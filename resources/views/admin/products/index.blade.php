@@ -18,7 +18,7 @@
             <thead class="bg-gray-100 text-gray-700">
                 <tr>
                     <th class="px-4 py-2 text-left">ID</th>
-                    <th class="px-4 py-2 text-left">Code</th>
+                    <th class="px-4 py-2 text-left">Kode</th>
                     <th class="px-4 py-2 text-left">Nama</th>
                     <th class="px-4 py-2 text-left">Kategori</th>
                     <th class="px-4 py-2 text-left">SubKategori</th>

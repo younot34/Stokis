@@ -14,28 +14,37 @@ class DashboardController extends Controller
     {
         $warehouse = Auth::user()->warehouse;
 
-        // Barang keluar hari ini
         $today = Carbon::today();
-        $todayOutProducts = Transaction::where('warehouse_id', $warehouse->id)
+        $totalProducts = $warehouse->products->count();
+
+        // Barang keluar hari ini
+        $todayOutTransactions = Transaction::where('warehouse_id', $warehouse->id)
             ->where('type', 'out')
             ->whereDate('created_at', $today)
-            ->with('product')
+            ->with('items.product')
             ->get();
+
+        // Flatten items untuk tabel
+        $todayOutProducts = $todayOutTransactions->flatMap(fn($tx) => $tx->items);
 
         // 10 barang keluar terbanyak bulan ini
         $currentMonth = Carbon::now()->month;
         $currentYear = Carbon::now()->year;
 
-        $topOutProducts = Transaction::selectRaw('product_id, SUM(quantity) as total_out')
-            ->where('warehouse_id', $warehouse->id)
+        $topOutItems = Transaction::where('warehouse_id', $warehouse->id)
             ->where('type', 'out')
             ->whereMonth('created_at', $currentMonth)
             ->whereYear('created_at', $currentYear)
+            ->with('items.product')
+            ->get()
+            ->flatMap(fn($tx) => $tx->items)
             ->groupBy('product_id')
-            ->with('product')
-            ->orderByDesc('total_out')
-            ->take(10)
-            ->get();
+            ->map(fn($items, $productId) => [
+                'product' => $items->first()->product ?? $items->first(),
+                'total_out' => $items->sum('quantity')
+            ])
+            ->sortByDesc('total_out')
+            ->take(10);
 
         // 10 barang stok kurang dari 10
         $lowStockProducts = $warehouse->products()
@@ -46,19 +55,21 @@ class DashboardController extends Controller
 
         // Total barang keluar per bulan selama 12 bulan terakhir
         $year = Carbon::now()->year;
-        $monthlyOut = Transaction::selectRaw('MONTH(created_at) as month, SUM(quantity) as total')
-            ->where('warehouse_id', $warehouse->id)
+        $monthlyOut = Transaction::where('warehouse_id', $warehouse->id)
             ->where('type', 'out')
             ->whereYear('created_at', $year)
-            ->groupBy('month')
-            ->orderBy('month')
-            ->pluck('total', 'month');
+            ->with('items')
+            ->get()
+            ->flatMap(fn($tx) => $tx->items)
+            ->groupBy(fn($item) => $item->created_at->month)
+            ->map(fn($items) => $items->sum('quantity'));
 
         return view('warehouse.dashboard', compact(
             'todayOutProducts',
-            'topOutProducts',
+            'topOutItems',
             'lowStockProducts',
-            'monthlyOut'
+            'monthlyOut',
+            'totalProducts'
         ));
     }
 }

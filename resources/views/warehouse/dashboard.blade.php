@@ -34,19 +34,25 @@
             <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden shadow-sm">
                 <thead class="bg-gray-50">
                     <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produk</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subkategori</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Keluar</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($todayOutProducts as $item)
                     <tr class="hover:bg-gray-50 transition">
-                        <td class="px-6 py-4 whitespace-nowrap text-gray-800 font-medium">{{ $item->product->name ?? '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-800 font-medium">{{ $item->product->code ?? '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-800 font-medium">{{ $item->product->name ?? $item->product_name ?? '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $item->product->category->parent->name ?? '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $item->product->category->name ?? '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $item->quantity }}</td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="2" class="text-center py-4 text-gray-500">Belum ada transaksi keluar hari ini</td>
+                        <td colspan="5" class="text-center py-4 text-gray-500">Belum ada transaksi keluar hari ini</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -61,19 +67,25 @@
             <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden shadow-sm">
                 <thead class="bg-gray-50">
                     <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produk</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subkategori</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Keluar</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($topOutProducts as $item)
+                    @forelse($topOutItems as $item)
                     <tr class="hover:bg-gray-50 transition">
-                        <td class="px-6 py-4 whitespace-nowrap text-gray-800 font-medium">{{ $item->product->name ?? '-' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ $item->total_out }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-800 font-medium">{{ $item['product']->code ?? '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-800 font-medium">{{ $item['product']->name ?? $item['product']->product_name ?? '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $item['product']->category->parent->name ?? '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $item['product']->category->name ?? '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $item['total_out'] }}</td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="2" class="text-center py-4 text-gray-500">Belum ada transaksi keluar</td>
+                        <td colspan="5" class="text-center py-4 text-gray-500">Belum ada transaksi keluar</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -88,19 +100,25 @@
             <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden shadow-sm">
                 <thead class="bg-gray-50">
                     <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produk</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subkategori</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Stok</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($lowStockProducts as $product)
                     <tr class="hover:bg-gray-50 transition">
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-800 font-medium">{{ $product->code ?? '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-gray-800 font-medium">{{ $product->name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $product->category->parent->name ?? '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $product->category->name ?? '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $product->pivot->quantity }}</td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="2" class="text-center py-4 text-gray-500">Tidak ada barang dengan stok kurang dari 10</td>
+                        <td colspan="5" class="text-center py-4 text-gray-500">Tidak ada barang dengan stok kurang dari 10</td>
                     </tr>
                     @endforelse
                 </tbody>

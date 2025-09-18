@@ -101,5 +101,31 @@ class ProductController extends Controller
         $product->delete();
         return redirect()->route('admin.products.index')->with('success','Product deleted');
     }
+
+    public function find(Request $request)
+    {
+        $query = Product::with(['category.parent']);
+
+        if ($request->code) {
+            $product = $query->where('code', $request->code)->first();
+        } elseif ($request->id) {
+            $product = $query->find($request->id);
+        } else {
+            return response()->json(['error' => 'Produk tidak ditemukan'], 404);
+        }
+
+        if (!$product) {
+            return response()->json(['error' => 'Produk tidak ditemukan'], 404);
+        }
+
+        return response()->json([
+            'id'         => $product->id,
+            'code'       => $product->code,
+            'name'       => $product->name,
+            'category'   => $product->parentCategory->name ?? '-',
+            'subcategory'=> $product->category->name ?? '-',
+            'price'      => $product->price,
+        ]);
+    }
 }
 

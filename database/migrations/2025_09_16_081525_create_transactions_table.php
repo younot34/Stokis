@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('warehouse_id')->constrained()->onDelete('cascade');
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->enum('type', ['in','out']);
-            $table->integer('quantity');
+            $table->string('code')->unique(); // kode transaksi induk
+            $table->foreignId('warehouse_id')->constrained()->cascadeOnDelete();
+            $table->enum('type',['in','out']);
             $table->text('note')->nullable();
-            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
+            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }

@@ -32,16 +32,18 @@
         </thead>
         <tbody>
             @forelse($transactions as $tr)
-            <tr class="border-b hover:bg-gray-50">
-                <td class="px-4 py-2">{{ $tr->created_at->format('d-m-Y H:i') }}</td>
-                <td class="px-4 py-2">{{ $tr->warehouse->name ?? '-' }}</td>
-                <td class="px-4 py-2">{{ $tr->product->name ?? '-' }}</td>
-                <td class="px-4 py-2">{{ $tr->quantity }}</td>
-            </tr>
+                @foreach($tr->items as $item)
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="px-4 py-2">{{ $tr->created_at->format('d-m-Y H:i') }}</td>
+                        <td class="px-4 py-2">{{ $tr->warehouse->name ?? '-' }}</td>
+                        <td class="px-4 py-2">{{ $item->product->name ?? $item->product_name ?? '-' }}</td>
+                        <td class="px-4 py-2">{{ $item->quantity }}</td>
+                    </tr>
+                @endforeach
             @empty
-            <tr>
-                <td colspan="4" class="text-center py-4 text-gray-500">Tidak ada data</td>
-            </tr>
+                <tr>
+                    <td colspan="4" class="text-center py-4 text-gray-500">Tidak ada data</td>
+                </tr>
             @endforelse
         </tbody>
     </table>

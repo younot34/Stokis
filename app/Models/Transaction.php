@@ -7,19 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
-    use HasFactory;
+    protected $fillable = ['code','warehouse_id','type','note','created_by'];
 
-    protected $fillable = ['warehouse_id','product_id','type','quantity','note','created_by'];
+    public function items() {
+        return $this->hasMany(TransactionItem::class);
+    }
 
     public function warehouse() {
         return $this->belongsTo(Warehouse::class);
-    }
-
-    public function product() {
-        return $this->belongsTo(Product::class);
     }
 
     public function creator() {
         return $this->belongsTo(User::class, 'created_by');
     }
 }
+
