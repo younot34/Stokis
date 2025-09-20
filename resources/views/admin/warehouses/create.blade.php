@@ -1,27 +1,48 @@
 @extends('layouts.admin')
 @section('title','Tambah Stokis')
-@section('content')
 
-<div class="max-w-2xl mx-auto bg-white shadow-lg rounded-lg p-8">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">🏬 Tambah Stokis</h2>
+@section('content')
+<div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-xl p-8">
+    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">🏬 Tambah Stokis</h2>
 
     <form action="{{ route('admin.warehouses.store') }}" method="POST" class="space-y-5">
         @csrf
 
         <!-- Nama Stokis -->
         <div>
-            <label for="name" class="block text-gray-700 font-medium mb-2">Nama Stokis</label>
-            <input type="text" name="name" id="name"
-                   required
-                   class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 px-4 py-2 transition" />
+            <label for="name" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Nama Stokis</label>
+            <input type="text" name="name" id="name" required
+                   class="w-full rounded-lg border border-gray-300 dark:border-gray-600
+                          bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100
+                          shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 px-4 py-2 transition" />
         </div>
 
         <!-- Alamat -->
         <div>
-            <label for="address" class="block text-gray-700 font-medium mb-2">Alamat</label>
+            <label for="address" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Alamat</label>
             <input type="text" name="address" id="address"
-                   class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 px-4 py-2 transition" />
+                   class="w-full rounded-lg border border-gray-300 dark:border-gray-600
+                          bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100
+                          shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 px-4 py-2 transition" />
         </div>
+
+        <!-- Tambah Stokis -->
+        <div>
+            <label for="province" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Provinsi</label>
+            <input type="text" name="province" id="province"
+                class="w-full rounded-lg border border-gray-300 dark:border-gray-600
+                        bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100
+                        shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 px-4 py-2 transition" />
+        </div>
+
+        <div>
+            <label for="city" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Kota / Kabupaten</label>
+            <input type="text" name="city" id="city"
+                class="w-full rounded-lg border border-gray-300 dark:border-gray-600
+                        bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100
+                        shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 px-4 py-2 transition" />
+        </div>
+
 
         <!-- Tombol Aksi -->
         <div class="flex items-center justify-between">
@@ -36,5 +57,4 @@
         </div>
     </form>
 </div>
-
 @endsection

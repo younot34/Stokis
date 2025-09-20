@@ -2,8 +2,8 @@
 @section('title','Edit User')
 @section('content')
 
-<div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-lg">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">✏️ Edit User</h2>
+<div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
+    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">✏️ Edit User</h2>
 
     <form action="{{ route('admin.users.update',$user->id) }}" method="POST" class="space-y-5">
         @csrf
@@ -11,41 +11,45 @@
 
         <!-- Nama -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Nama</label>
             <input type="text" name="name" value="{{ $user->name }}" required
-                   class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                   class="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
         </div>
 
         <!-- Email -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Email</label>
             <input type="email" name="email" value="{{ $user->email }}" required
-                   class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                   class="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
         </div>
 
         <!-- Password -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Password <span class="text-gray-400 text-xs">(kosongkan jika tidak diubah)</span></label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+                Password <span class="text-gray-400 dark:text-gray-500 text-xs">(kosongkan jika tidak diubah)</span>
+            </label>
             <input type="password" name="password"
-                   class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                   class="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
         </div>
 
         <!-- Role -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Role</label>
             <select name="role" required
-                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                    class="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
                 <option value="admin" {{ $user->role=='admin'?'selected':'' }}>Admin</option>
-                <option value="stokis" {{ $user->role=='stokis'?'selected':'' }}>stokis</option>
+                <option value="stokis" {{ $user->role=='stokis'?'selected':'' }}>Stokis</option>
             </select>
         </div>
 
-        <!-- stokis -->
+        <!-- Stokis -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">stokis <span class="text-gray-400 text-xs">(jika role stokis)</span></label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+                Stokis <span class="text-gray-400 dark:text-gray-500 text-xs">(jika role stokis)</span>
+            </label>
             <select name="warehouse_id"
-                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                <option value="">-- Pilih stokis --</option>
+                    class="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                <option value="">-- Pilih Stokis --</option>
                 @foreach($warehouses as $w)
                     <option value="{{ $w->id }}" {{ $user->warehouse_id==$w->id?'selected':'' }}>
                         {{ $w->name }}
@@ -57,7 +61,7 @@
         <!-- Tombol Aksi -->
         <div class="flex justify-end space-x-3">
             <a href="{{ route('admin.users.index') }}"
-               class="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition">
+               class="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 rounded-lg transition">
                 ← Kembali
             </a>
             <button type="submit"

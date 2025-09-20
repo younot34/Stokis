@@ -32,8 +32,12 @@ class ReportController extends Controller
                 ->whereMonth('created_at', Carbon::parse($month)->month);
         }
 
+        if ($request->code) {
+            $query->where('code', 'like', '%' . $request->code . '%');
+        }
+
         // Load items dan product relation
-        $transactions = $query->with('items.product','warehouse')->get();
+        $transactions = $query->with('items.product','warehouse')->paginate(20);
 
         return view('admin.reports.outgoing', compact(
             'transactions','warehouses','warehouseId','date','month'

@@ -10,7 +10,13 @@ class WarehouseController extends Controller
 {
     public function index() {
         $warehouses = Warehouse::all();
-        return view('admin.warehouses.index', compact('warehouses'));
+        $warehouses->map(function ($warehouse) {
+            $warehouse->totalAsset = $warehouse->products->sum(
+                fn($p) => $p->pivot->quantity * $p->price
+            );
+            return $warehouse;
+        });
+        return view('admin.warehouses.index', compact('warehouses',));
     }
 
     public function create() {
@@ -21,8 +27,10 @@ class WarehouseController extends Controller
         $request->validate([
             'name' => 'required|string',
             'address' => 'nullable|string',
+            'province' => 'nullable|string',
+            'city' => 'nullable|string',
         ]);
-        Warehouse::create($request->only('name','address'));
+        Warehouse::create($request->only('name','address','province','city'));
         return redirect()->route('admin.warehouses.index')->with('success','Warehouse created');
     }
 
@@ -31,8 +39,8 @@ class WarehouseController extends Controller
     }
 
     public function update(Request $request, Warehouse $warehouse) {
-        $request->validate(['name'=>'required','address'=>'nullable']);
-        $warehouse->update($request->only('name','address'));
+        $request->validate(['name'=>'required','address'=>'nullable','province'=>'nullable','city'=>'nullable']);
+        $warehouse->update($request->only('name','address','province','city'));
         return redirect()->route('admin.warehouses.index')->with('success','Warehouse updated');
     }
 

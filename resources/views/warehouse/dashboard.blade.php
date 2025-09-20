@@ -12,7 +12,7 @@
     </div>
 
     <!-- Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         <div class="bg-gradient-to-r from-blue-400 to-blue-600 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300">
             <h3 class="text-lg font-semibold">Total Barang</h3>
             <p class="text-3xl font-bold mt-2">{{ $totalProducts ?? 0 }}</p>
@@ -25,6 +25,14 @@
             <h3 class="text-lg font-semibold">Stok Kurang dari 10</h3>
             <p class="text-3xl font-bold mt-2">{{ $lowStockProducts->count() ?? 0 }}</p>
         </div>
+        <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300">
+            <h3 class="text-lg font-semibold">Total Stok</h3>
+            <p class="text-3xl font-bold mt-2">{{ $totalStock ?? 0 }}</p>
+        </div>
+        <div class="bg-gradient-to-r from-red-400 to-red-600 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300">
+            <h3 class="text-lg font-semibold">Total Aset</h3>
+            <p class="text-3xl font-bold mt-2">Rp {{ number_format($totalAsset ?? 0, 0, ',', '.') }}</p>
+        </div>
     </div>
 
     <!-- Barang Keluar Hari Ini -->
@@ -32,7 +40,7 @@
         <h3 class="text-xl font-semibold text-gray-700 mb-4">Barang Keluar Hari Ini ({{ \Carbon\Carbon::today()->format('d M Y') }})</h3>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden shadow-sm">
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-200">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produk</th>
@@ -41,7 +49,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Keluar</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="bg-white divide-y divide-gray-400">
                     @forelse($todayOutProducts as $item)
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-6 py-4 whitespace-nowrap text-gray-800 font-medium">{{ $item->product->code ?? '-' }}</td>
@@ -65,7 +73,7 @@
         <h3 class="text-xl font-semibold text-gray-700 mb-4">10 Barang Keluar Terbanyak</h3>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden shadow-sm">
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-200">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produk</th>
@@ -74,7 +82,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Keluar</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="bg-white divide-y divide-gray-400">
                     @forelse($topOutItems as $item)
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-6 py-4 whitespace-nowrap text-gray-800 font-medium">{{ $item['product']->code ?? '-' }}</td>
@@ -98,7 +106,7 @@
         <h3 class="text-xl font-semibold text-gray-700 mb-4">10 Barang dengan Stok Kurang dari 10</h3>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden shadow-sm">
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-200">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produk</th>
@@ -107,7 +115,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Stok</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="bg-white divide-y divide-gray-400">
                     @forelse($lowStockProducts as $product)
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-6 py-4 whitespace-nowrap text-gray-800 font-medium">{{ $product->code ?? '-' }}</td>

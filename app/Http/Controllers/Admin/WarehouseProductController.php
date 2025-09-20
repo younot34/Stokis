@@ -18,11 +18,21 @@ class WarehouseProductController extends Controller
         if ($request->filled('warehouse_id')) {
             $query->where('id', $request->warehouse_id);
         }
+        // filter by province
+        if ($request->province) {
+            $query->where('province', $request->province);
+        }
+        // filter by city
+        if ($request->city) {
+            $query->where('city', $request->city);
+        }
 
         $warehouses = $query->get();
         $allWarehouses = Warehouse::all(); // untuk isi dropdown
+        $allProvinces  = Warehouse::select('province')->distinct()->pluck('province')->filter()->toArray();
+        $allCities     = Warehouse::select('city')->distinct()->pluck('city')->filter()->toArray();
 
-        return view('admin.stocks.index', compact('warehouses','allWarehouses'));
+        return view('admin.stocks.index', compact('warehouses','allWarehouses','allProvinces', 'allCities'));
     }
 
     public function updateStock(Request $request, Product $product, Warehouse $warehouse){

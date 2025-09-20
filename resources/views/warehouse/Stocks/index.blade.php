@@ -6,7 +6,7 @@
 
 <div class="overflow-x-auto bg-white shadow rounded">
     <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
+        <thead class="bg-gray-200">
             <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kode</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Produk</th>
@@ -16,7 +16,7 @@
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Jumlah Stok</th>
             </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
+        <tbody class="bg-white divide-y divide-gray-400">
             @forelse($products as $product)
                 <tr class="hover:bg-gray-50 transition">
                     <td class="px-6 py-4 font-medium text-gray-800">{{ $product->code }}</td>

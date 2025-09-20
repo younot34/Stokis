@@ -11,7 +11,6 @@ class StockController extends Controller
     {
         $warehouse = Auth::user()->warehouse;
 
-        // Ambil semua produk di warehouse ini dengan pivot quantity
         $products = $warehouse->products()->orderBy('name')->get();
 
         return view('warehouse.stocks.index', compact('products'));

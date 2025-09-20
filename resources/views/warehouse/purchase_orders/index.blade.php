@@ -1,7 +1,7 @@
 @extends('layouts.warehouse')
 @section('title','Permintaan Barang')
 @section('content')
-<div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6">
+<div class="mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6">
 
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
@@ -16,7 +16,7 @@
     <div class="bg-white shadow-lg rounded-xl overflow-hidden">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-200 border">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">#</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
@@ -28,7 +28,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="bg-white divide-y divide-gray-400">
                     @forelse ($purchaseOrders as $po)
                         <tr class="hover:bg-gray-50 transition">
                             <td class="px-6 py-4 whitespace-nowrap">{{ $po->id }}</td>

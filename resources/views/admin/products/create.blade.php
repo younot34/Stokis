@@ -1,52 +1,108 @@
 @extends('layouts.admin')
 @section('title','Tambah Produk')
 @section('content')
-<div class="max-w-6xl mx-auto bg-white shadow-lg rounded-xl p-6">
-    <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-3">Tambah Produk</h2>
+
+<div class="max-w-6xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6">
+    <!-- Header -->
+    <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100 border-b pb-3 border-gray-200 dark:border-gray-700">
+        ➕ Tambah Produk
+    </h2>
 
     <form action="{{ route('admin.products.store') }}" method="POST" id="productForm">
         @csrf
 
         <div id="product-rows" class="space-y-4">
-            <div class="grid grid-cols-6 gap-3 items-center product-row">
-                <input type="text" name="products[0][code]" placeholder="AB-123"
-                    class="code-input border rounded-lg px-3 py-2" required>
+            <div class="grid grid-cols-6 gap-3 items-start product-row">
+                <!-- Kode Produk -->
+                <div>
+                    <label for="code-0" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Kode Produk
+                    </label>
+                    <input type="text" id="code-0" name="products[0][code]" placeholder="AB-123"
+                        class="code-input border border-gray-300 dark:border-gray-600
+                               rounded-lg px-3 py-2 w-full
+                               bg-white dark:bg-gray-700
+                               text-gray-800 dark:text-gray-100" required>
+                </div>
 
-                <input type="text" name="products[0][name]" placeholder="Nama Produk"
-                    class="border rounded-lg px-3 py-2" required>
+                <!-- Nama Produk -->
+                <div>
+                    <label for="name-0" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Nama Produk
+                    </label>
+                    <input type="text" id="name-0" name="products[0][name]" placeholder="Nama Produk"
+                        class="border border-gray-300 dark:border-gray-600
+                               rounded-lg px-3 py-2 w-full
+                               bg-white dark:bg-gray-700
+                               text-gray-800 dark:text-gray-100" required>
+                </div>
 
                 <!-- Parent kategori -->
-                <input list="parent-list-0" name="products[0][parent_name]"
-                    placeholder="Ketik / pilih kategori induk"
-                    class="border rounded-lg px-3 py-2 parent-input" data-index="0" required>
-
-                <datalist id="parent-list-0">
-                    @foreach($parents as $parent)
-                        <option value="{{ $parent->name }}">
-                    @endforeach
-                </datalist>
+                <div>
+                    <label for="parent-0" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Kategori Induk
+                    </label>
+                    <input list="parent-list-0" id="parent-0" name="products[0][parent_name]"
+                        placeholder="Ketik / pilih kategori induk"
+                        class="border border-gray-300 dark:border-gray-600
+                               rounded-lg px-3 py-2 w-full
+                               bg-white dark:bg-gray-700
+                               text-gray-800 dark:text-gray-100 parent-input"
+                        data-index="0" required>
+                    <datalist id="parent-list-0">
+                        @foreach($parents as $parent)
+                            <option value="{{ $parent->name }}">
+                        @endforeach
+                    </datalist>
+                </div>
 
                 <!-- Subkategori -->
-                <input list="subcategory-list-0" name="products[0][subcategory_name]"
-                    placeholder="Ketik / pilih subkategori"
-                    class="border rounded-lg px-3 py-2 subcategory-input" data-index="0" required>
+                <div>
+                    <label for="subcategory-0" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Subkategori
+                    </label>
+                    <input list="subcategory-list-0" id="subcategory-0" name="products[0][subcategory_name]"
+                        placeholder="Ketik / pilih subkategori"
+                        class="border border-gray-300 dark:border-gray-600
+                               rounded-lg px-3 py-2 w-full
+                               bg-white dark:bg-gray-700
+                               text-gray-800 dark:text-gray-100 subcategory-input"
+                        data-index="0" required>
+                    <datalist id="subcategory-list-0"></datalist>
+                </div>
 
-                <datalist id="subcategory-list-0">
-                    <!-- akan diisi via JS saat parent dipilih -->
-                </datalist>
+                <!-- Harga -->
+                <div>
+                    <label for="price-0" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Harga
+                    </label>
+                    <input type="number" id="price-0" name="products[0][price]" placeholder="Harga"
+                        class="border border-gray-300 dark:border-gray-600
+                               rounded-lg px-3 py-2 w-full
+                               bg-white dark:bg-gray-700
+                               text-gray-800 dark:text-gray-100" required>
+                </div>
 
-
-                <input type="number" name="products[0][price]" placeholder="Harga"
-                    class="border rounded-lg px-3 py-2" required>
-
-                <button type="button" class="remove-row text-red-500 font-bold" style="display:none;">&times;</button>
+                <!-- Hapus -->
+                <div class="flex items-end">
+                    <button type="button" class="remove-row text-red-500 font-bold" style="display:none;">&times;</button>
+                </div>
             </div>
         </div>
 
-        <div class="mt-4 flex justify-between">
-            <button type="button" id="addRow" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">+ Tambah Baris</button>
+        <!-- Tombol -->
+        <div class="mt-6 flex justify-between">
+            <button type="button" id="addRow"
+                class="inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600
+                       text-white rounded-lg shadow transition">
+                ➕ Tambah Baris
+            </button>
 
-            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg">Simpan Semua</button>
+            <button type="submit"
+                class="inline-flex items-center px-6 py-2 bg-green-600 hover:bg-green-700
+                       text-white rounded-lg shadow transition">
+                💾 Simpan Semua
+            </button>
         </div>
     </form>
 </div>
@@ -69,44 +125,55 @@ document.addEventListener("DOMContentLoaded", function () {
             </datalist>
         `;
     }
+
     function formatCodeInput(input) {
-        let val = input.value
-        .toUpperCase()
-        .replace(/[^A-Z0-9]/g, "");
+        let val = input.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
         if (val.length > 2) {
-            val = val.slice(0,2) + "-" + val.slice(2,5); }
-            input.value = val; }
+            val = val.slice(0,2) + "-" + val.slice(2,5);
+        }
+        input.value = val;
+    }
+
     // Event delegation: format semua input code
     container.addEventListener("input", function(e) {
         if (e.target.classList.contains("code-input")) {
-            formatCodeInput(e.target); } });
+            formatCodeInput(e.target);
+        }
+    });
 
     // Tambah baris baru
     document.getElementById('addRow').addEventListener('click', function () {
         const row = document.createElement('div');
-        row.className = 'grid grid-cols-6 gap-3 items-center product-row';
+        row.className = 'grid grid-cols-6 gap-3 items-start product-row';
 
         row.innerHTML = `
             <input type="text" name="products[${rowIndex}][code]" placeholder="AB-123"
-                class="code-input border rounded-lg px-3 py-2" required>
+                class="code-input border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2
+                       bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100" required>
 
             <input type="text" name="products[${rowIndex}][name]" placeholder="Nama Produk"
-                class="border rounded-lg px-3 py-2" required>
+                class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2
+                       bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100" required>
 
             <input list="parent-list-${rowIndex}"
                 name="products[${rowIndex}][parent_name]"
                 placeholder="Ketik / pilih kategori induk"
-                class="border rounded-lg px-3 py-2 parent-input" data-index="${rowIndex}" required>
+                class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2
+                       bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 parent-input"
+                data-index="${rowIndex}" required>
             ${parentOptionsHtml(rowIndex)}
 
             <input list="subcategory-list-${rowIndex}"
                 name="products[${rowIndex}][subcategory_name]"
                 placeholder="Ketik / pilih subkategori"
-                class="border rounded-lg px-3 py-2 subcategory-input" data-index="${rowIndex}" required>
+                class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2
+                       bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 subcategory-input"
+                data-index="${rowIndex}" required>
             <datalist id="subcategory-list-${rowIndex}"></datalist>
 
             <input type="number" name="products[${rowIndex}][price]" placeholder="Harga"
-                class="border rounded-lg px-3 py-2" required>
+                class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2
+                       bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100" required>
 
             <button type="button" class="remove-row text-red-500 font-bold">×</button>
         `;
@@ -137,26 +204,6 @@ document.addEventListener("DOMContentLoaded", function () {
     container.addEventListener('click', function(e) {
         if (e.target.classList.contains('remove-row')) {
             e.target.closest('.product-row').remove();
-        }
-    });
-
-
-    // Saat parent berubah -> isi subkategori
-    container.addEventListener('change', function (e) {
-        if (e.target.classList.contains('parent-select')) {
-            const parentId = e.target.value;
-            const row = e.target.closest('.product-row');
-            const subSelect = row.querySelector('.subcategory-select');
-
-            subSelect.innerHTML = `<option value="">-- Pilih Subkategori --</option>`;
-            if (parentId && childrenMap[parentId]) {
-                childrenMap[parentId].forEach(ch => {
-                    const opt = document.createElement('option');
-                    opt.value = ch.id;
-                    opt.text = ch.name;
-                    subSelect.appendChild(opt);
-                });
-            }
         }
     });
 });

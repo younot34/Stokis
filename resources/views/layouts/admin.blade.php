@@ -1,43 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      x-data="{ ...darkModeHandler(), openSidebar: false }"
+      x-bind:class="darkMode ? 'dark' : ''"
+      x-init="init()">
 <head>
     <meta charset="UTF-8">
     <title>Admin - @yield('title')</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/alpinejs" defer></script>
-    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.bootstrap5.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-</head>
-<body class="bg-gray-100 font-sans" x-data="{ openSidebar: false }">
+        <script>
+        tailwind.config = { darkMode: 'class', }
 
-    <!-- Navbar (mobile only) -->
-    <header class="flex items-center justify-between bg-gray-800 text-white px-4 py-3 md:hidden">
-        <h1 class="text-lg font-bold">Admin Panel</h1>
-        <button @click="openSidebar = !openSidebar" class="focus:outline-none">
-            <!-- Hamburger icon -->
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
-        </button>
+        // ⚡ Dark mode sebelum render
+        if (localStorage.getItem('darkMode') === 'true' ||
+            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 font-sans text-gray-800 dark:text-gray-200">
+
+    <!-- Navbar -->
+    <header class="flex items-center justify-between bg-white dark:bg-gray-800 shadow px-4 py-3
+                md:ml-64 fixed w-full md:w-[calc(100%-16rem)] z-40 transition-colors">
+
+        <!-- Left: Hamburger + Title (mobile only) -->
+        <div class="flex items-center space-x-3 md:hidden">
+            <!-- Hamburger Button -->
+            <button @click="openSidebar = !openSidebar"
+                    class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+            <!-- Admin Panel text (only on mobile) -->
+            <h1 class="text-lg font-bold">Admin Panel</h1>
+        </div>
+
+        <!-- Right: Actions -->
+        <div class="flex items-center space-x-4 ml-auto">
+            <!-- Dark mode toggle -->
+            <button @click="toggle()"
+                    class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                <i x-show="!darkMode" data-lucide="moon" class="w-5 h-5"></i>
+                <i x-show="darkMode" data-lucide="sun" class="w-5 h-5"></i>
+            </button>
+            <!-- Notification -->
+            <button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                <i data-lucide="bell" class="w-5 h-5"></i>
+            </button>
+            <!-- Profile Dropdown -->
+            <div class="relative" x-data="{ openProfile: false }">
+                <button @click="openProfile = !openProfile" class="flex items-center space-x-2 focus:outline-none">
+                    <img src="https://i.pravatar.cc/40" class="w-8 h-8 rounded-full" alt="profile">
+                    <span class="hidden md:block font-medium">{{ auth()->user()->name }}</span>
+                </button>
+                <!-- Dropdown -->
+                <div x-show="openProfile" @click.away="openProfile = false"
+                    x-transition
+                    class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden z-50">
+                    <a href="{{ route('profile.edit') }}"
+                    class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">Profile</a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                                class="w-full text-left px-4 py-2 text-sm hover:bg-red-500 hover:text-white">
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </header>
 
     <div class="flex min-h-screen relative">
 
         <!-- Overlay (mobile only) -->
-        <div
-            class="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
-            x-show="openSidebar"
-            @click="openSidebar = false"
-            x-transition.opacity>
+        <div class="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+             x-show="openSidebar"
+             @click="openSidebar = false"
+             x-transition.opacity>
         </div>
 
         <!-- Sidebar -->
-        <aside
-            class="fixed md:static top-0 left-0 w-64 h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white p-5 transform md:translate-x-0 transition-transform duration-200 z-30"
+        <aside class="fixed md:static top-0 left-0 w-64 h-screen bg-gradient-to-b from-gray-900 to-gray-800
+            text-white p-5 transform md:translate-x-0 transition-all duration-300 z-30
+            overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900"
             :class="openSidebar ? 'translate-x-0' : '-translate-x-full'">
 
             <h1 class="text-2xl font-bold mb-8 hidden md:block">Admin Panel</h1>
@@ -45,88 +92,105 @@
                 <ul class="space-y-2">
                     <li>
                         <a href="{{ route('admin.dashboard') }}"
-                           class="block p-2 rounded
-                           {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700 text-white' : 'hover:bg-gray-700' }}">
+                           class="flex items-center gap-3 p-2 rounded-lg transition
+                           {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                           <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                            Dashboard
                         </a>
                     </li>
-
                     <li>
                         <a href="{{ route('admin.warehouses.index') }}"
-                           class="block p-2 rounded
-                           {{ request()->routeIs('admin.warehouses.*') ? 'bg-gray-700 text-white' : 'hover:bg-gray-700' }}">
+                           class="flex items-center gap-3 p-2 rounded-lg transition
+                           {{ request()->routeIs('admin.warehouses.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                           <i data-lucide="building" class="w-5 h-5"></i>
                            Stokis
                         </a>
                     </li>
-
                     <li>
                         <a href="{{ route('admin.categories.index') }}"
-                           class="block p-2 rounded
-                           {{ request()->routeIs('admin.categories.*') ? 'bg-gray-700 text-white' : 'hover:bg-gray-700' }}">
+                           class="flex items-center gap-3 p-2 rounded-lg transition
+                           {{ request()->routeIs('admin.categories.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                           <i data-lucide="layers" class="w-5 h-5"></i>
                            Kategori
                         </a>
                     </li>
-
                     <li>
                         <a href="{{ route('admin.products.index') }}"
-                           class="block p-2 rounded
-                           {{ request()->routeIs('admin.products.*') ? 'bg-gray-700 text-white' : 'hover:bg-gray-700' }}">
+                           class="flex items-center gap-3 p-2 rounded-lg transition
+                           {{ request()->routeIs('admin.products.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                           <i data-lucide="package" class="w-5 h-5"></i>
                            Produk
                         </a>
                     </li>
-
                     <li>
                         <a href="{{ route('admin.purchase_orders.index') }}"
-                           class="block p-2 rounded
-                           {{ request()->routeIs('admin.purchase_orders.*') ? 'bg-gray-700 text-white' : 'hover:bg-gray-700' }}">
+                           class="flex items-center gap-3 p-2 rounded-lg transition
+                           {{ request()->routeIs('admin.purchase_orders.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                           <i data-lucide="file-text" class="w-5 h-5"></i>
                            PO Stokis
                         </a>
                     </li>
-
                     <li>
                         <a href="{{ route('admin.stocks.index') }}"
-                           class="block p-2 rounded
-                           {{ request()->routeIs('admin.stocks.*') ? 'bg-gray-700 text-white' : 'hover:bg-gray-700' }}">
-                           Stok
+                           class="flex items-center gap-3 p-2 rounded-lg transition
+                           {{ request()->routeIs('admin.stocks.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                           <i data-lucide="database" class="w-5 h-5"></i>
+                           Stok per Stokis
                         </a>
                     </li>
-
+                    <li>
+                        <a href="{{ route('admin.central_stocks.index') }}"
+                            class="flex items-center gap-3 p-2 rounded-lg transition
+                            {{ request()->routeIs('admin.central_stocks.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                            <i data-lucide="database" class="w-5 h-5"></i>
+                            Stok Pusat
+                        </a>
+                    </li>
                     <li>
                         <a href="{{ route('admin.reports.outgoing') }}"
-                           class="block p-2 rounded
-                           {{ request()->routeIs('admin.reports.*') ? 'bg-gray-700 text-white' : 'hover:bg-gray-700' }}">
-                           Barang keluar
+                           class="flex items-center gap-3 p-2 rounded-lg transition
+                           {{ request()->routeIs('admin.reports.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                           <i data-lucide="truck" class="w-5 h-5"></i>
+                           Barang Keluar
                         </a>
                     </li>
-
                     <li>
                         <a href="{{ route('admin.users.index') }}"
-                           class="block p-2 rounded
-                           {{ request()->routeIs('admin.users.*') ? 'bg-gray-700 text-white' : 'hover:bg-gray-700' }}">
+                           class="flex items-center gap-3 p-2 rounded-lg transition
+                           {{ request()->routeIs('admin.users.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                           <i data-lucide="users" class="w-5 h-5"></i>
                            User
                         </a>
                     </li>
                 </ul>
             </nav>
-
-            <!-- Profile & Logout -->
-            <div class="mt-10 border-t border-gray-700 pt-5">
-                <p class="mb-3">👋 Hai, {{ auth()->user()->name }}</p>
-                <a href="{{ route('profile.edit') }}" class="block py-2 px-3 bg-gray-700 hover:bg-gray-600 rounded mb-2">Profile</a>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="w-full py-2 px-3 bg-red-600 hover:bg-red-500 rounded">Logout</button>
-                </form>
-            </div>
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 p-6 md:ml-0 mt-14 md:mt-0">
-            <div class="bg-white rounded-xl shadow p-6">
+        <main class="flex-1 p-2 md:p-6 mt-16">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition">
                 @yield('content')
             </div>
         </main>
     </div>
-
+<script>
+function darkModeHandler() {
+    return {
+        darkMode: false,
+        init() {
+            if (localStorage.getItem('darkMode') === null) {
+                this.darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            } else {
+                this.darkMode = localStorage.getItem('darkMode') === 'true';
+            }
+        },
+        toggle() {
+            this.darkMode = !this.darkMode;
+            localStorage.setItem('darkMode', this.darkMode);
+        }
+    }
+}
+lucide.createIcons();
+</script>
 </body>
 </html>

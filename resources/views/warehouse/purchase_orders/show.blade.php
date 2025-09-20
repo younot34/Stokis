@@ -25,7 +25,7 @@
     <div class="overflow-x-auto">
         <table class="w-full border-collapse">
             <thead>
-                <tr class="bg-gray-100 text-gray-700 text-left">
+                <tr class="bg-gray-200 text-gray-700 text-left">
                     <th class="px-4 py-3">Kode Barang</th>
                     <th class="px-4 py-3">Produk</th>
                     <th class="px-4 py-3">Harga</th>
@@ -48,13 +48,13 @@
                         $totalQty += $qtyUsed;
                         $totalHarga += $subtotal;
                     @endphp
-                    <tr class="border-b hover:bg-gray-50 transition">
-                        <td class="px-4 py-3 text-gray-700">{{ $item->product->code ?? '-' }}</td>
-                        <td class="px-4 py-3 font-medium text-gray-800">{{ $item->product->name }}</td>
-                        <td class="px-4 py-3">Rp {{ number_format($item->price,0,',','.') }}</td>
-                        <td class="px-4 py-3">{{ $item->quantity_requested }}</td>
-                        <td class="px-4 py-3">{{ $item->quantity_approved ?? '-' }}</td>
-                        <td class="px-4 py-3">Rp {{ number_format($subtotal,0,',','.') }}</td>
+                    <tr class="border border-gray-400 hover:bg-gray-50 transition">
+                        <td class="border border-gray-400 px-4 py-3 text-gray-700">{{ $item->product->code ?? '-' }}</td>
+                        <td class="border border-gray-400 px-4 py-3 font-medium text-gray-800">{{ $item->product->name }}</td>
+                        <td class="border border-gray-400 px-4 py-3">Rp {{ number_format($item->price,0,',','.') }}</td>
+                        <td class="border border-gray-400 px-4 py-3">{{ $item->quantity_requested }}</td>
+                        <td class="border border-gray-400 px-4 py-3">{{ $item->quantity_approved ?? '-' }}</td>
+                        <td class="border border-gray-400 px-4 py-3">Rp {{ number_format($subtotal,0,',','.') }}</td>
                     </tr>
                 @endforeach
             </tbody>

@@ -1,7 +1,7 @@
 @extends('layouts.warehouse')
 
 @section('content')
-<div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6">
+<div class="mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6">
 
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
@@ -18,37 +18,37 @@
                 <div>
                     <label class="block font-semibold mb-1">Kode PO</label>
                     <input type="text" name="po_code" value="{{ $poCode }}" readonly
-                           class="border p-2 rounded w-full bg-gray-100">
+                           class="border border-gray-400 p-2 rounded w-full bg-gray-100">
                 </div>
 
                 <div>
                     <label class="block font-semibold mb-1">Stokis</label>
                     <input type="text" value="{{ $warehouse->name }}" readonly
-                           class="border p-2 rounded w-full bg-gray-100">
+                           class="border border-gray-400 p-2 rounded w-full bg-gray-100">
                     <input type="hidden" name="warehouse_id" value="{{ $warehouse->id }}">
                 </div>
             </div>
 
             <!-- Tabel Barang -->
             <div class="overflow-x-auto">
-                <table class="min-w-full border border-gray-200 rounded-lg" id="poTable">
+                <table class="min-w-full border border-gray-400 rounded-lg" id="poTable">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-3 py-2 text-left text-sm font-medium text-gray-500">Kode Barang</th>
-                            <th class="px-3 py-2 text-left text-sm font-medium text-gray-500">Nama Barang</th>
-                            <th class="px-3 py-2 text-left text-sm font-medium text-gray-500">Jumlah</th>
-                            <th class="px-3 py-2 text-left text-sm font-medium text-gray-500">Harga</th>
-                            <th class="px-3 py-2 text-left text-sm font-medium text-gray-500">Subtotal</th>
-                            <th class="px-3 py-2 text-left text-sm font-medium text-gray-500">Aksi</th>
+                            <th class="border border-gray-400 p-2 rounded px-3 py-2 text-left text-sm font-medium text-gray-500">Kode Barang</th>
+                            <th class="border border-gray-400 p-2 rounded px-3 py-2 text-left text-sm font-medium text-gray-500">Nama Barang</th>
+                            <th class="border border-gray-400 p-2 rounded px-3 py-2 text-left text-sm font-medium text-gray-500">Jumlah</th>
+                            <th class="border border-gray-400 p-2 rounded px-3 py-2 text-left text-sm font-medium text-gray-500">Harga</th>
+                            <th class="border border-gray-400 p-2 rounded px-3 py-2 text-left text-sm font-medium text-gray-500">Subtotal</th>
+                            <th class="border border-gray-400 p-2 rounded px-3 py-2 text-left text-sm font-medium text-gray-500">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="poBody" class="bg-white divide-y divide-gray-200"></tbody>
+                    <tbody id="poBody" class="bg-white divide-y divide-gray-400"></tbody>
                 </table>
             </div>
 
             <div class="flex justify-between items-center">
                 <button type="button" id="addRow"
-                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow transition-all">
+                    class="bg-green-500 hover:bg-green-600 text-white border border-gray-400 p-2 px-4 py-2 rounded-lg shadow transition-all">
                     + Tambah Barang
                 </button>
 
@@ -105,13 +105,13 @@ function updateTotals() {
 
 function addRow() {
     let row = `
-        <tr class="row-item hover:bg-gray-50 transition">
-            <td><input type="text" name="items[${rowId}][code]" class="border p-1 w-full code rounded" list="productCodes">
+        <tr class="border border-gray-400 row-item hover:bg-gray-50 transition">
+            <td><input type="text" name="items[${rowId}][code]" class="border border-gray-400 p-1 w-full code rounded" list="productCodes">
                 <input type="hidden" name="items[${rowId}][product_id]" class="product_id"></td>
-            <td><input type="text" name="items[${rowId}][name]" class="border p-1 w-full name rounded" list="productNames"></td>
-            <td><input type="number" name="items[${rowId}][qty]" class="border p-1 w-full qty rounded" min="1" value="1"></td>
-            <td><input type="number" name="items[${rowId}][harga]" class="border p-1 w-full harga rounded" readonly></td>
-            <td><input type="number" class="border p-1 w-full subtotal rounded" readonly></td>
+            <td><input type="text" name="items[${rowId}][name]" class="border border-gray-400 p-1 w-full name rounded" list="productNames"></td>
+            <td><input type="number" name="items[${rowId}][qty]" class="border border-gray-400 p-1 w-full qty rounded" min="1" value="1"></td>
+            <td><input type="number" name="items[${rowId}][harga]" class="border border-gray-400 p-1 w-full harga rounded" readonly></td>
+            <td><input type="number" class="border border-gray-400 p-1 w-full subtotal rounded" readonly></td>
             <td><button type="button" class="remove bg-red-500 hover:bg-red-600 text-white px-2 rounded transition">X</button></td>
         </tr>
     `;

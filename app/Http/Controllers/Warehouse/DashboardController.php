@@ -16,6 +16,8 @@ class DashboardController extends Controller
 
         $today = Carbon::today();
         $totalProducts = $warehouse->products->count();
+        $totalStock = $warehouse->products->sum(fn($p) => $p->pivot->quantity);
+        $totalAsset = $warehouse->products->sum(fn($p) => $p->pivot->quantity * $p->price);
 
         // Barang keluar hari ini
         $todayOutTransactions = Transaction::where('warehouse_id', $warehouse->id)
@@ -69,7 +71,9 @@ class DashboardController extends Controller
             'topOutItems',
             'lowStockProducts',
             'monthlyOut',
-            'totalProducts'
+            'totalProducts',
+            'totalStock',
+            'totalAsset'
         ));
     }
 }

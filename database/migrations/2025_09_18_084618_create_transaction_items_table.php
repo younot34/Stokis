@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('transaction_id')->constrained()->cascadeOnDelete();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+            $table->string('product_code')->nullable();
             $table->string('product_name');
             $table->string('category_name')->nullable();
             $table->string('subcategory_name')->nullable();
             $table->integer('quantity');
             $table->decimal('price',12,2);
+            $table->decimal('total_price', 15,2);
             $table->text('note')->nullable();
             $table->timestamps();
         });

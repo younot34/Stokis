@@ -75,6 +75,9 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group
 
     // Reports
     Route::get('reports/outgoing', [ReportController::class, 'outgoing'])->name('reports.outgoing');
+
+    //stok pusat
+     Route::resource('central_stocks', App\Http\Controllers\Admin\CentralStockController::class);
 });
 
 Route::middleware(['auth','role:stokis'])->prefix('warehouse')->name('warehouse.')->group(function(){

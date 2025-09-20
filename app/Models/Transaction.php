@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
-    protected $fillable = ['code','warehouse_id','type','note','created_by'];
+    protected $fillable = ['code','warehouse_id','type','note','grand_total','created_by'];
 
     public function items() {
         return $this->hasMany(TransactionItem::class);

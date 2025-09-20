@@ -113,6 +113,13 @@ class PurchaseOrderController extends Controller
                     $product->id => ['quantity' => $currentQty + $approvedQty]
                 ]);
 
+                // ✅ Kurangi stok pusat
+                $centralStock = \App\Models\CentralStock::where('product_id', $product->id)->first();
+                if ($centralStock) {
+                    $newQty = max(0, $centralStock->quantity - $approvedQty); 
+                    $centralStock->update(['quantity' => $newQty]);
+                }
+
             }
         }
 

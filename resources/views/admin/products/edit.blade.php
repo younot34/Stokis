@@ -2,34 +2,34 @@
 @section('title','Edit Produk')
 @section('content')
 
-<div class="bg-white p-6 rounded-xl shadow-lg max-w-3xl mx-auto">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">✏️ Edit Produk</h2>
+<div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg max-w-3xl mx-auto">
+    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">✏️ Edit Produk</h2>
 
     <form action="{{ route('admin.products.update',$product->id) }}" method="POST" class="space-y-5">
         @csrf
         @method('PUT')
 
         <!-- Code -->
-        <div>
-            <label class="block font-medium text-gray-700 mb-1">Kode Produk</label>
+        <div class="mb-4">
+            <label class="block font-medium text-gray-700 dark:text-gray-200 mb-1">Kode Produk</label>
             <input type="text" name="code" value="{{ $product->code }}" required
-                   class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                   class="w-full border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
         </div>
 
         <!-- Nama -->
         <div>
-            <label class="block font-medium text-gray-700 mb-1">Nama Produk</label>
+            <label class="block font-medium text-gray-700 dark:text-gray-200 mb-1">Nama Produk</label>
             <input type="text" name="name" value="{{ $product->name }}" required
-                   class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                   class="w-full border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
         </div>
 
         <!-- Kategori Induk -->
         <div>
-            <label class="block font-medium text-gray-700 mb-1">Kategori Induk</label>
+            <label class="block font-medium text-gray-700 dark:text-gray-200 mb-1">Kategori Induk</label>
             <input list="parent-list" name="parent_name"
                    value="{{ optional($product->category->parent)->name }}"
                    placeholder="Ketik / pilih kategori induk"
-                   class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 parent-input" required>
+                   class="w-full border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500 parent-input" required>
             <datalist id="parent-list">
                 @foreach($parents as $parent)
                     <option value="{{ $parent->name }}">
@@ -39,11 +39,11 @@
 
         <!-- SubKategori -->
         <div>
-            <label class="block font-medium text-gray-700 mb-1">SubKategori</label>
+            <label class="block font-medium text-gray-700 dark:text-gray-200 mb-1">SubKategori</label>
             <input list="subcategory-list" name="subcategory_name"
                    value="{{ $product->category->name ?? '' }}"
                    placeholder="Ketik / pilih subkategori"
-                   class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 subcategory-input" required>
+                   class="w-full border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500 subcategory-input" required>
             <datalist id="subcategory-list">
                 @if($product->category && $product->category->parent)
                     @foreach($product->category->parent->children as $child)
@@ -55,18 +55,18 @@
 
         <!-- Harga -->
         <div>
-            <label class="block font-medium text-gray-700 mb-1">Harga</label>
+            <label class="block font-medium text-gray-700 dark:text-gray-200 mb-1">Harga</label>
             <div class="flex items-center">
-                <span class="px-3 py-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-600">Rp</span>
+                <span class="px-3 py-2 bg-gray-100 dark:bg-gray-600 border border-r-0 border-gray-400 dark:border-gray-600 rounded-l-lg text-gray-600 dark:text-gray-200">Rp</span>
                 <input type="number" name="price" value="{{ $product->price }}" required
-                       class="w-full border-gray-300 rounded-r-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                       class="w-full border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-r p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
             </div>
         </div>
 
         <!-- Tombol -->
         <div class="flex justify-end">
             <button type="submit"
-                    class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow transition">
+                    class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow transition">
                 💾 Update Produk
             </button>
         </div>
