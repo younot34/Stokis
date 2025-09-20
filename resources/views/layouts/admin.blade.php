@@ -82,10 +82,11 @@
         </div>
 
         <!-- Sidebar -->
-        <aside class="fixed md:static top-0 left-0 w-64 h-screen bg-gradient-to-b from-gray-900 to-gray-800
-            text-white p-5 transform md:translate-x-0 transition-all duration-300 z-30
-            overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900"
-            :class="openSidebar ? 'translate-x-0' : '-translate-x-full'">
+        <aside class="fixed top-0 left-0 w-64 h-screen bg-gradient-to-b from-gray-900 to-gray-800
+        text-white p-5 z-30
+        overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900
+        transform md:translate-x-0 transition-all duration-300"
+        :class="openSidebar ? 'translate-x-0' : '-translate-x-full'">
 
             <h1 class="text-2xl font-bold mb-8 hidden md:block">Admin Panel</h1>
             <nav>
@@ -93,7 +94,7 @@
                     <li>
                         <a href="{{ route('admin.dashboard') }}"
                            class="flex items-center gap-3 p-2 rounded-lg transition
-                           {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                           {{ request()->routeIs('admin.dashboard.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
                            <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                            Dashboard
                         </a>
@@ -167,7 +168,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 p-2 md:p-6 mt-16">
+        <main class="flex-1 p-2 md:p-6 mt-16 md:ml-64">
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition">
                 @yield('content')
             </div>

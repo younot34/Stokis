@@ -25,7 +25,7 @@
             <h3 class="text-lg font-semibold">Total Stok</h3>
             <p class="text-4xl font-bold mt-2">{{ $totalStock ?? 0 }}</p>
         </div>
-        <div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-6 rounded-xl shadow hover:shadow-lg transition">
+        <div class="bg-gradient-to-r from-red-400 to-red-600 text-white p-6 rounded-xl shadow hover:shadow-lg transition">
             <h3 class="text-lg font-semibold">Purchase Order</h3>
             <p class="text-4xl font-bold mt-2">{{ $totalPO ?? 0 }}</p>
         </div>

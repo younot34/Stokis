@@ -5,54 +5,56 @@
 
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <h1 class="text-3xl font-extrabold text-gray-900 mb-4 sm:mb-0">Buat Purchase Order</h1>
-        <span class="text-gray-600">Stokis: <strong>{{ $warehouse->name }}</strong></span>
+        <h1 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-4 sm:mb-0">Buat Purchase Order</h1>
+        <span class="text-gray-600 dark:text-gray-300">
+            Stokis: <strong>{{ $warehouse->name }}</strong>
+        </span>
     </div>
 
     <!-- Form PO -->
-    <div class="bg-white shadow-lg rounded-xl p-6">
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6">
         <form action="{{ route('warehouse.purchase_orders.store') }}" method="POST" class="space-y-6">
             @csrf
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="block font-semibold mb-1">Kode PO</label>
+                    <label class="block font-semibold mb-1 text-gray-800 dark:text-gray-200">Kode PO</label>
                     <input type="text" name="po_code" value="{{ $poCode }}" readonly
-                           class="border border-gray-400 p-2 rounded w-full bg-gray-100">
+                           class="border border-gray-400 dark:border-gray-600 p-2 rounded w-full bg-gray-100 dark:bg-gray-700 dark:text-gray-100">
                 </div>
 
                 <div>
-                    <label class="block font-semibold mb-1">Stokis</label>
+                    <label class="block font-semibold mb-1 text-gray-800 dark:text-gray-200">Stokis</label>
                     <input type="text" value="{{ $warehouse->name }}" readonly
-                           class="border border-gray-400 p-2 rounded w-full bg-gray-100">
+                           class="border border-gray-400 dark:border-gray-600 p-2 rounded w-full bg-gray-100 dark:bg-gray-700 dark:text-gray-100">
                     <input type="hidden" name="warehouse_id" value="{{ $warehouse->id }}">
                 </div>
             </div>
 
             <!-- Tabel Barang -->
             <div class="overflow-x-auto">
-                <table class="min-w-full border border-gray-400 rounded-lg" id="poTable">
-                    <thead class="bg-gray-50">
+                <table class="min-w-full border border-gray-400 dark:border-gray-600 rounded-lg" id="poTable">
+                    <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
-                            <th class="border border-gray-400 p-2 rounded px-3 py-2 text-left text-sm font-medium text-gray-500">Kode Barang</th>
-                            <th class="border border-gray-400 p-2 rounded px-3 py-2 text-left text-sm font-medium text-gray-500">Nama Barang</th>
-                            <th class="border border-gray-400 p-2 rounded px-3 py-2 text-left text-sm font-medium text-gray-500">Jumlah</th>
-                            <th class="border border-gray-400 p-2 rounded px-3 py-2 text-left text-sm font-medium text-gray-500">Harga</th>
-                            <th class="border border-gray-400 p-2 rounded px-3 py-2 text-left text-sm font-medium text-gray-500">Subtotal</th>
-                            <th class="border border-gray-400 p-2 rounded px-3 py-2 text-left text-sm font-medium text-gray-500">Aksi</th>
+                            <th class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Kode Barang</th>
+                            <th class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Nama Barang</th>
+                            <th class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Jumlah</th>
+                            <th class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Harga</th>
+                            <th class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Subtotal</th>
+                            <th class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="poBody" class="bg-white divide-y divide-gray-400"></tbody>
+                    <tbody id="poBody" class="bg-white dark:bg-gray-800 divide-y divide-gray-400 dark:divide-gray-600"></tbody>
                 </table>
             </div>
 
             <div class="flex justify-between items-center">
                 <button type="button" id="addRow"
-                    class="bg-green-500 hover:bg-green-600 text-white border border-gray-400 p-2 px-4 py-2 rounded-lg shadow transition-all">
+                    class="bg-green-500 hover:bg-green-600 text-white p-2 px-4 py-2 rounded-lg shadow transition-all">
                     + Tambah Barang
                 </button>
 
-                <div class="space-x-4 font-semibold text-gray-700">
+                <div class="space-x-4 font-semibold text-gray-700 dark:text-gray-200">
                     <span>Total Qty: <span id="totalQty">0</span></span>
                     <span>Total Harga: <span id="totalHarga">Rp 0</span></span>
                 </div>
@@ -105,13 +107,13 @@ function updateTotals() {
 
 function addRow() {
     let row = `
-        <tr class="border border-gray-400 row-item hover:bg-gray-50 transition">
-            <td><input type="text" name="items[${rowId}][code]" class="border border-gray-400 p-1 w-full code rounded" list="productCodes">
+        <tr class="border border-gray-400 dark:border-gray-600 row-item hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+            <td><input type="text" name="items[${rowId}][code]" class="border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 p-1 w-full code rounded" list="productCodes">
                 <input type="hidden" name="items[${rowId}][product_id]" class="product_id"></td>
-            <td><input type="text" name="items[${rowId}][name]" class="border border-gray-400 p-1 w-full name rounded" list="productNames"></td>
-            <td><input type="number" name="items[${rowId}][qty]" class="border border-gray-400 p-1 w-full qty rounded" min="1" value="1"></td>
-            <td><input type="number" name="items[${rowId}][harga]" class="border border-gray-400 p-1 w-full harga rounded" readonly></td>
-            <td><input type="number" class="border border-gray-400 p-1 w-full subtotal rounded" readonly></td>
+            <td><input type="text" name="items[${rowId}][name]" class="border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 p-1 w-full name rounded" list="productNames"></td>
+            <td><input type="number" name="items[${rowId}][qty]" class="border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 p-1 w-full qty rounded" min="1" value="1"></td>
+            <td><input type="number" name="items[${rowId}][harga]" class="border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 p-1 w-full harga rounded" readonly></td>
+            <td><input type="number" class="border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 p-1 w-full subtotal rounded" readonly></td>
             <td><button type="button" class="remove bg-red-500 hover:bg-red-600 text-white px-2 rounded transition">X</button></td>
         </tr>
     `;

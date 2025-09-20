@@ -62,9 +62,15 @@ class DashboardController extends Controller
             ->whereYear('created_at', $year)
             ->with('items')
             ->get()
-            ->flatMap(fn($tx) => $tx->items)
-            ->groupBy(fn($item) => $item->created_at->month)
-            ->map(fn($items) => $items->sum('quantity'));
+            ->flatMap(fn($tx) => $tx->items->map(fn($item) => [
+                'quantity' => $item->quantity,
+                'month' => $tx->created_at->month
+            ]))
+            ->groupBy('month')
+            ->map(fn($items) => collect($items)->sum('quantity'));
+
+        // Pastikan semua bulan ada
+        $monthlyOut = collect(range(1,12))->mapWithKeys(fn($m) => [$m => $monthlyOut[$m] ?? 0]);
 
         return view('warehouse.dashboard', compact(
             'todayOutProducts',
