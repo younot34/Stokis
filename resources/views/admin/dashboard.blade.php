@@ -3,15 +3,12 @@
 @section('title','Dashboard')
 
 @section('content')
-    <!-- Header -->
     <h2 class="text-2xl md:text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">
         Admin Dashboard
     </h2>
     <p class="text-gray-600 dark:text-gray-400 mb-8">
         Selamat datang, <span class="font-semibold">{{ auth()->user()->name }}</span> 👋
     </p>
-
-    <!-- Statistik Singkat -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
         <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow hover:shadow-lg transition">
             <h3 class="text-lg font-semibold">Total Stokis</h3>
@@ -30,8 +27,6 @@
             <p class="text-4xl font-bold mt-2">{{ $totalPO ?? 0 }}</p>
         </div>
     </div>
-
-    <!-- Purchase Order Terbaru -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 mb-10">
         <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Purchase Order Terbaru</h3>
         <div class="overflow-x-auto">
@@ -70,10 +65,7 @@
             </table>
         </div>
     </div>
-
-    <!-- Top Transaksi & Top Nominal -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Top Transaksi -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
             <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
                 🔝 Top Transaksi
@@ -103,8 +95,6 @@
                 </table>
             </div>
         </div>
-
-        <!-- Top Nominal Transaksi -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
             <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
                 💰 Top Nominal Transaksi

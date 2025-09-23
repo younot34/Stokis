@@ -3,20 +3,14 @@
 
 @section('content')
 <div class="space-y-8">
-
-    <!-- Header -->
     <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl p-6 shadow-lg">
         <h2 class="text-2xl font-bold">✏️ Edit Subkategori</h2>
         <p class="text-sm text-indigo-100">Kelola parent kategori dan daftar subkategori</p>
     </div>
-
-    <!-- Form Card -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition">
         <form action="{{ route('admin.categories.update', $category->id) }}" method="POST" class="space-y-6">
             @csrf
             @method('PUT')
-
-            <!-- Parent Kategori -->
             <div>
                 <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">Parent Kategori</label>
                 <input type="text" list="parentCategories" id="parentName" name="parentName"
@@ -30,8 +24,6 @@
                     @endforeach
                 </datalist>
             </div>
-
-            <!-- Subkategori -->
             <div id="subcategories" class="space-y-2">
                 @foreach($subcategories as $i => $sub)
                 <div class="flex space-x-2 items-center">
@@ -51,8 +43,6 @@
                     class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow transition">
                 ➕ Tambah Subkategori
             </button>
-
-            <!-- Tombol Aksi -->
             <div class="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700">
                 <a href="{{ route('admin.categories.index') }}"
                    class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg shadow transition">

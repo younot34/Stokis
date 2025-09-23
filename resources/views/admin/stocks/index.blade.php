@@ -7,7 +7,6 @@
     </h2>
 
     <form method="GET" action="{{ route('admin.stocks.index') }}" class="mb-6 flex flex-wrap items-center gap-3">
-        <!-- Filter Stokis -->
         <div>
             <label for="warehouse_id" class="text-gray-700 dark:text-gray-200 font-medium">Stokis:</label>
             <select name="warehouse_id" id="warehouse_id"
@@ -22,8 +21,6 @@
                 @endforeach
             </select>
         </div>
-
-        <!-- Filter Provinsi -->
         <div>
             <label for="province" class="text-gray-700 dark:text-gray-200 font-medium">Provinsi:</label>
             <select name="province" id="province"
@@ -38,8 +35,6 @@
                 @endforeach
             </select>
         </div>
-
-        <!-- Filter Kota -->
         <div>
             <label for="city" class="text-gray-700 dark:text-gray-200 font-medium">Kota:</label>
             <select name="city" id="city"
@@ -54,8 +49,6 @@
                 @endforeach
             </select>
         </div>
-
-        <!-- Tombol -->
         <button type="submit"
             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
             Filter
@@ -63,7 +56,6 @@
     </form>
 
     @foreach($warehouses as $warehouse)
-    <!-- Card stokis -->
     <div class="bg-gray-50 dark:bg-gray-800 shadow-sm rounded-lg p-5 mb-8">
         <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-100 mb-4">{{ $warehouse->name }}
             <span class="ml-3 text-sm font-normal text-gray-600 dark:text-gray-400">

@@ -3,14 +3,9 @@
 
 @section('content')
 <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg max-w-lg mx-auto">
-    <!-- Header -->
     <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">➕ Tambah Kategori</h2>
-
-    <!-- Form -->
     <form action="{{ route('admin.categories.store') }}" method="POST" class="space-y-5">
         @csrf
-
-        <!-- SubKategori -->
         <div>
             <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">SubKategori</label>
             <input type="text" name="names[]" value="{{ old('names.0') }}" required
@@ -23,8 +18,6 @@
                 ➕ Tambah data
             </button>
         </div>
-
-        <!-- Parent Kategori -->
         <div>
             <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Parent Kategori</label>
             <input list="parent-categories" name="parent_name" value="{{ old('parent_name') }}"
@@ -38,8 +31,6 @@
                 @endforeach
             </datalist>
         </div>
-
-        <!-- Tombol Aksi -->
         <div class="flex items-center justify-between">
             <a href="{{ route('admin.categories.index') }}"
                class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg shadow transition">
@@ -52,8 +43,6 @@
         </div>
     </form>
 </div>
-
-<!-- Script untuk tambah input -->
 <script>
     const addBtn = document.getElementById('add-name');
     const container = document.getElementById('extra-names');

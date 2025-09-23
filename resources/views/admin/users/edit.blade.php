@@ -8,22 +8,16 @@
     <form action="{{ route('admin.users.update',$user->id) }}" method="POST" class="space-y-5">
         @csrf
         @method('PUT')
-
-        <!-- Nama -->
         <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Nama</label>
             <input type="text" name="name" value="{{ $user->name }}" required
                    class="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
         </div>
-
-        <!-- Email -->
         <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Email</label>
             <input type="email" name="email" value="{{ $user->email }}" required
                    class="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
         </div>
-
-        <!-- Password -->
         <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                 Password <span class="text-gray-400 dark:text-gray-500 text-xs">(kosongkan jika tidak diubah)</span>
@@ -31,8 +25,6 @@
             <input type="password" name="password"
                    class="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
         </div>
-
-        <!-- Role -->
         <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Role</label>
             <select name="role" required
@@ -41,8 +33,6 @@
                 <option value="stokis" {{ $user->role=='stokis'?'selected':'' }}>Stokis</option>
             </select>
         </div>
-
-        <!-- Stokis -->
         <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                 Stokis <span class="text-gray-400 dark:text-gray-500 text-xs">(jika role stokis)</span>
@@ -57,8 +47,6 @@
                 @endforeach
             </select>
         </div>
-
-        <!-- Tombol Aksi -->
         <div class="flex justify-end space-x-3">
             <a href="{{ route('admin.users.index') }}"
                class="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 rounded-lg transition">

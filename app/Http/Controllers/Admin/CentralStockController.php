@@ -9,18 +9,17 @@ use Illuminate\Http\Request;
 
 class CentralStockController extends Controller
 {
+    /** @var \Illuminate\Pagination\LengthAwarePaginator $stocks */
     public function index(Request $request)
     {
         $query = CentralStock::with('product');
 
-        // Filter berdasarkan kode produk
         if ($request->filled('code')) {
             $query->whereHas('product', function ($q) use ($request) {
                 $q->where('code', 'like', '%' . $request->code . '%');
             });
         }
 
-        // Filter berdasarkan nama produk
         if ($request->filled('name')) {
             $query->whereHas('product', function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->name . '%');
@@ -46,10 +45,8 @@ class CentralStockController extends Controller
         ]);
 
         foreach ($request->product_id as $index => $productInput) {
-            // Ambil kode produk dari input
             $productCode = explode(' - ', $productInput)[0];
 
-            // Cari product id
             $product = Product::where('code', $productCode)->first();
 
             if ($product) {

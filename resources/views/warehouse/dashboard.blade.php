@@ -3,15 +3,11 @@
 
 @section('content')
 <div class="space-y-8">
-
-    <!-- Header -->
     <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl p-6 shadow-xl">
         <h2 class="text-2xl font-bold">Stokis Dashboard</h2>
         <p class="mt-2 text-gray-100 dark:text-gray-200">Selamat datang, <span class="font-semibold">{{ auth()->user()->name }}</span>!
         Berikut ringkasan <span class="font-semibold">{{ auth()->user()->warehouse->name ?? '-' }}</span>.</p>
     </div>
-
-    <!-- Summary Cards -->
     <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-10">
         <div class="bg-gradient-to-r from-blue-400 to-blue-600 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300">
             <h3 class="text-lg font-semibold">Total Barang</h3>
@@ -35,7 +31,6 @@
         </div>
     </div>
 
-    <!-- Barang Keluar Hari Ini -->
     <div class="bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-6 hover:shadow-2xl transition-shadow duration-300">
         <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">Barang Keluar Hari Ini ({{ \Carbon\Carbon::today()->format('d M Y') }})</h3>
         <div class="overflow-x-auto">
@@ -68,7 +63,6 @@
         </div>
     </div>
 
-    <!-- 10 Barang Keluar Terbanyak -->
     <div class="bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-6 hover:shadow-2xl transition-shadow duration-300">
         <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">10 Barang Keluar Terbanyak</h3>
         <div class="overflow-x-auto">
@@ -101,7 +95,6 @@
         </div>
     </div>
 
-    <!-- 10 Barang dengan Stok Kurang dari 10 -->
     <div class="bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-6 hover:shadow-2xl transition-shadow duration-300">
         <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">10 Barang dengan Stok Kurang dari 10</h3>
         <div class="overflow-x-auto">

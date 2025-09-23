@@ -3,8 +3,6 @@
 
 @section('content')
 <h2 class="text-2xl font-bold mb-5 text-gray-800 dark:text-gray-100">Laporan Barang Keluar</h2>
-
-<!-- Filter -->
 <form method="GET" class="mb-6 flex flex-wrap gap-4">
     <select name="warehouse_id"
         class="border border-gray-300 dark:border-gray-600 rounded p-2
@@ -35,8 +33,6 @@
         Filter
     </button>
 </form>
-
-<!-- Table -->
 <div class="bg-white dark:bg-gray-900 shadow-lg rounded-xl overflow-hidden">
     <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
         Transaksi

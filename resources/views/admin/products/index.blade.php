@@ -3,8 +3,6 @@
 @section('content')
 
 <div class="space-y-8">
-
-    <!-- Header -->
     <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl p-6 shadow-lg">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between">
             <h2 class="text-2xl font-bold">📦 List Produk</h2>
@@ -14,8 +12,6 @@
             </a>
         </div>
     </div>
-
-    <!-- Card Tabel -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition">
         <div class="overflow-x-auto">
             <table class="w-full border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">

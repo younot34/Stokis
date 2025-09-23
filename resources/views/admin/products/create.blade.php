@@ -3,7 +3,6 @@
 @section('content')
 
 <div class="max-w-6xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6">
-    <!-- Header -->
     <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100 border-b pb-3 border-gray-200 dark:border-gray-700">
         ➕ Tambah Produk
     </h2>
@@ -13,7 +12,6 @@
 
         <div id="product-rows" class="space-y-4">
             <div class="grid grid-cols-6 gap-3 items-start product-row">
-                <!-- Kode Produk -->
                 <div>
                     <label for="code-0" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Kode Produk
@@ -24,8 +22,6 @@
                                bg-white dark:bg-gray-700
                                text-gray-800 dark:text-gray-100" required>
                 </div>
-
-                <!-- Nama Produk -->
                 <div>
                     <label for="name-0" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Nama Produk
@@ -36,8 +32,6 @@
                                bg-white dark:bg-gray-700
                                text-gray-800 dark:text-gray-100" required>
                 </div>
-
-                <!-- Parent kategori -->
                 <div>
                     <label for="parent-0" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Kategori Induk
@@ -55,8 +49,6 @@
                         @endforeach
                     </datalist>
                 </div>
-
-                <!-- Subkategori -->
                 <div>
                     <label for="subcategory-0" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Subkategori
@@ -70,8 +62,6 @@
                         data-index="0" required>
                     <datalist id="subcategory-list-0"></datalist>
                 </div>
-
-                <!-- Harga -->
                 <div>
                     <label for="price-0" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Harga
@@ -82,15 +72,11 @@
                                bg-white dark:bg-gray-700
                                text-gray-800 dark:text-gray-100" required>
                 </div>
-
-                <!-- Hapus -->
                 <div class="flex items-end">
                     <button type="button" class="remove-row text-red-500 font-bold" style="display:none;">&times;</button>
                 </div>
             </div>
         </div>
-
-        <!-- Tombol -->
         <div class="mt-6 flex justify-between">
             <button type="button" id="addRow"
                 class="inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600

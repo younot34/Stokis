@@ -2,8 +2,6 @@
 @section('title','Stokis')
 
 @section('content')
-
-    <!-- Header -->
     <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">📦 Daftar Stokis</h2>
         <a href="{{ route('admin.warehouses.create') }}"
@@ -12,7 +10,6 @@
         </a>
     </div>
 
-    <!-- Tabel Stokis -->
     <div class="overflow-x-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg">
         <table class="w-full border-collapse">
             <thead>

@@ -3,7 +3,6 @@
 @section('content')
 <div class="mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6">
 
-    <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-4 sm:mb-0">Purchase Order</h2>
         <a href="{{ route('warehouse.purchase_orders.create') }}"
@@ -13,7 +12,6 @@
         </a>
     </div>
 
-    <!-- Tabel PO -->
     <div class="bg-white dark:bg-gray-900 shadow-lg rounded-xl overflow-hidden">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -65,7 +63,6 @@
             </table>
         </div>
 
-        <!-- Pagination -->
         <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
             {{ $purchaseOrders->links() }}
         </div>

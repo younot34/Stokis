@@ -8,22 +8,16 @@
     <form action="{{ route('admin.products.update',$product->id) }}" method="POST" class="space-y-5">
         @csrf
         @method('PUT')
-
-        <!-- Code -->
         <div class="mb-4">
             <label class="block font-medium text-gray-700 dark:text-gray-200 mb-1">Kode Produk</label>
             <input type="text" name="code" value="{{ $product->code }}" required
                    class="w-full border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
         </div>
-
-        <!-- Nama -->
         <div>
             <label class="block font-medium text-gray-700 dark:text-gray-200 mb-1">Nama Produk</label>
             <input type="text" name="name" value="{{ $product->name }}" required
                    class="w-full border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
         </div>
-
-        <!-- Kategori Induk -->
         <div>
             <label class="block font-medium text-gray-700 dark:text-gray-200 mb-1">Kategori Induk</label>
             <input list="parent-list" name="parent_name"
@@ -36,8 +30,6 @@
                 @endforeach
             </datalist>
         </div>
-
-        <!-- SubKategori -->
         <div>
             <label class="block font-medium text-gray-700 dark:text-gray-200 mb-1">SubKategori</label>
             <input list="subcategory-list" name="subcategory_name"
@@ -52,8 +44,6 @@
                 @endif
             </datalist>
         </div>
-
-        <!-- Harga -->
         <div>
             <label class="block font-medium text-gray-700 dark:text-gray-200 mb-1">Harga</label>
             <div class="flex items-center">
@@ -62,8 +52,6 @@
                        class="w-full border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-r p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
             </div>
         </div>
-
-        <!-- Tombol -->
         <div class="flex justify-end">
             <button type="submit"
                     class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow transition">

@@ -8,8 +8,6 @@
     <form action="{{ route('admin.warehouses.update', $warehouse->id) }}" method="POST" class="space-y-5">
         @csrf
         @method('PUT')
-
-        <!-- Nama Stokis -->
         <div>
             <label for="name" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Nama Stokis</label>
             <input type="text" name="name" id="name"
@@ -19,8 +17,6 @@
                           bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100
                           shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-4 py-2 transition" />
         </div>
-
-        <!-- Alamat -->
         <div>
             <label for="address" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Alamat</label>
             <input type="text" name="address" id="address"
@@ -29,8 +25,6 @@
                           bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100
                           shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-4 py-2 transition" />
         </div>
-
-        <!-- Edit Stokis -->
         <div>
             <label for="province" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Provinsi</label>
             <input type="text" name="province" id="province"
@@ -48,8 +42,6 @@
                         bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100
                         shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-4 py-2 transition" />
         </div>
-
-        <!-- Tombol Aksi -->
         <div class="flex items-center justify-between">
             <a href="{{ route('admin.warehouses.index') }}"
                class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow transition">

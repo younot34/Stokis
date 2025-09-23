@@ -9,8 +9,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
         <script>
         tailwind.config = { darkMode: 'class', }
-
-        // ⚡ Dark mode sebelum render
         if (localStorage.getItem('darkMode') === 'true' ||
             (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
@@ -21,40 +19,31 @@
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 font-sans text-gray-800 dark:text-gray-200">
 
-    <!-- Navbar -->
     <header class="flex items-center justify-between bg-white dark:bg-gray-800 shadow px-4 py-3
                 md:ml-64 fixed w-full md:w-[calc(100%-16rem)] z-40 transition-colors">
 
-        <!-- Left: Hamburger + Title (mobile only) -->
         <div class="flex items-center space-x-3 md:hidden">
-            <!-- Hamburger Button -->
             <button @click="openSidebar = !openSidebar"
                     class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
-            <!-- Admin Panel text (only on mobile) -->
             <h1 class="text-lg font-bold">Admin Panel</h1>
         </div>
 
-        <!-- Right: Actions -->
         <div class="flex items-center space-x-4 ml-auto">
-            <!-- Dark mode toggle -->
             <button @click="toggle()"
                     class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
                 <i x-show="!darkMode" data-lucide="moon" class="w-5 h-5"></i>
                 <i x-show="darkMode" data-lucide="sun" class="w-5 h-5"></i>
             </button>
-            <!-- Notification -->
             <button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
                 <i data-lucide="bell" class="w-5 h-5"></i>
             </button>
-            <!-- Profile Dropdown -->
             <div class="relative" x-data="{ openProfile: false }">
                 <button @click="openProfile = !openProfile" class="flex items-center space-x-2 focus:outline-none">
                     <img src="https://i.pravatar.cc/40" class="w-8 h-8 rounded-full" alt="profile">
                     <span class="hidden md:block font-medium">{{ auth()->user()->name }}</span>
                 </button>
-                <!-- Dropdown -->
                 <div x-show="openProfile" @click.away="openProfile = false"
                     x-transition
                     class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden z-50">
@@ -74,14 +63,12 @@
 
     <div class="flex min-h-screen relative">
 
-        <!-- Overlay (mobile only) -->
         <div class="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
              x-show="openSidebar"
              @click="openSidebar = false"
              x-transition.opacity>
         </div>
 
-        <!-- Sidebar -->
         <aside class="fixed top-0 left-0 w-64 h-screen bg-gradient-to-b from-gray-900 to-gray-800
         text-white p-5 z-30
         overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900
@@ -167,7 +154,6 @@
             </nav>
         </aside>
 
-        <!-- Main Content -->
         <main class="flex-1 p-2 md:p-6 mt-16 md:ml-64">
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition">
                 @yield('content')

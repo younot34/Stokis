@@ -3,12 +3,10 @@
 @section('content')
 <div class="mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6">
 
-    <!-- Header -->
     <div class="flex items-center justify-between">
         <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100">Barang Keluar</h2>
     </div>
 
-    <!-- Notifikasi -->
     @if(session('success'))
         <div class="bg-green-50 dark:bg-green-900 border-l-4 border-green-400 text-green-700 dark:text-green-200 p-4 rounded shadow">
             {{ session('success') }}
@@ -25,14 +23,11 @@
         </div>
     @endif
 
-    <!-- Form Barang Keluar -->
     <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6">
         <form action="{{ route('warehouse.transactions.store') }}" method="POST">
             @csrf
 
-            <!-- Kode Transaksi + Keterangan -->
             <div class="grid grid-cols-2 gap-6 mb-4">
-                <!-- Kode Transaksi -->
                 <div>
                     <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-200">Kode Transaksi</label>
                     <input type="text" name="code"
@@ -40,7 +35,6 @@
                         placeholder="Masukkan kode transaksi (contoh: TX-20240918001)" required>
                 </div>
 
-                <!-- Keterangan Transaksi -->
                 <div>
                     <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-200">Keterangan Transaksi</label>
                     <textarea name="note" rows="1"
@@ -49,12 +43,10 @@
                 </div>
             </div>
 
-            <!-- List produk -->
             <div id="items-wrapper" class="space-y-4">
                 <div class="item-block">
                     <div class="item-row grid grid-cols-7 gap-3 items-start">
 
-                        <!-- Kode Barang -->
                         <div class="flex flex-col">
                             <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Kode Barang</label>
                             <select name="items[0][product_code]"
@@ -72,7 +64,6 @@
                                 @endforeach
                             </select>
                         </div>
-                        <!-- Nama Barang -->
                         <div class="flex flex-col">
                             <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Nama Barang</label>
                             <select name="items[0][product_id]"
@@ -89,38 +80,32 @@
                                 @endforeach
                             </select>
                         </div>
-                        <!-- Kategori -->
                         <div class="flex flex-col">
                             <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Kategori</label>
                             <input type="text" name="items[0][category]"
                                 class="category border border-gray-400 dark:border-gray-600 px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" readonly>
                         </div>
-                        <!-- Subkategori -->
                         <div class="flex flex-col">
                             <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Subkategori</label>
                             <input type="text" name="items[0][subcategory]"
                                 class="subcategory border border-gray-400 dark:border-gray-600 px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" readonly>
                         </div>
-                         <!-- Jumlah -->
                         <div class="flex flex-col">
                             <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Qty</label>
                             <input type="number" name="items[0][quantity]" value="1"
                                 class="quantity border border-gray-400 dark:border-gray-600 px-2 py-1 w-20 text-center rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
                         </div>
-                        <!-- Harga -->
                         <div class="flex flex-col">
                             <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Harga</label>
                             <input type="number" name="items[0][price]"
                                 class="price border border-gray-400 dark:border-gray-600 px-2 py-1 text-right rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" readonly>
                         </div>
-                        <!-- Total Harga -->
                         <div class="flex flex-col">
                             <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Total</label>
                             <input type="number" name="items[0][total_price]"
                                 class="total-price border border-gray-400 dark:border-gray-600 px-2 py-1 text-right rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" readonly>
                         </div>
                     </div>
-                    <!-- Keterangan -->
                     <div class="flex flex-col mt-2">
                         <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Keterangan</label>
                         <input type="text" name="items[0][note]" placeholder="Keterangan" class="note border border-gray-400 dark:border-gray-600 dark:bg-gray-800
@@ -129,17 +114,14 @@
                 </div>
             </div>
 
-            <!-- Tombol tambah row -->
             <button type="button" id="addRow" class="mt-3 bg-gray-200 dark:bg-gray-600 text-gray-900 dark:text-gray-100 px-3 py-1 rounded">+ Tambah Barang</button>
 
-            <!-- Submit -->
             <div class="mt-4">
                 <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
                     Simpan Transaksi
                 </button>
             </div>
         </form>
-        <!-- Grand Total -->
         <div class="mt-6 flex justify-end">
             <div>
                 <label class="block text-right font-bold mb-1 text-gray-700 dark:text-gray-200">Total Transaksi:</label>
@@ -149,7 +131,6 @@
         </div>
     </div>
 
-    <!-- Tabel Transaksi Terakhir -->
     <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl overflow-hidden">
         <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100 px-6 py-4 border-b border-gray-200 dark:border-gray-700">Transaksi Terakhir</h3>
         <div class="overflow-x-auto">

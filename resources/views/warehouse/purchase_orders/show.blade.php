@@ -6,7 +6,6 @@
         Detail Purchase Order
     </h2>
 
-    <!-- Informasi PO -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-gray-700 dark:text-gray-300">
         <p><span class="font-semibold dark:text-gray-200">Kode PO:</span> {{ $po->po_code }}</p>
         <p><span class="font-semibold dark:text-gray-200">Stokis:</span> {{ $po->warehouse->name }}</p>
@@ -23,7 +22,6 @@
         </p>
     </div>
 
-    <!-- Tabel Item PO -->
     <div class="overflow-x-auto">
         <table class="w-full border-collapse">
             <thead>

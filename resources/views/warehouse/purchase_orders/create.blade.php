@@ -3,7 +3,6 @@
 @section('content')
 <div class="mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6">
 
-    <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <h1 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-4 sm:mb-0">Buat Purchase Order</h1>
         <span class="text-gray-600 dark:text-gray-300">
@@ -11,7 +10,6 @@
         </span>
     </div>
 
-    <!-- Form PO -->
     <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6">
         <form action="{{ route('warehouse.purchase_orders.store') }}" method="POST" class="space-y-6">
             @csrf
@@ -31,7 +29,6 @@
                 </div>
             </div>
 
-            <!-- Tabel Barang -->
             <div class="overflow-x-auto">
                 <table class="min-w-full border border-gray-400 dark:border-gray-600 rounded-lg" id="poTable">
                     <thead class="bg-gray-50 dark:bg-gray-700">
@@ -70,7 +67,6 @@
     </div>
 </div>
 
-<!-- Datalist untuk autocomplete -->
 <datalist id="productCodes">
     @foreach($products as $product)
         <option value="{{ $product->code }}" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}">

@@ -7,8 +7,6 @@
     <form action="{{ route('admin.central_stocks.update',$central_stock->id) }}" method="POST" class="space-y-4">
         @csrf
         @method('PUT')
-
-        <!-- Pilih Produk -->
         <div>
             <label for="product_id" class="block mb-2 text-gray-700 dark:text-gray-300">Produk</label>
             <select name="product_id" id="product_id" required
@@ -21,8 +19,6 @@
                 @endforeach
             </select>
         </div>
-
-        <!-- Jumlah -->
         <div>
             <label for="quantity" class="block mb-2 text-gray-700 dark:text-gray-300">Jumlah Masuk</label>
             <input type="number" name="quantity" id="quantity" required min="1"
@@ -30,8 +26,6 @@
                    class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 w-full
                                bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100">
         </div>
-
-        <!-- Aksi -->
         <div class="flex justify-between">
             <a href="{{ route('admin.central_stocks.index') }}" class="bg-gray-500 hover:bg-gray-600 px-4 py-2 rounded-lg text-white">⬅️ Kembali</a>
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg text-white">💾 Update</button>

@@ -2,8 +2,6 @@
 @section('title','Stok Pusat')
 
 @section('content')
-
-    <!-- Header -->
     <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">📦 Stok Pusat</h2>
         <a href="{{ route('admin.central_stocks.create') }}"
@@ -11,10 +9,8 @@
             ➕ Tambah Stok
         </a>
     </div>
-    <!-- Filter -->
     <div class="mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
         <form method="GET" action="{{ route('admin.central_stocks.index') }}" class="flex flex-wrap gap-4">
-            <!-- Kode Produk -->
             <div>
                 <label for="code" class="block text-sm text-gray-700 dark:text-gray-300 mb-1">Kode Produk</label>
                 <input type="text" name="code" id="code" value="{{ request('code') }}"
@@ -23,7 +19,6 @@
                             bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100">
             </div>
 
-            <!-- Nama Produk -->
             <div>
                 <label for="name" class="block text-sm text-gray-700 dark:text-gray-300 mb-1">Nama Produk</label>
                 <input type="text" name="name" id="name" value="{{ request('name') }}"
@@ -32,7 +27,6 @@
                             bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100">
             </div>
 
-            <!-- Tombol -->
             <div class="flex items-end gap-2">
                 <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
                     🔍 Cari
@@ -44,7 +38,6 @@
         </form>
     </div>
 
-    <!-- Tabel -->
     <div class="overflow-x-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg">
         <table class="w-full border-collapse">
             <thead>
@@ -90,7 +83,6 @@
         </table>
     </div>
 
-    <!-- Pagination -->
     <div class="mt-4">
         {{ $stocks->links() }}
     </div>

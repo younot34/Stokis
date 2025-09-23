@@ -5,8 +5,6 @@
     <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100 border-b border-gray-300 dark:border-gray-700 pb-3">
         Detail Purchase Order
     </h2>
-
-    <!-- Informasi PO -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-gray-700 dark:text-gray-300">
         <p><span class="font-semibold">Kode PO:</span> {{ $po->po_code }}</p>
         <p><span class="font-semibold">Stokis:</span> {{ $po->warehouse->name }}</p>
@@ -22,12 +20,8 @@
             </span>
         </p>
     </div>
-
-    <!-- Form Approve -->
     <form action="{{ route('admin.purchase_orders.approve',$po->id) }}" method="POST" class="space-y-6">
         @csrf
-
-        <!-- Tabel Item PO -->
         <div class="overflow-x-auto">
             <table class="w-full border-collapse">
                 <thead>
@@ -91,8 +85,6 @@
                 </tfoot>
             </table>
         </div>
-
-        <!-- Tombol Approve -->
         @if($po->status == 'pending')
         <div class="flex justify-end">
             <button type="submit"
