@@ -9,9 +9,26 @@ use Illuminate\Http\Request;
 
 class CentralStockController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $stocks = CentralStock::with('product')->latest()->paginate(10);
+        $query = CentralStock::with('product');
+
+        // Filter berdasarkan kode produk
+        if ($request->filled('code')) {
+            $query->whereHas('product', function ($q) use ($request) {
+                $q->where('code', 'like', '%' . $request->code . '%');
+            });
+        }
+
+        // Filter berdasarkan nama produk
+        if ($request->filled('name')) {
+            $query->whereHas('product', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->name . '%');
+            });
+        }
+
+        $stocks = $query->latest()->paginate(10)->withQueryString();
+
         return view('admin.central_stocks.index', compact('stocks'));
     }
 
@@ -23,22 +40,25 @@ class CentralStockController extends Controller
 
     public function store(Request $request)
     {
-        $productInput = $request->product_id;
-
-        // Ambil kode produk dari input
-        $productCode = explode(' - ', $productInput)[0];
-
-        // Cari product id
-        $product = Product::where('code', $productCode)->firstOrFail();
-
         $request->validate([
-            'quantity'   => 'required|integer|min:1',
+            'product_id.*' => 'required|string',
+            'quantity.*'   => 'required|integer|min:1',
         ]);
 
-        CentralStock::create([
-            'product_id' => $product->id,
-            'quantity'   => $request->quantity,
-        ]);
+        foreach ($request->product_id as $index => $productInput) {
+            // Ambil kode produk dari input
+            $productCode = explode(' - ', $productInput)[0];
+
+            // Cari product id
+            $product = Product::where('code', $productCode)->first();
+
+            if ($product) {
+                CentralStock::create([
+                    'product_id' => $product->id,
+                    'quantity'   => $request->quantity[$index],
+                ]);
+            }
+        }
 
         return redirect()->route('admin.central_stocks.index')->with('success', 'Stok berhasil ditambahkan!');
     }

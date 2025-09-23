@@ -82,7 +82,6 @@
                 <table class="min-w-full text-sm text-left border border-gray-200 dark:border-gray-700 rounded-lg">
                     <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
                         <tr>
-                            <th class="py-3 px-4">Kode Transaksi</th>
                              <th class="py-3 px-4">Stokis</th>
                              <th class="py-3 px-4">Kota</th>
                             <th class="py-3 px-4 text-center">Jumlah Item</th>
@@ -90,18 +89,15 @@
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                         @forelse($topTransactions as $tx)
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                <td class="py-3 px-4 font-medium">{{ $tx->code }}</td>
-                                <td class="py-3 px-4">{{ $tx->warehouse->name ?? '-' }}</td>
-                                <td class="py-3 px-4">{{ $tx->warehouse->city ?? '-' }}</td>
-                                <td class="py-3 px-4 text-center">{{ $tx->items_count }}</td>
-                            </tr>
+                        <tr>
+                            <td class="py-3 px-4 font-medium">{{ $tx->name }}</td>
+                            <td class="py-3 px-4">{{ $tx->city }}</td>
+                            <td class="py-3 px-4 text-center">{{ $tx->total_items }}</td>
+                        </tr>
                         @empty
-                            <tr>
-                                <td colspan="2" class="text-center py-6 text-gray-500 dark:text-gray-400">
-                                    Belum ada data.
-                                </td>
-                            </tr>
+                        <tr>
+                            <td colspan="3" class="text-center py-6 text-gray-500">Belum ada data.</td>
+                        </tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -117,7 +113,6 @@
                 <table class="min-w-full text-sm text-left border border-gray-200 dark:border-gray-700 rounded-lg">
                     <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
                         <tr>
-                            <th class="py-3 px-4">Kode Transaksi</th>
                             <th class="py-3 px-4">Stokis</th>
                             <th class="py-3 px-4">Kota</th>
                             <th class="py-3 px-4 text-right">Total</th>
@@ -125,20 +120,17 @@
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                         @forelse($topNominals as $tx)
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                <td class="py-3 px-4 font-medium">{{ $tx->code }}</td>
-                                <td class="py-3 px-4">{{ $tx->warehouse->name ?? '-' }}</td>
-                                <td class="py-3 px-4">{{ $tx->warehouse->city ?? '-' }}</td>
-                                <td class="py-3 px-4 text-right">
-                                    Rp {{ number_format($tx->grand_total,0,',','.') }}
-                                </td>
-                            </tr>
+                        <tr>
+                            <td class="py-3 px-4 font-medium">{{ $tx->name ?? '-' }}</td>
+                            <td class="py-3 px-4">{{ $tx->city ?? '-' }}</td>
+                            <td class="py-3 px-4 text-right">
+                                Rp {{ number_format($tx->total_nominal,0,',','.') }}
+                            </td>
+                        </tr>
                         @empty
-                            <tr>
-                                <td colspan="2" class="text-center py-6 text-gray-500 dark:text-gray-400">
-                                    Belum ada data.
-                                </td>
-                            </tr>
+                        <tr>
+                            <td colspan="3" class="text-center py-6 text-gray-500">Belum ada data.</td>
+                        </tr>
                         @endforelse
                     </tbody>
                 </table>

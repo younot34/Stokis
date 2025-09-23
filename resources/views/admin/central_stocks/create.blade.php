@@ -2,42 +2,71 @@
 @section('title','Tambah Stok Pusat')
 
 @section('content')
-<div class="max-w-xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+<div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
     <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">➕ Tambah Stok Pusat</h2>
+
     <form action="{{ route('admin.central_stocks.store') }}" method="POST" class="space-y-4">
         @csrf
 
-        <!-- Pilih Produk -->
-        <div>
-            <label for="product_id" class="block mb-2 text-gray-700 dark:text-gray-300">Produk</label>
-            <input list="product-list" id="product_id" name="product_id" required
-                placeholder="Ketik / pilih produk"
-                class="border border-gray-300 dark:border-gray-600
-                    rounded-lg px-3 py-2 w-full
-                    bg-white dark:bg-gray-700
-                    text-gray-800 dark:text-gray-100">
-            <datalist id="product-list">
-                @foreach($products as $product)
-                    <option value="{{ $product->code }} - {{ $product->name }}">
-                @endforeach
-            </datalist>
+        <div id="stock-items">
+            <div class="stock-row flex gap-4 mb-3">
+                <!-- Produk -->
+                <div class="flex-1">
+                    <label class="block mb-1 text-gray-700 dark:text-gray-300">Produk</label>
+                    <input list="product-list" name="product_id[]" required
+                        placeholder="Ketik / pilih produk"
+                        class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 w-full
+                               bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100">
+                </div>
+
+                <!-- Jumlah -->
+                <div class="w-32">
+                    <label class="block mb-1 text-gray-700 dark:text-gray-300">Jumlah</label>
+                    <input type="number" name="quantity[]" required min="1"
+                           class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 w-full
+                                  bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100">
+                </div>
+
+                <!-- Hapus baris -->
+                <button type="button" onclick="removeRow(this)"
+                    class="self-end bg-red-500 text-white px-3 py-2 rounded-lg">✖</button>
+            </div>
         </div>
 
-        <!-- Jumlah -->
-        <div>
-            <label for="quantity" class="block mb-2 text-gray-700 dark:text-gray-300">Jumlah Masuk</label>
-            <input type="number" name="quantity" id="quantity" required min="1"
-                   class="border border-gray-300 dark:border-gray-600
-                               rounded-lg px-3 py-2 w-full
-                               bg-white dark:bg-gray-700
-                               text-gray-800 dark:text-gray-100">
-        </div>
+        <!-- Tombol tambah baris -->
+        <button type="button" onclick="addRow()"
+            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">+ Tambah Produk</button>
 
         <!-- Aksi -->
-        <div class="flex justify-between">
+        <div class="flex justify-between mt-6">
             <a href="{{ route('admin.central_stocks.index') }}" class="bg-gray-500 hover:bg-gray-600 px-4 py-2 rounded-lg text-white">⬅️ Kembali</a>
             <button type="submit" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg text-white">✅ Simpan</button>
         </div>
     </form>
+
+    <!-- datalist produk -->
+    <datalist id="product-list">
+        @foreach($products as $product)
+            <option value="{{ $product->code }} - {{ $product->name }}">
+        @endforeach
+    </datalist>
 </div>
+
+<script>
+function addRow() {
+    let container = document.getElementById('stock-items');
+    let row = container.querySelector('.stock-row').cloneNode(true);
+
+    // reset input value
+    row.querySelectorAll('input').forEach(input => input.value = '');
+    container.appendChild(row);
+}
+
+function removeRow(btn) {
+    let container = document.getElementById('stock-items');
+    if (container.querySelectorAll('.stock-row').length > 1) {
+        btn.parentElement.remove();
+    }
+}
+</script>
 @endsection
