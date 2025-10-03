@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\PurchaseOrder;
+use App\Models\PurchaseOrderRecap;
 use App\Models\Product;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
@@ -18,7 +19,9 @@ class PurchaseOrderController extends Controller
             'items.product',
             'requester',
             'approver'
-        ])->latest()->get();
+        ])
+        ->where('po_code', 'LIKE', 'AGT%')
+        ->latest()->get();
 
         return view('admin.purchase_orders.index', compact('orders'));
     }
@@ -26,13 +29,13 @@ class PurchaseOrderController extends Controller
     {
         $user = auth()->user();
 
-        // Ambil hanya PO yang dibuat oleh stokis ini, dengan itemnya
-        $purchaseOrders = \App\Models\PurchaseOrder::with('items.product')
+        // Ambil data dari tabel recap, bukan PO biasa
+        $purchaseOrderRecaps = \App\Models\PurchaseOrderRecap::with(['items.product', 'discountItems.product', 'warehouse', 'requester'])
             ->where('warehouse_id', $user->warehouse_id)
             ->latest()
             ->paginate(10);
 
-        return view('warehouse.purchase_orders.index', compact('purchaseOrders'));
+        return view('warehouse.purchase_orders.index', compact('purchaseOrderRecaps'));
     }
     private function generatePoCode($warehouse)
     {
@@ -83,11 +86,57 @@ class PurchaseOrderController extends Controller
         // Simpan detail barang
         foreach ($request->items as $item) {
             $product = Product::find($item['product_id']);
-            $po->items()->create([
-                'product_id' => $product->id,
-                'quantity_requested' => $item['qty'],
-                'price' => $product->price,
-            ]);
+            $useDiscount = $item['use_discount'] ?? false;
+
+            if ($useDiscount && ($product->discount || $product->discount_price)) {
+                // PO Diskon
+                $finalPrice = $product->final_price;
+
+                $po->discountItems()->create([
+                    'product_id' => $product->id,
+                    'quantity_requested' => $item['qty'],
+                    'price' => $product->price,
+                    'discount' => $product->discount,
+                    'final_price' => $finalPrice,
+                ]);
+            } else {
+                // PO Normal
+                $po->items()->create([
+                    'product_id' => $product->id,
+                    'quantity_requested' => $item['qty'],
+                    'price' => $product->price,
+                ]);
+            }
+        }
+        // Buat PO recap
+        $poRecap = \App\Models\PurchaseOrderRecap::create([
+            'po_code' => $po->po_code,
+            'warehouse_id' => $warehouse->id,
+            'requested_by' => Auth::id(),
+            'status' => 'pending',
+        ]);
+        // Simpan item normal
+        foreach ($request->items as $item) {
+            $product = Product::find($item['product_id']);
+            $useDiscount = $item['use_discount'] ?? false;
+
+            if ($useDiscount && ($product->discount || $product->discount_price)) {
+                $finalPrice = $product->final_price;
+
+                $poRecap->discountItems()->create([
+                    'product_id' => $product->id,
+                    'quantity_requested' => $item['qty'],
+                    'price' => $product->price,
+                    'discount' => $product->discount,
+                    'final_price' => $finalPrice,
+                ]);
+            } else {
+                $poRecap->items()->create([
+                    'product_id' => $product->id,
+                    'quantity_requested' => $item['qty'],
+                    'price' => $product->price,
+                ]);
+            }
         }
 
         return redirect()
@@ -98,14 +147,79 @@ class PurchaseOrderController extends Controller
     // Admin approve PO
     public function approve(Request $request, PurchaseOrder $purchaseOrder)
     {
-        foreach ($request->items as $itemId => $approvedQty) {
+        $poRecap = \App\Models\PurchaseOrderRecap::where('po_code', $purchaseOrder->po_code)->first();
+        if (!$poRecap) {
+            // fallback: buat recap kalau belum ada
+            $poRecap = \App\Models\PurchaseOrderRecap::create([
+                'po_code' => $purchaseOrder->po_code,
+                'warehouse_id' => $purchaseOrder->warehouse_id,
+                'requested_by' => $purchaseOrder->requested_by,
+                'status' => 'pending',
+            ]);
+
+            // salin semua item
+            foreach ($purchaseOrder->items as $item) {
+                $poRecap->items()->create([
+                    'product_id' => $item->product_id,
+                    'quantity_requested' => $item->quantity_requested,
+                    'price' => $item->price,
+                ]);
+            }
+            foreach ($purchaseOrder->discountItems as $item) {
+                $poRecap->discountItems()->create([
+                    'product_id' => $item->product_id,
+                    'quantity_requested' => $item->quantity_requested,
+                    'price' => $item->price,
+                    'discount' => $item->discount,
+                    'final_price' => $item->final_price,
+                ]);
+            }
+        }
+
+        $errors = [];
+
+        // ✅ Cek stok untuk items normal
+        foreach ($request->items ?? [] as $itemId => $approvedQty) {
+            $item = $purchaseOrder->items()->find($itemId);
+            if ($item) {
+                $centralStock = \App\Models\CentralStock::where('product_id', $item->product_id)->first();
+                $available = $centralStock?->quantity ?? 0;
+
+                if ($approvedQty > $available) {
+                    $errors[] = "Stok pusat produk {$item->product->name} tidak mencukupi.
+                                Diminta: {$approvedQty}, tersedia: {$available}";
+                }
+            }
+        }
+
+        // ✅ Cek stok untuk items diskon
+        foreach ($request->discount_items ?? [] as $itemId => $approvedQty) {
+            $item = $purchaseOrder->discountItems()->find($itemId);
+            if ($item) {
+                $centralStock = \App\Models\CentralStock::where('product_id', $item->product_id)->first();
+                $available = $centralStock?->quantity ?? 0;
+
+                if ($approvedQty > $available) {
+                    $errors[] = "Stok pusat produk {$item->product->name} tidak mencukupi.
+                                Diminta: {$approvedQty}, tersedia: {$available}";
+                }
+            }
+        }
+
+        // Kalau ada error stok, hentikan approve
+        if (!empty($errors)) {
+            return back()->withErrors($errors)->withInput();
+        }
+
+        // ✅ Kalau stok cukup, lanjut proses approve
+        foreach ($request->items ?? [] as $itemId => $approvedQty) {
             $item = $purchaseOrder->items()->find($itemId);
             if ($item) {
                 $item->update([
-                    'quantity_approved' => $approvedQty
+                    'quantity_approved' => $approvedQty,
+                    'subtotal' => $approvedQty * $item->price,
                 ]);
 
-                // update stok per produk
                 $warehouse = $purchaseOrder->warehouse;
                 $product = $item->product;
                 $currentQty = $warehouse->products()->where('product_id',$product->id)->first()?->pivot->quantity ?? 0;
@@ -113,16 +227,104 @@ class PurchaseOrderController extends Controller
                     $product->id => ['quantity' => $currentQty + $approvedQty]
                 ]);
 
-                // ✅ Kurangi stok pusat
+                // Kurangi stok pusat
                 $centralStock = \App\Models\CentralStock::where('product_id', $product->id)->first();
                 if ($centralStock) {
-                    $newQty = max(0, $centralStock->quantity - $approvedQty); 
+                    $newQty = max(0, $centralStock->quantity - $approvedQty);
                     $centralStock->update(['quantity' => $newQty]);
                 }
-
             }
         }
 
+        foreach ($request->discount_items ?? [] as $itemId => $approvedQty) {
+            $discountItem = $purchaseOrder->discountItems()->find($itemId);
+            if ($discountItem) {
+                $discountItem->update([
+                    'quantity_approved' => $approvedQty,
+                    'subtotal' => $approvedQty * $discountItem->final_price,
+                ]);
+
+                $warehouse = $purchaseOrder->warehouse;
+                $product   = $discountItem->product;
+                $currentQty = $warehouse->products()
+                    ->where('product_id', $product->id)
+                    ->first()?->pivot->quantity ?? 0;
+
+                $warehouse->products()->syncWithoutDetaching([
+                    $product->id => ['quantity' => $currentQty + $approvedQty]
+                ]);
+
+                // Kurangi stok pusat
+                $centralStock = \App\Models\CentralStock::where('product_id', $product->id)->first();
+                if ($centralStock) {
+                    $newQty = max(0, $centralStock->quantity - $approvedQty);
+                    $centralStock->update(['quantity' => $newQty]);
+                }
+            }
+        }
+        // Normal items
+        foreach ($request->items ?? [] as $itemId => $approvedQty) {
+            $item = $purchaseOrder->items()->find($itemId);
+            if ($item) {
+                $item->update([
+                    'quantity_approved' => $approvedQty,
+                    'subtotal' => $approvedQty * $item->price,
+                ]);
+
+                // Update recap
+                $recapItem = $poRecap->items()->where('product_id', $item->product_id)->first();
+                if ($recapItem) {
+                    $recapItem->update(['quantity_approved' => $approvedQty]);
+                }
+
+                // Update stok warehouse & central stock
+                $warehouse = $purchaseOrder->warehouse;
+                $currentQty = $warehouse->products()->where('product_id',$item->product_id)->first()?->pivot->quantity ?? 0;
+                $warehouse->products()->syncWithoutDetaching([
+                    $item->product_id => ['quantity' => $currentQty + $approvedQty]
+                ]);
+
+                $centralStock = \App\Models\CentralStock::where('product_id', $item->product_id)->first();
+                if ($centralStock) {
+                    $centralStock->decrement('quantity', $approvedQty);
+                }
+            }
+        }
+
+        // Discount items
+        foreach ($request->discount_items ?? [] as $itemId => $approvedQty) {
+            $item = $purchaseOrder->discountItems()->find($itemId);
+            if ($item) {
+                $item->update([
+                    'quantity_approved' => $approvedQty,
+                    'subtotal' => $approvedQty * $item->final_price,
+                ]);
+
+                // Update recap
+                $recapItem = $poRecap->discountItems()->where('product_id', $item->product_id)->first();
+                if ($recapItem) {
+                    $recapItem->update(['quantity_approved' => $approvedQty]);
+                }
+
+                // Update stok warehouse & central stock
+                $warehouse = $purchaseOrder->warehouse;
+                $currentQty = $warehouse->products()->where('product_id',$item->product_id)->first()?->pivot->quantity ?? 0;
+                $warehouse->products()->syncWithoutDetaching([
+                    $item->product_id => ['quantity' => $currentQty + $approvedQty]
+                ]);
+
+                $centralStock = \App\Models\CentralStock::where('product_id', $item->product_id)->first();
+                if ($centralStock) {
+                    $centralStock->decrement('quantity', $approvedQty);
+                }
+            }
+        }
+
+        // Update status PO dan recap
+        $poRecap->update([
+            'status' => 'approved',
+            'approved_by'=>Auth::id()
+        ]);
         $purchaseOrder->update([
             'status' => 'approved',
             'approved_by'=>Auth::id()
@@ -130,20 +332,21 @@ class PurchaseOrderController extends Controller
 
         return back()->with('success','PO approved');
     }
-    public function show(PurchaseOrder $purchaseOrder)
+    public function show(PurchaseOrderRecap $poRecap)
     {
-        $purchaseOrder->load('items.product','warehouse','requester');
-        return view('admin.purchase_orders.show', ['po' => $purchaseOrder]);
+        $poRecap->load('items.product', 'discountItems.product', 'warehouse', 'requester');
+        return view('admin.purchase_orders.show', ['po' => $poRecap]);
+    }
+    public function showWarehouseRecap($poId)
+    {
+        $user = auth()->user();
+
+        $po = \App\Models\PurchaseOrderRecap::with(['items.product', 'discountItems.product', 'warehouse'])
+            ->where('id', $poId)
+            ->where('warehouse_id', $user->warehouse_id)
+            ->firstOrFail();
+
+        return view('warehouse.purchase_orders.show', compact('po'));
     }
 
-    public function showWarehouse(PurchaseOrder $purchaseOrder)
-    {
-        // pastikan PO ini hanya bisa dilihat oleh warehouse yang sama
-        if ($purchaseOrder->warehouse_id !== auth()->user()->warehouse_id) {
-            abort(403, 'Tidak boleh akses PO ini');
-        }
-
-        $purchaseOrder->load('items.product','warehouse','requester');
-        return view('warehouse.purchase_orders.show', ['po' => $purchaseOrder]);
-    }
 }

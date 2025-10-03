@@ -22,7 +22,31 @@
             </ul>
         </div>
     @endif
+    <datalist id="productCodesAll">
+        @foreach($allItems as $item)
+            <option value="{{ $item['code'] }}"
+                data-id="{{ $item['id'] }}"
+                data-name="{{ $item['name'] }}"
+                data-category="{{ $item['category'] }}"
+                data-subcategory="{{ $item['subcategory'] }}"
+                data-price="{{ $item['price'] }}"
+                data-type="{{ $item['type'] }}">
+            </option>
+        @endforeach
+    </datalist>
 
+    <datalist id="productNamesAll">
+        @foreach($allItems as $item)
+            <option value="{{ $item['name'] }}"
+                data-id="{{ $item['id'] }}"
+                data-code="{{ $item['code'] }}"
+                data-category="{{ $item['category'] }}"
+                data-subcategory="{{ $item['subcategory'] }}"
+                data-price="{{ $item['price'] }}"
+                data-type="{{ $item['type'] }}">
+            </option>
+        @endforeach
+    </datalist>
     <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6">
         <form action="{{ route('warehouse.transactions.store') }}" method="POST">
             @csrf
@@ -49,36 +73,19 @@
 
                         <div class="flex flex-col">
                             <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Kode Barang</label>
-                            <select name="items[0][product_code]"
-                                class="product-code border border-gray-400 dark:border-gray-600 px-2 py-1 rounded w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                                <option value="">-- Pilih Kode --</option>
-                                @foreach(auth()->user()->warehouse->products as $product)
-                                    <option value="{{ $product->code }}"
-                                        data-id="{{ $product->id }}"
-                                        data-name="{{ $product->name }}"
-                                        data-category="{{ $product->category->parent->name ?? '' }}"
-                                        data-subcategory="{{ $product->category->name ?? '' }}"
-                                        data-price="{{ $product->price }}">
-                                        {{ $product->code }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <input type="text" name="items[0][product_code]"
+                                class="product-code border border-gray-400 dark:border-gray-600 px-2 py-1 rounded w-full
+                                        bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                list="productCodesAll">
+                            <input type="hidden" name="items[0][product_id]" class="product-id">
+                            <input type="hidden" name="items[0][type]" class="item-type" value="normal">
                         </div>
                         <div class="flex flex-col">
                             <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Nama Barang</label>
-                            <select name="items[0][product_id]"
-                                class="product-name border border-gray-400 dark:border-gray-600 px-2 py-1 rounded w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                                <option value="">-- Pilih Produk --</option>
-                                @foreach(auth()->user()->warehouse->products as $product)
-                                    <option value="{{ $product->id }}"
-                                        data-code="{{ $product->code }}"
-                                        data-category="{{ $product->category->parent->name ?? '' }}"
-                                        data-subcategory="{{ $product->category->name ?? '' }}"
-                                        data-price="{{ $product->price }}">
-                                        {{ $product->name }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <input type="text" name="items[0][product_name]"
+                                class="product-name border border-gray-400 dark:border-gray-600 px-2 py-1 rounded w-full
+                                        bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                list="productNamesAll">
                         </div>
                         <div class="flex flex-col">
                             <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Kategori</label>
@@ -243,35 +250,40 @@ function updateFields(row, data) {
     row.querySelector('.quantity').value = 1; // default 1
 }
 
-// event handler pilih kode
-document.addEventListener('change', (e) => {
-    if (e.target.classList.contains('product-code')) {
-        const row = e.target.closest('.item-block');
-        const selected = e.target.options[e.target.selectedIndex];
-        updateFields(row, {
-            code: selected.value,
-            id: selected.dataset.id,
-            category: selected.dataset.category,
-            subcategory: selected.dataset.subcategory,
-            price: selected.dataset.price
-        });
+document.addEventListener('input', (e) => {
+    if (e.target.matches('.product-code')) {
+        const input = e.target;
+        const row   = input.closest('.item-block');
+        const option = document.querySelector(`#productCodesAll option[value="${input.value}"]`);
+        if (option) {
+            row.querySelector('.product-id').value = option.dataset.id || '';
+            row.querySelector('.product-name').value = option.dataset.name || '';
+            row.querySelector('.category').value = option.dataset.category || '';
+            row.querySelector('.subcategory').value = option.dataset.subcategory || '';
+            row.querySelector('.price').value = option.dataset.price || '';
+            row.querySelector('.item-type').value = option.dataset.type || 'normal';
+            row.querySelector('.quantity').value = 1;
+            calculateGrandTotal();
+        }
+    }
+
+    if (e.target.matches('.product-name')) {
+        const input = e.target;
+        const row   = input.closest('.item-block');
+        const option = document.querySelector(`#productNamesAll option[value="${input.value}"]`);
+        if (option) {
+            row.querySelector('.product-id').value = option.dataset.id || '';
+            row.querySelector('.product-code').value = option.dataset.code || '';
+            row.querySelector('.category').value = option.dataset.category || '';
+            row.querySelector('.subcategory').value = option.dataset.subcategory || '';
+            row.querySelector('.price').value = option.dataset.price || '';
+            row.querySelector('.item-type').value = option.dataset.type || 'normal';
+            row.querySelector('.quantity').value = 1;
+            calculateGrandTotal();
+        }
     }
 });
 
-// event handler pilih nama
-document.addEventListener('change', (e) => {
-    if (e.target.classList.contains('product-name')) {
-        const row = e.target.closest('.item-block');
-        const selected = e.target.options[e.target.selectedIndex];
-        updateFields(row, {
-            code: selected.dataset.code,
-            id: selected.value,
-            category: selected.dataset.category,
-            subcategory: selected.dataset.subcategory,
-            price: selected.dataset.price
-        });
-    }
-});
 
 // tombol tambah row
 document.getElementById('addRow').addEventListener('click', () => {
@@ -281,39 +293,20 @@ document.getElementById('addRow').addEventListener('click', () => {
     newRow.innerHTML = `
         <div class="item-row grid grid-cols-7 gap-3 items-start">
             <div class="flex flex-col">
-                <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Kode Barang</label>
-                <select name="items[${rowIndex}][product_code]"
-                        class="product-code border border-gray-400 dark:border-gray-600 dark:bg-gray-800
-                               dark:text-gray-100 px-2 py-1 rounded w-full">
-                    <option value="">-- Pilih Kode --</option>
-                    @foreach(auth()->user()->warehouse->products as $product)
-                        <option value="{{ $product->code }}"
-                                data-id="{{ $product->id }}"
-                                data-name="{{ $product->name }}"
-                                data-category="{{ $product->category->parent->name ?? '' }}"
-                                data-subcategory="{{ $product->category->name ?? '' }}"
-                                data-price="{{ $product->price }}">
-                            {{ $product->code }}
-                        </option>
-                    @endforeach
-                </select>
+                <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Kode Barang</label>
+                <input type="text" name="items[${rowIndex}][product_code]"
+                    class="product-code border border-gray-400 dark:border-gray-600 px-2 py-1 rounded w-full
+                            bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    list="productCodesAll">
+                <input type="hidden" name="items[${rowIndex}][product_id]" class="product-id">
+                <input type="hidden" name="items[${rowIndex}][type]" class="item-type" value="normal">
             </div>
             <div class="flex flex-col">
-                <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Nama Barang</label>
-                <select name="items[${rowIndex}][product_id]"
-                        class="product-name border border-gray-400 dark:border-gray-600 dark:bg-gray-800
-                               dark:text-gray-100 px-2 py-1 rounded w-full">
-                    <option value="">-- Pilih Produk --</option>
-                    @foreach(auth()->user()->warehouse->products as $product)
-                        <option value="{{ $product->id }}"
-                                data-code="{{ $product->code }}"
-                                data-category="{{ $product->category->parent->name ?? '' }}"
-                                data-subcategory="{{ $product->category->name ?? '' }}"
-                                data-price="{{ $product->price }}">
-                            {{ $product->name }}
-                        </option>
-                    @endforeach
-                </select>
+                <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Nama Barang</label>
+                <input type="text" name="items[${rowIndex}][product_name]"
+                    class="product-name border border-gray-400 dark:border-gray-600 px-2 py-1 rounded w-full
+                            bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    list="productNamesAll">
             </div>
             <div class="flex flex-col">
                 <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Kategori</label>

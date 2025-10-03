@@ -1,4 +1,4 @@
-@extends('layouts.warehouse')
+@extends('layouts.admin')
 @section('title','Detail PO')
 @section('content')
 <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6">
@@ -7,17 +7,17 @@
     </h2>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-gray-700 dark:text-gray-300">
-        <p><span class="font-semibold dark:text-gray-200">Kode PO:</span> {{ $po->po_code }}</p>
-        <p><span class="font-semibold dark:text-gray-200">Stokis:</span> {{ $po->warehouse->name }}</p>
-        <p><span class="font-semibold dark:text-gray-200">Tanggal:</span> {{ $po->created_at->format('d-m-Y') }}</p>
+        <p><span class="font-semibold dark:text-gray-200">Kode PO:</span> {{ $kirim->po_code }}</p>
+        <p><span class="font-semibold dark:text-gray-200">Stokis:</span> {{ $kirim->warehouse->name }}</p>
+        <p><span class="font-semibold dark:text-gray-200">Tanggal:</span> {{ $kirim->created_at->format('d-m-Y') }}</p>
         <p>
             <span class="font-semibold dark:text-gray-200">Status:</span>
             <span class="px-3 py-1 rounded-full text-sm font-semibold
-                @if($po->status == 'pending') bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300
-                @elseif($po->status == 'approved') bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300
-                @elseif($po->status == 'rejected') bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300
+                @if($kirim->status == 'pending') bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300
+                @elseif($kirim->status == 'approved') bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300
+                @elseif($kirim->status == 'rejected') bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300
                 @else bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 @endif">
-                {{ ucfirst($po->status) }}
+                {{ ucfirst($kirim->status) }}
             </span>
         </p>
     </div>
@@ -41,9 +41,9 @@
                     $totalQty = 0;
                     $totalHarga = 0;
                 @endphp
-                @foreach($po->items->concat($po->discountItems) as $item)
+                @foreach($kirim->items->concat($kirim->discountItems) as $item)
                     @php
-                        $qtyUsed = $po->status == 'approved'
+                        $qtyUsed = $kirim->status == 'approved'
                             ? $item->quantity_approved
                             : $item->quantity_requested;
 

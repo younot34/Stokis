@@ -139,7 +139,15 @@
                            class="flex items-center gap-3 p-2 rounded-lg transition
                            {{ request()->routeIs('admin.reports.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
                            <i data-lucide="truck" class="w-5 h-5"></i>
-                           Barang Keluar
+                           Barang Keluar Per Stokis
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.kirims.index') }}"
+                           class="flex items-center gap-3 p-2 rounded-lg transition
+                           {{ request()->routeIs('admin.kirims.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                           <i data-lucide="truck" class="w-5 h-5"></i>
+                           Kirim Barang Ke Stokis
                         </a>
                     </li>
                     <li>

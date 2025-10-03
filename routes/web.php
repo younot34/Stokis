@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\WarehouseProductController;
 use App\Http\Controllers\Admin\PurchaseOrderController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\KirimBarangController;
+use App\Http\Controllers\Admin\CentralStockController;
 use App\Http\Controllers\Warehouse\TransactionController;
 use App\Http\Controllers\Warehouse\DashboardController as WarehouseDashboardController;
 use App\Http\Controllers\Warehouse\StockController;
@@ -70,14 +72,19 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group
 
     // Purchase Orders
     Route::get('/purchase-orders', [PurchaseOrderController::class, 'index'])->name('purchase_orders.index');
-    Route::get('/purchase-orders/{purchaseOrder}', [PurchaseOrderController::class, 'show'])->name('purchase_orders.show');
+    Route::get('/purchase-orders/{poRecap}', [PurchaseOrderController::class, 'show'])->name('purchase_orders.show');
     Route::post('/purchase-orders/{purchaseOrder}/approve', [PurchaseOrderController::class, 'approve'])->name('purchase_orders.approve');
 
     // Reports
     Route::get('reports/outgoing', [ReportController::class, 'outgoing'])->name('reports.outgoing');
 
     //stok pusat
-     Route::resource('central_stocks', App\Http\Controllers\Admin\CentralStockController::class);
+    Route::resource('central_stocks', CentralStockController::class);
+
+    //kirim barang ke stokis
+    Route::resource('kirims', KirimBarangController::class);
+    Route::get('/generate-kirim-code/{warehouse}', [KirimBarangController::class, 'generateCodeAjax'])->name('kirim.generate.code');
+
 });
 
 Route::middleware(['auth','role:stokis'])->prefix('warehouse')->name('warehouse.')->group(function(){
@@ -93,8 +100,7 @@ Route::middleware(['auth','role:stokis'])->prefix('warehouse')->name('warehouse.
     Route::get('purchase-orders', [PurchaseOrderController::class,'indexWarehouse'])->name('purchase_orders.index');
     Route::get('purchase-orders/create', [PurchaseOrderController::class,'createWarehouse'])->name('purchase_orders.create');
     Route::post('purchase-orders', [PurchaseOrderController::class,'store'])->name('purchase_orders.store');
-    Route::get('purchase-orders/{purchaseOrder}', [PurchaseOrderController::class,'showWarehouse'])
-    ->name('purchase_orders.show');
+    Route::get('purchase-orders/recap/{po}', [PurchaseOrderController::class, 'showWarehouseRecap'])->name('purchase_orders.show');
 
     //Stok stokis
     Route::get('stocks', [StockController::class, 'index'])->name('stocks.index');

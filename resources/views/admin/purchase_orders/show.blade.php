@@ -20,6 +20,15 @@
             </span>
         </p>
     </div>
+    @if($errors->any())
+        <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <form action="{{ route('admin.purchase_orders.approve',$po->id) }}" method="POST" class="space-y-6">
         @csrf
         <div class="overflow-x-auto">
@@ -28,59 +37,96 @@
                     <tr class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-left">
                         <th class="px-4 py-3">Kode Barang</th>
                         <th class="px-4 py-3">Produk</th>
-                        <th class="px-4 py-3">Harga</th>
+
+                        {{-- Harga berbeda untuk PO Normal vs Diskon --}}
+                        @if($po->discountItems->count() > 0)
+                            <th class="px-4 py-3">Harga Normal</th>
+                            <th class="px-4 py-3">Diskon</th>
+                            <th class="px-4 py-3">Harga Diskon</th>
+                        @else
+                            <th class="px-4 py-3">Harga</th>
+                        @endif
+
                         <th class="px-4 py-3">Jumlah Request</th>
                         <th class="px-4 py-3">Jumlah Approve</th>
                         <th class="px-4 py-3">Subtotal</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-gray-400 dark:divide-gray-700">
                     @php
-                        $totalQty = 0;
-                        $totalHarga = 0;
+                        $grandQty = 0;
+                        $grandHarga = 0;
                     @endphp
+
+                    {{-- Loop Normal Items --}}
                     @foreach($po->items as $item)
                         @php
                             $qtyUsed = $po->status == 'approved' ? $item->quantity_approved : $item->quantity_requested;
                             $subtotal = $item->price * $qtyUsed;
-                            $totalQty += $qtyUsed;
-                            $totalHarga += $subtotal;
+                            $grandQty += $qtyUsed;
+                            $grandHarga += $subtotal;
                         @endphp
-                        <tr class="border-b border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            <td class="border border-gray-400 dark:border-gray-700 px-4 py-3 text-gray-700 dark:text-gray-200">{{ $item->product->code ?? '-' }}</td>
-                            <td class="border border-gray-400 dark:border-gray-700 px-4 py-3 font-medium text-gray-800 dark:text-gray-100">{{ $item->product->name }}</td>
-                            <td class="border border-gray-400 dark:border-gray-700 px-4 py-3 text-gray-700 dark:text-gray-200">Rp {{ number_format($item->price,0,',','.') }}</td>
-                            <td class="border border-gray-400 dark:border-gray-700 px-4 py-3 text-gray-700 dark:text-gray-200">{{ $item->quantity_requested }}</td>
-                            <td class="border border-gray-400 dark:border-gray-700 px-4 py-3">
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                            <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">{{ $item->product->code ?? '-' }}</td>
+                            <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">{{ $item->product->name }}</td>
+                            <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">Rp {{ number_format($item->price,0,',','.') }}</td>
+
+                            @if($po->discountItems->count() > 0)
+                                <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">-</td>
+                                <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">-</td>
+                            @endif
+
+                            <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">{{ $item->quantity_requested }}</td>
+                            <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">
                                 @if($po->status == 'pending')
-                                    <input type="number"
-                                        name="items[{{ $item->id }}]"
-                                        value="{{ $item->quantity_requested }}"
-                                        min="0"
-                                        class="border border-gray-400 dark:border-gray-600 rounded-lg px-3 py-2 w-28 focus:ring focus:ring-blue-200 dark:focus:ring-blue-800 focus:border-blue-400 dark:bg-gray-800 dark:text-gray-100">
+                                    <input type="number" name="items[{{ $item->id }}]"
+                                        value="{{ $item->quantity_requested }}" min="0"
+                                        class="border rounded px-3 py-1 w-24 dark:bg-gray-800 dark:text-gray-100">
                                 @else
-                                    <span class="text-gray-700 dark:text-gray-200">{{ $item->quantity_approved }}</span>
+                                    {{ $item->quantity_approved }}
                                 @endif
                             </td>
-                            <td class="border border-gray-400 dark:border-gray-700 px-4 py-3 text-gray-700 dark:text-gray-200">Rp {{ number_format($subtotal,0,',','.') }}</td>
+                            <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">Rp {{ number_format($subtotal,0,',','.') }}</td>
+                        </tr>
+                    @endforeach
+
+                    {{-- Loop Discount Items --}}
+                    @foreach($po->discountItems as $item)
+                        @php
+                            $qtyUsed = $po->status == 'approved' ? $item->quantity_approved : $item->quantity_requested;
+                            $subtotal = $item->final_price * $qtyUsed;
+                            $grandQty += $qtyUsed;
+                            $grandHarga += $subtotal;
+                        @endphp
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                            <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">{{ $item->product->code ?? '-' }}</td>
+                            <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">{{ $item->product->name }}</td>
+                            <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">Rp {{ number_format($item->price,0,',','.') }}</td>
+                            <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">{{ $item->discount }} %</td>
+                            <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">Rp {{ number_format($item->final_price,0,',','.') }}</td>
+                            <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">{{ $item->quantity_requested }}</td>
+                            <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">
+                                @if($po->status == 'pending')
+                                    <input type="number" name="discount_items[{{ $item->id }}]"
+                                        value="{{ $item->quantity_requested }}" min="0"
+                                        class="border rounded px-3 py-1 w-24 dark:bg-gray-800 dark:text-gray-100">
+                                @else
+                                    {{ $item->quantity_approved }}
+                                @endif
+                            </td>
+                            <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">Rp {{ number_format($subtotal,0,',','.') }}</td>
                         </tr>
                     @endforeach
                 </tbody>
-                <tfoot class="bg-gray-50 dark:bg-gray-700 font-semibold text-gray-800 dark:text-gray-100">
-                    <tr>
-                        <td colspan="3" class="px-4 py-3 text-right"></td>
-                        @if($po->status == 'pending')
-                            <td class="px-4 py-3">Total : {{$totalQty }}</td>
-                            <td></td>
-                        @elseif($po->status == 'approved')
-                            <td></td>
-                            <td class="px-4 py-3">Total : {{ $totalQty }}</td>
+                <tfoot class="bg-gray-50 dark:bg-gray-700 font-semibold text-gray-800 dark:text-gray-200">
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                        @if($po->discountItems->count() > 0)
+                            <td colspan="6" class="px-4 py-3 text-right">Grand Total</td>
                         @else
-                            <td></td>
-                            <td></td>
+                            <td colspan="4" class="px-4 py-3 text-right">Grand Total</td>
                         @endif
-
-                        <td class="px-4 py-3">Rp {{ number_format($totalHarga,0,',','.') }}</td>
+                        <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">{{ $grandQty }}</td>
+                        <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">Rp {{ number_format($grandHarga,0,',','.') }}</td>
                     </tr>
                 </tfoot>
             </table>

@@ -75,31 +75,34 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-400 dark:divide-gray-600">
-                    @forelse($warehouse->products as $product)
+                    @forelse($warehouse->allItems as $item)
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
                         <td class="px-4 py-3 text-gray-700 dark:text-gray-200">
-                            {{ $product->code }}
+                            {{ $item->product->code }}
                         </td>
                         <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">
-                            {{ $product->name }}
+                            {{ $item->product->name }}
                         </td>
                         <td class="px-4 py-3 text-gray-600 dark:text-gray-300">
-                            {{ $product->parentCategory->name ?? '-' }}
+                            {{ $item->product->parentCategory->name ?? '-' }}
                         </td>
                         <td class="px-4 py-3 text-gray-600 dark:text-gray-300">
-                            {{ $product->category->name ?? '-' }}
+                            {{ $item->product->category->name ?? '-' }}
                         </td>
                         <td class="px-4 py-3 text-gray-600 dark:text-gray-300">
-                            Rp {{ number_format($product->price,0,',','.') }}
+                            Rp {{ number_format($item->final_price ?? $item->price, 0, ',', '.') }}
+                            @if(isset($item->final_price))
+                                <span class="ml-2 text-xs text-green-600 dark:text-green-400">(Diskon)</span>
+                            @endif
                         </td>
                         <td class="px-4 py-3 text-gray-700 dark:text-gray-200">
-                            {{ $product->pivot->quantity }}
+                            {{ $item->quantity_approved }}
                         </td>
                     </tr>
                     @empty
                     <tr>
                         <td colspan="6" class="text-center py-4 text-gray-500 dark:text-gray-400">
-                            Belum ada produk di stokis ini
+                            Belum ada stok di stokis ini
                         </td>
                     </tr>
                     @endforelse

@@ -1,31 +1,31 @@
-@extends('layouts.warehouse')
+@extends('layouts.admin')
 
 @section('content')
 <div class="mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6">
 
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <h1 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-4 sm:mb-0">Buat Purchase Order</h1>
-        <span class="text-gray-600 dark:text-gray-300">
-            Stokis: <strong>{{ $warehouse->name }}</strong>
-        </span>
+        <h1 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-4 sm:mb-0">Kirim Barang</h1>
     </div>
 
     <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6">
-        <form action="{{ route('warehouse.purchase_orders.store') }}" method="POST" class="space-y-6">
+        <form action="{{ route('admin.kirims.store') }}" method="POST" class="space-y-6">
+
             @csrf
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="block font-semibold mb-1 text-gray-800 dark:text-gray-200">Kode PO</label>
-                    <input type="text" name="po_code" value="{{ $poCode }}" readonly
-                           class="border border-gray-400 dark:border-gray-600 p-2 rounded w-full bg-gray-100 dark:bg-gray-700 dark:text-gray-100">
+                    <label for="po_code" class="block font-semibold mb-1 text-gray-800 dark:text-gray-200">Kode Kirim</label>
+                    <input type="text" id="po_code" name="po_code" class="border border-gray-400 dark:border-gray-600 p-2 rounded w-full bg-gray-100 dark:bg-gray-700 dark:text-gray-100" readonly>
                 </div>
 
                 <div>
-                    <label class="block font-semibold mb-1 text-gray-800 dark:text-gray-200">Stokis</label>
-                    <input type="text" value="{{ $warehouse->name }}" readonly
-                           class="border border-gray-400 dark:border-gray-600 p-2 rounded w-full bg-gray-100 dark:bg-gray-700 dark:text-gray-100">
-                    <input type="hidden" name="warehouse_id" value="{{ $warehouse->id }}">
+                    <label for="warehouse_id" class="block font-semibold mb-1 text-gray-800 dark:text-gray-200">Warehouse</label>
+                    <select id="warehouse_id" name="warehouse_id" class="border border-gray-400 dark:border-gray-600 p-2 rounded w-full bg-gray-100 dark:bg-gray-700 dark:text-gray-100">
+                        <option value="">-- Pilih Warehouse --</option>
+                        @foreach($warehouses as $warehouse)
+                            <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="overflow-x-auto">
@@ -199,5 +199,19 @@
             }
         }
     });
+
+    document.getElementById('warehouse_id').addEventListener('change', function () {
+        let warehouseId = this.value;
+        if (warehouseId) {
+            fetch(`/admin/generate-kirim-code/${warehouseId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('po_code').value = data.code;
+                });
+        } else {
+            document.getElementById('po_code').value = '';
+        }
+    });
 </script>
+
 @endsection

@@ -23,6 +23,8 @@
                         <th class="px-4 py-2 text-left">Kategori</th>
                         <th class="px-4 py-2 text-left">SubKategori</th>
                         <th class="px-4 py-2 text-left">Harga</th>
+                        <th class="px-4 py-2 text-left">Diskon</th>
+                        <th class="px-4 py-2 text-left">Harga Diskon</th>
                         <th class="px-4 py-2 text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -36,6 +38,12 @@
                         <td class="px-4 py-2">{{ $product->category ? $product->category->name : '-' }}</td>
                         <td class="px-4 py-2 font-semibold text-green-600 dark:text-green-400">
                             Rp {{ number_format($product->price,0,',','.') }}
+                        </td>
+                        <td class="px-4 py-2 font-semibold text-green-600 dark:text-green-400">
+                            {{ number_format($product->discount,0,',','.') }}%
+                        </td>
+                        <td class="px-4 py-2 font-semibold text-green-600 dark:text-green-400">
+                            Rp {{ number_format($product->discount_price,0,',','.') }}
                         </td>
                         <td class="px-4 py-2 text-center space-x-2">
                             <a href="{{ route('admin.products.edit',$product->id) }}"

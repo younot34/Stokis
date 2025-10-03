@@ -29,6 +29,8 @@ class ProductController extends Controller
             'products.*.code' => 'required|string|distinct',
             'products.*.name' => 'required|string',
             'products.*.price' => 'required|numeric',
+            'products.*.discount' => 'required|numeric',
+            'products.*.discount_price' => 'required|numeric',
         ]);
 
         foreach ($request->products as $i => $p) {
@@ -51,6 +53,8 @@ class ProductController extends Controller
                 'parent_id' => $parent->id,
                 'category_id' => $subcategory->id,
                 'price' => $p['price'],
+                'discount'      => $p['discount'],
+                'discount_price'=> $p['discount_price'],
             ]);
         }
 
@@ -70,7 +74,9 @@ class ProductController extends Controller
             'name'=>'required',
             'parent_name'=>'required|string',
             'subcategory_name'=>'required|string',
-            'price'=>'required|numeric'
+            'price'=>'required|numeric',
+            'discount'=>'required|numeric',
+            'discount_price'=>'required|numeric'
         ]);
 
         // Cari / buat kategori induk
@@ -92,6 +98,8 @@ class ProductController extends Controller
             'parent_id' => $parent->id,
             'category_id' => $subcategory->id,
             'price' => $request->price,
+            'discount' => $request->discount,
+            'discount_price' => $request->discount_price,
         ]);
 
         return redirect()->route('admin.products.index')->with('success','Produk berhasil diperbarui');
@@ -125,6 +133,8 @@ class ProductController extends Controller
             'category'   => $product->parentCategory->name ?? '-',
             'subcategory'=> $product->category->name ?? '-',
             'price'      => $product->price,
+            'discount'      => $product->discount ?? '-',
+            'discount_price' => $product->discount_price ?? '-',
         ]);
     }
 }

@@ -2,7 +2,7 @@
 @section('title','Tambah Produk')
 @section('content')
 
-<div class="max-w-6xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6">
+<div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6">
     <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100 border-b pb-3 border-gray-200 dark:border-gray-700">
         ➕ Tambah Produk
     </h2>
@@ -11,7 +11,7 @@
         @csrf
 
         <div id="product-rows" class="space-y-4">
-            <div class="grid grid-cols-6 gap-3 items-start product-row">
+            <div class="grid grid-cols-8 gap-3 items-start product-row">
                 <div>
                     <label for="code-0" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Kode Produk
@@ -63,14 +63,24 @@
                     <datalist id="subcategory-list-0"></datalist>
                 </div>
                 <div>
-                    <label for="price-0" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Harga
                     </label>
-                    <input type="number" id="price-0" name="products[0][price]" placeholder="Harga"
-                        class="border border-gray-300 dark:border-gray-600
-                               rounded-lg px-3 py-2 w-full
-                               bg-white dark:bg-gray-700
-                               text-gray-800 dark:text-gray-100" required>
+                    <input type="number" name="products[0][price]" class="price-input border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 w-full bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100" required>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Diskon (%)
+                    </label>
+                    <input type="number" name="products[0][discount]" class="discount-input border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 w-full bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100" min="0" max="100" value="0">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Harga Diskon
+                    </label>
+                    <input type="number" name="products[0][discount_price]" class="discount-price-input border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 w-full bg-gray-100 dark:bg-gray-700 text-gray-300" readonly>
                 </div>
                 <div class="flex items-end">
                     <button type="button" class="remove-row text-red-500 font-bold" style="display:none;">&times;</button>
@@ -103,7 +113,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let rowIndex = 1;
     const container = document.getElementById('product-rows');
+    // Hitung otomatis harga diskon
+    function calculateDiscount(row) {
+        const priceInput = row.querySelector(".price-input");
+        const discountInput = row.querySelector(".discount-input");
+        const discountPriceInput = row.querySelector(".discount-price-input");
 
+        const price = parseFloat(priceInput.value) || 0;
+        const discount = parseFloat(discountInput.value) || 0;
+
+        const discountPrice = price - (price * discount / 100);
+        discountPriceInput.value = discountPrice > 0 ? Math.round(discountPrice) : 0;
+    }
+
+    // Event delegation
+    document.getElementById("product-rows").addEventListener("input", function (e) {
+        if (e.target.classList.contains("price-input") || e.target.classList.contains("discount-input")) {
+            const row = e.target.closest(".product-row");
+            calculateDiscount(row);
+        }
+    });
     function parentOptionsHtml(rowId) {
         return `
             <datalist id="parent-list-${rowId}">
@@ -130,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Tambah baris baru
     document.getElementById('addRow').addEventListener('click', function () {
         const row = document.createElement('div');
-        row.className = 'grid grid-cols-6 gap-3 items-start product-row';
+        row.className = 'grid grid-cols-8 gap-3 items-start product-row';
 
         row.innerHTML = `
             <input type="text" name="products[${rowIndex}][code]" placeholder="AB-123"
@@ -157,10 +186,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 data-index="${rowIndex}" required>
             <datalist id="subcategory-list-${rowIndex}"></datalist>
 
-            <input type="number" name="products[${rowIndex}][price]" placeholder="Harga"
-                class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2
-                       bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100" required>
-
+            <input type="number" name="products[${rowIndex}][price]" class="price-input border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 w-full bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100" required>
+            <input type="number" name="products[${rowIndex}][discount]" class="discount-input border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 w-full bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100" min="0" max="100" value="0">
+            <input type="number" name="products[${rowIndex}][discount_price]" class="discount-price-input border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 w-full bg-gray-100 dark:bg-gray-700 text-gray-300" readonly>
             <button type="button" class="remove-row text-red-500 font-bold">×</button>
         `;
         container.appendChild(row);

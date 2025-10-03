@@ -25,4 +25,23 @@ class Warehouse extends Model
     public function transactions() {
         return $this->hasMany(Transaction::class);
     }
+
+    public function purchaseOrders() {
+        return $this->hasMany(PurchaseOrder::class);
+    }
+
+    public function getTotalAssetAttribute() {
+        $normalItems = PurchaseOrderItem::whereHas('purchaseOrder', function($q) {
+                $q->where('warehouse_id', $this->id)
+                  ->where('status', 'approved');
+            })->get();
+
+        $discountItems = PurchaseOrderDiscountItem::whereHas('purchaseOrder', function($q) {
+                $q->where('warehouse_id', $this->id)
+                  ->where('status', 'approved');
+            })->get();
+
+        return $normalItems->sum(fn($i) => $i->quantity_approved * $i->price)
+             + $discountItems->sum(fn($i) => $i->quantity_approved * $i->final_price);
+    }
 }

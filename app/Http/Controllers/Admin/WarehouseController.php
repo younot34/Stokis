@@ -9,14 +9,8 @@ use Illuminate\Http\Request;
 class WarehouseController extends Controller
 {
     public function index() {
-        $warehouses = Warehouse::all();
-        $warehouses->map(function ($warehouse) {
-            $warehouse->totalAsset = $warehouse->products->sum(
-                fn($p) => $p->pivot->quantity * $p->price
-            );
-            return $warehouse;
-        });
-        return view('admin.warehouses.index', compact('warehouses',));
+    $warehouses = Warehouse::all();
+    return view('admin.warehouses.index', compact('warehouses'));
     }
 
     public function create() {

@@ -11,9 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
-
-    protected $fillable = ['code', 'name', 'parent_id', 'category_id', 'price'];
-
+    protected $fillable = ['code','name','parent_id','category_id','price','discount','discount_price'];
     public function category() {
         return $this->belongsTo(Category::class);
     }
@@ -24,6 +22,16 @@ class Product extends Model
     }
     public function warehouses() {
         return $this->belongsToMany(Warehouse::class, 'warehouse_product')->withPivot('quantity')->withTimestamps();
+    }
+    public function getFinalPriceAttribute()
+    {
+        if ($this->discount_price) {
+            return $this->discount_price;
+        }
+        if ($this->discount) {
+            return $this->price - ($this->price * $this->discount / 100);
+        }
+        return $this->price;
     }
 }
 

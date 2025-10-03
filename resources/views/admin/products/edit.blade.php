@@ -52,6 +52,26 @@
                        class="w-full border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-r p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
             </div>
         </div>
+        <div>
+            <label class="block font-medium text-gray-700 dark:text-gray-200 mb-1">Diskon (%)</label>
+            <input type="number" name="discount" value="{{ $product->discount ?? 0 }}" min="0" max="100"
+                class="discount-input w-full border border-gray-400 dark:border-gray-600
+                        dark:bg-gray-700 dark:text-gray-100 rounded p-2
+                        shadow-sm focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700 dark:text-gray-200 mb-1">Harga Diskon</label>
+            <div class="flex items-center">
+                <span class="px-3 py-2 bg-gray-100 dark:bg-gray-600 border border-r-0 border-gray-400 dark:border-gray-600 rounded-l-lg text-gray-600 dark:text-gray-200">Rp</span>
+                <input type="number" name="discount_price" 
+                    value="{{ $product->discount_price ?? '' }}" readonly
+                    class="discounted-price w-full border border-gray-400 dark:border-gray-600
+                            dark:bg-gray-700 dark:text-gray-100 rounded-r p-2
+                            bg-gray-100 dark:bg-gray-600">
+
+            </div>
+        </div>
         <div class="flex justify-end">
             <button type="submit"
                     class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow transition">
@@ -71,7 +91,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const parentInput = document.querySelector(".parent-input");
     const subList = document.getElementById("subcategory-list");
+    const priceInput = document.querySelector('[name="price"]');
+    const discountInput = document.querySelector('[name="discount"]');
+    const discountedInput = document.querySelector('[name="discount_price"]');
+    function hitungDiskon() {
+        const price = parseFloat(priceInput.value) || 0;
+        const discount = parseFloat(discountInput.value) || 0;
+        let discounted = price;
 
+        if (discount > 0) {
+            discounted = price - (price * discount / 100);
+        }
+        discountedInput.value = discounted > 0 ? discounted.toFixed(0) : "";
+    }
+
+    priceInput.addEventListener("input", hitungDiskon);
+    discountInput.addEventListener("input", hitungDiskon);
+
+    // hitung sekali waktu halaman pertama kali load
+    hitungDiskon();
+    
     function refreshSubcategories() {
         const parentName = parentInput.value.trim();
         subList.innerHTML = "";

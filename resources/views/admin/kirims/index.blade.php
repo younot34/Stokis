@@ -1,14 +1,14 @@
-@extends('layouts.warehouse')
+@extends('layouts.admin')
 @section('title','Permintaan Barang')
 @section('content')
 <div class="mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6">
 
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-4 sm:mb-0">Purchase Order</h2>
-        <a href="{{ route('warehouse.purchase_orders.create') }}"
+        <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-4 sm:mb-0">Kirim Barang Ke Stokis</h2>
+        <a href="{{ route('admin.kirims.create') }}"
            class="inline-block bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700
                   text-white px-5 py-2 rounded-lg shadow-md transition-all duration-200">
-            + Buat PO
+            + Kirim
         </a>
     </div>
     <div class="bg-white dark:bg-gray-900 shadow-lg rounded-xl overflow-hidden">
@@ -26,7 +26,7 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-400 dark:divide-gray-700">
-                    @forelse ($purchaseOrderRecaps as $po)
+                    @forelse ($kirims as $po)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
                             <td class="px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100">{{ $po->created_at->format('d-m-Y') }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100">{{ $po->po_code }}</td>
@@ -50,7 +50,7 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <a href="{{ route('warehouse.purchase_orders.show', $po->id) }}"
+                                <a href="{{ route('admin.kirims.show', $po->id) }}"
                                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow text-sm">
                                     Detail
                                 </a>
@@ -68,7 +68,7 @@
         </div>
 
         <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
-            {{ $purchaseOrderRecaps->links() }}
+            {{ $kirims->links() }}
         </div>
     </div>
 </div>

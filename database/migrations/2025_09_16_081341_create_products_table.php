@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->decimal('price', 15, 2);
+            $table->decimal('discount', 8, 2)->default(0);
+            $table->decimal('discount_price', 15, 2)->nullable();
             $table->timestamps();
         });
     }

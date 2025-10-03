@@ -31,7 +31,7 @@
                         <td class="px-6 py-4 text-gray-600 dark:text-gray-300">{{ $warehouse->address }}</td>
                         <td class="px-6 py-4 text-gray-600 dark:text-gray-300">{{ $warehouse->province }}</td>
                         <td class="px-6 py-4 text-gray-600 dark:text-gray-300">{{ $warehouse->city }}</td>
-                        <td class="px-6 py-4 text-gray-600 dark:text-gray-300">Rp {{ number_format($warehouse->totalAsset ?? 0, 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 text-gray-600 dark:text-gray-300">Rp {{ number_format($warehouse->total_asset ?? 0, 0, ',', '.') }}</td>
                         <td class="px-6 py-4 text-center space-x-2">
                             <a href="{{ route('admin.warehouses.edit',$warehouse->id) }}"
                                class="inline-block bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg shadow transition">

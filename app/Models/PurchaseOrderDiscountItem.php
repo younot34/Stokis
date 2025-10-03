@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @mixin IdeHelperPurchaseOrderItem
+ * @mixin IdeHelperPurchaseOrder
  */
-class PurchaseOrderItem extends Model
+class PurchaseOrderDiscountItem extends Model
 {
-    use HasFactory;
-
-    protected $fillable = ['purchase_order_id','product_id',
-    'quantity_requested','quantity_approved','price'];
-
+    protected $fillable = [
+        'purchase_order_id','product_id',
+        'quantity_requested','quantity_approved',
+        'price','discount','final_price'
+    ];
     public function product() {
         return $this->belongsTo(Product::class);
     }
