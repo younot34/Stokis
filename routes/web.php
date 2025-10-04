@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\WarehouseController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Admin\KirimBarangController;
 use App\Http\Controllers\Admin\CentralStockController;
 use App\Http\Controllers\Warehouse\TransactionController;
 use App\Http\Controllers\Warehouse\DashboardController as WarehouseDashboardController;
+use App\Http\Controllers\Warehouse\NoticeWarehouseController;
 use App\Http\Controllers\Warehouse\StockController;
 
 /*
@@ -85,6 +87,11 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group
     Route::resource('kirims', KirimBarangController::class);
     Route::get('/generate-kirim-code/{warehouse}', [KirimBarangController::class, 'generateCodeAjax'])->name('kirim.generate.code');
 
+    // Barang Keluar / Transaksi
+    Route::get('transactions', [NoticeController::class,'index'])->name('transactions.index');
+    Route::get('transactions/create', [NoticeController::class,'create'])->name('transactions.create');
+    Route::post('transactions', [NoticeController::class,'store'])->name('transactions.store');
+
 });
 
 Route::middleware(['auth','role:stokis'])->prefix('warehouse')->name('warehouse.')->group(function(){
@@ -104,6 +111,11 @@ Route::middleware(['auth','role:stokis'])->prefix('warehouse')->name('warehouse.
 
     //Stok stokis
     Route::get('stocks', [StockController::class, 'index'])->name('stocks.index');
+
+    //notice
+    Route::resource('notice', NoticeWarehouseController::class);
+    Route::get('notice/{notice}/edit', [NoticeWarehouseController::class, 'edit'])->name('notice.edit');
+    Route::put('notice/{notice}', [NoticeWarehouseController::class, 'update'])->name('notice.update');
 });
 
 

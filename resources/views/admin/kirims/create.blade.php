@@ -36,7 +36,7 @@
                             <th class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Nama Barang</th>
                             <th class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Jumlah</th>
                             <th class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Harga</th>
-                            <th id="thDiskon" class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">diskon</th>
+                            <th id="thDiskon" class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Diskon</th>
                             <th id="thHargaDiskon" class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Harga diskon</th>
                             <th class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Subtotal</th>
                             <th class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Aksi</th>
@@ -58,7 +58,11 @@
                 </div>
             </div>
 
-            <div class="text-right">
+            <div class="flex items-center justify-between">
+                <a href="{{ route('admin.kirims.index') }}"
+                class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow transition">
+                    ⬅️ Kembali
+                </a>
                 <button type="submit"
                     class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-lg shadow transition-all">
                     Kirim PO

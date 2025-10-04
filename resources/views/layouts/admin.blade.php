@@ -151,6 +151,14 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('admin.transactions.index') }}"
+                           class="flex items-center gap-3 p-2 rounded-lg transition
+                           {{ request()->routeIs('admin.transactions.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                           <i data-lucide="truck" class="w-5 h-5"></i>
+                           Notice Ke Stokis
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('admin.users.index') }}"
                            class="flex items-center gap-3 p-2 rounded-lg transition
                            {{ request()->routeIs('admin.users.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">

@@ -97,6 +97,14 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('warehouse.notice.index') }}"
+                           class="flex items-center gap-3 p-2 rounded-lg transition
+                           {{ request()->routeIs('warehouse.notice.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                           <i data-lucide="truck" class="w-5 h-5"></i>
+                           Notice
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('warehouse.purchase_orders.index') }}"
                            class="flex items-center gap-3 p-2 rounded-lg transition
                            {{ request()->routeIs('warehouse.purchase_orders.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
