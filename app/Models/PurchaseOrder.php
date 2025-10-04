@@ -12,7 +12,12 @@ class PurchaseOrder extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['po_code','warehouse_id','requested_by','approved_by','status'];
+    protected $fillable = [
+        'po_code','warehouse_id','requested_by','approved_by','status',
+        'jasa_pengiriman',
+        'resi_number',
+        'image',
+    ];
 
     public function warehouse() {
         return $this->belongsTo(Warehouse::class);

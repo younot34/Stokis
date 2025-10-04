@@ -6,7 +6,7 @@
     <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Update Proses {{ $notice->code }}</h2>
 
     {{-- Form Edit Status & Jasa Kirim --}}
-    <form action="{{ route('warehouse.notice.update', $notice->id) }}" method="POST" class="mt-4 space-y-4">
+    <form action="{{ route('warehouse.notice.update', $notice->id) }}" method="POST" enctype="multipart/form-data" class="mt-4 space-y-4">
         @csrf
         @method('PUT')
 
@@ -34,6 +34,47 @@
                 </select>
             </div>
         </div>
+        <div class="grid grid-cols-2 gap-6 mb-4">
+            <div>
+                <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-200">Nama Customer</label>
+                <input type="text" name="customer_name"
+                    value="{{ old('customer_name', $notice->customer_name) }}"
+                    class="w-full border rounded p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" required>
+            </div>
+            <div>
+                <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-200">No HP</label>
+                <input type="text" name="customer_phone"
+                    value="{{ old('customer_phone', $notice->customer_phone) }}"
+                    class="w-full border rounded p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" required>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-200">Alamat Lengkap</label>
+            <textarea name="customer_address"
+                    class="w-full border rounded p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    rows="3" required>{{ old('customer_address', $notice->customer_address) }}</textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6 mb-4">
+            <div>
+                <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-200">Nomor Resi</label>
+                <input type="text" name="resi_number"
+                    value="{{ old('resi_number', $notice->resi_number) }}"
+                    class="w-full border rounded p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+            </div>
+            <div>
+                <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-200">Upload Foto</label>
+                <input type="file" name="image"
+                    class="w-full border rounded p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                @if($notice->image)
+                    <div class="mt-2">
+                        <img src="{{ asset($notice->image) }}" alt="Foto" class="w-32 rounded shadow">
+                    </div>
+                @endif
+            </div>
+        </div>
+
 
     {{-- Tabel Detail Items --}}
     <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl overflow-hidden mt-6">

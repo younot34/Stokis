@@ -11,6 +11,8 @@ use App\Models\PurchaseOrderItem;
 use App\Models\Warehouse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use App\Notifications\WarehouseNotification;
 
 class NoticeController extends Controller
 {
@@ -248,6 +250,12 @@ class NoticeController extends Controller
 
             $transaction->update(['grand_total' => $grandTotal]);
             DB::commit();
+            $userWarehouse = User::where('warehouse_id', $request->warehouse_id)->first();
+
+            if ($userWarehouse) {
+                $message = "Ada pengiriman baru dengan kode {$transaction->code}.";
+                $userWarehouse->notify(new WarehouseNotification($message));
+            }
 
             return back()->with('success', 'Transaksi barang keluar berhasil dicatat');
 
@@ -256,4 +264,12 @@ class NoticeController extends Controller
             return back()->withErrors(['items' => $e->getMessage()]);
         }
     }
+
+    public function show($id)
+    {
+        $transaction = Notice::with('items', 'creator', 'warehouse')->findOrFail($id);
+
+        return view('admin.transactions.show', compact('transaction'));
+    }
+
 }

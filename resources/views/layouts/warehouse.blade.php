@@ -96,12 +96,18 @@
                            Barang Keluar User
                         </a>
                     </li>
-                    <li>
+                    <li class="relative">
                         <a href="{{ route('warehouse.notice.index') }}"
-                           class="flex items-center gap-3 p-2 rounded-lg transition
-                           {{ request()->routeIs('warehouse.notice.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
-                           <i data-lucide="truck" class="w-5 h-5"></i>
-                           Notice
+                        class="flex items-center gap-3 p-2 rounded-lg transition relative
+                        {{ request()->routeIs('warehouse.notice.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        <span>Notice</span>
+
+                        <!-- 🔴 Badge Angka Notifikasi -->
+                        <span id="noticeBadge"
+                                class="absolute right-3 top-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">
+                                0
+                        </span>
                         </a>
                     </li>
                     <li>
@@ -148,6 +154,90 @@ function darkModeHandler() {
     }
 }
 lucide.createIcons();
+</script>
+
+<script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+<script src="{{ mix('js/app.js') }}"></script>
+<script>
+    // Inisialisasi Pusher (harus cocok dengan .env kamu)
+    Pusher.logToConsole = false;
+
+    const pusher = new Pusher("{{ env('PUSHER_APP_KEY') }}", {
+        cluster: "{{ env('PUSHER_APP_CLUSTER') }}",
+        encrypted: true
+    });
+
+    // Channel sesuai warehouse_id user login
+    const warehouseId = "{{ auth()->user()->warehouse_id ?? '' }}";
+
+    if (warehouseId) {
+        // Ambil ID user login
+        const userId = "{{ auth()->id() }}";
+
+        if (userId) {
+            const channel = pusher.subscribe(`private-App.Models.User.${userId}`);
+
+            channel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function (data) {
+                // Ambil pesan dari notifikasi
+                const message = data.notification.message;
+
+                // 🔔 Mainkan suara notifikasi
+                const audio = new Audio('/sounds/notification.mp3');
+                audio.play();
+
+                // 🔔 Tampilkan alert
+                alert('📦 ' + message);
+
+                // 🔢 Tambah counter badge notifikasi
+                const badge = document.getElementById('noticeBadge');
+                let count = parseInt(localStorage.getItem('noticeCount') || '0') + 1;
+                badge.textContent = count;
+                badge.classList.remove('hidden');
+                localStorage.setItem('noticeCount', count);
+            });
+        }
+    }
+</script>
+<script>
+    const badge = document.getElementById('noticeBadge');
+    let count = 0;
+
+    if (warehouseId) {
+        const channel = pusher.subscribe(`warehouse.${warehouseId}`);
+
+        channel.bind('kirim-barang-event', function (data) {
+            // 🔔 Mainkan suara notifikasi
+            const audio = new Audio('/sounds/notification.mp3');
+            audio.play();
+
+            // 🔔 Tampilkan alert sederhana
+            alert('📦 Kiriman baru: ' + data.message);
+
+            // 🔢 Tambahkan counter notifikasi
+            count++;
+            badge.textContent = count;
+            badge.classList.remove('hidden');
+
+            // (Opsional) Simpan jumlah notifikasi di localStorage agar tetap ada setelah reload
+            localStorage.setItem('noticeCount', count);
+        });
+    }
+
+    // Saat halaman load, ambil jumlah notifikasi sebelumnya
+    document.addEventListener('DOMContentLoaded', () => {
+        const saved = localStorage.getItem('noticeCount');
+        if (saved && parseInt(saved) > 0) {
+            count = parseInt(saved);
+            badge.textContent = count;
+            badge.classList.remove('hidden');
+        }
+    });
+
+    // Reset badge jika user membuka halaman notice
+    if (window.location.href.includes('/warehouse/notice')) {
+        localStorage.removeItem('noticeCount');
+        if (badge) badge.classList.add('hidden');
+    }
 </script>
 </body>
 </html>

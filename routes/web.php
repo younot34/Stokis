@@ -88,9 +88,7 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group
     Route::get('/generate-kirim-code/{warehouse}', [KirimBarangController::class, 'generateCodeAjax'])->name('kirim.generate.code');
 
     // Barang Keluar / Transaksi
-    Route::get('transactions', [NoticeController::class,'index'])->name('transactions.index');
-    Route::get('transactions/create', [NoticeController::class,'create'])->name('transactions.create');
-    Route::post('transactions', [NoticeController::class,'store'])->name('transactions.store');
+    Route::resource('transactions', NoticeController::class);
 
 });
 

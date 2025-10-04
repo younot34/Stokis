@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class PurchaseOrderRecap extends Model
 {
-    protected $fillable = ['po_code','warehouse_id','requested_by','approved_by','status'];
+    protected $fillable = [
+        'po_code','warehouse_id','requested_by','approved_by','status',
+        'jasa_pengiriman',
+        'resi_number',
+        'image',
+    ];
 
     public function items() {
         return $this->hasMany(PurchaseOrderRecapItem::class);

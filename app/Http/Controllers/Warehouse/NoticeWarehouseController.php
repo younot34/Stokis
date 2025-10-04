@@ -83,134 +83,6 @@ class NoticeWarehouseController extends Controller
 
         return view('warehouse.notice.index', compact('transactions','items','discountItems','allItems','warehouses'));
     }
-    public function store(Request $request)
-    {
-        $user = auth()->user();
-        $rules = [
-            'code'        => 'required|string|unique:transactions,code',
-            'note'        => 'nullable|string',
-            'items'       => 'required|array|min:1',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity'   => 'required|integer|min:1',
-            'items.*.type'       => 'required|in:normal,discount',
-        ];
-        if (!$user->warehouse) {
-            $rules['warehouse_id'] = 'required|exists:warehouses,id';
-        }
-        $request->validate($rules);
-        // tentukan warehouse objek
-        if ($user->warehouse) {
-            $warehouse = $user->warehouse;
-        } else {
-            // ambil dari request (admin memilih)
-            $warehouse = Warehouse::findOrFail($request->warehouse_id);
-        }
-
-        DB::beginTransaction();
-        try {
-            $grandTotal = 0;
-
-            // 1️⃣ cek stok dulu (gabungkan normal & diskon)
-            foreach ($request->items as $item) {
-                $productId = $item['product_id'];
-                $quantityRequested = $item['quantity'];
-                $type = $item['type'];
-
-                if ($type === 'normal') {
-                    $poItems = PurchaseOrderItem::where('product_id', $productId)
-                        ->whereHas('purchaseOrder', fn($q) => $q->where('warehouse_id', $warehouse->id))
-                        ->orderBy('created_at') // stok lama dahulu
-                        ->get();
-                } else {
-                    $poItems = PurchaseOrderDiscountItem::where('product_id', $productId)
-                        ->whereHas('purchaseOrder', fn($q) => $q->where('warehouse_id', $warehouse->id))
-                        ->orderBy('created_at')
-                        ->get();
-                }
-
-                $availableQty = $poItems->sum('quantity_approved');
-                $productName = $poItems->first()->product->name ?? 'Unknown';
-
-                if ($quantityRequested > $availableQty) {
-                    throw new \Exception("Stok {$productName}" . ($type==='discount' ? ' (diskon)' : '') . " tidak mencukupi");
-                }
-            }
-
-            // 2️⃣ buat transaksi
-            $transaction = Notice::create([
-                'code'         => $request->code,
-                'warehouse_id' => $warehouse->id,
-                'type'         => 'out',
-                'note'         => $request->note,
-                'grand_total'  => 0,
-                'created_by'   => Auth::id(),
-                'status'          => $request->status ?? 'pending',
-                'jasa_pengiriman' => $request->jasa_pengiriman ?? null,
-            ]);
-
-            // 3️⃣ simpan item dan kurangi quantity_approved per batch
-            foreach ($request->items as $item) {
-                $productId = $item['product_id'];
-                $quantityRequested = $item['quantity'];
-                $type = $item['type'];
-
-                if ($type === 'normal') {
-                    $poItems = PurchaseOrderItem::where('product_id', $productId)
-                        ->whereHas('purchaseOrder', fn($q) => $q->where('warehouse_id', $warehouse->id))
-                        ->orderBy('created_at')
-                        ->get();
-                } else {
-                    $poItems = PurchaseOrderDiscountItem::where('product_id', $productId)
-                        ->whereHas('purchaseOrder', fn($q) => $q->where('warehouse_id', $warehouse->id))
-                        ->orderBy('created_at')
-                        ->get();
-                }
-
-                $remaining = $quantityRequested;
-                $price = 0;
-
-                foreach ($poItems as $poItem) {
-                    if ($remaining <= 0) break;
-
-                    $deduct = min($poItem->quantity_approved, $remaining);
-                    $poItem->quantity_approved -= $deduct;
-                    $poItem->save();
-
-                    // ambil harga (pakai harga batch pertama)
-                    if ($price === 0) {
-                        $price = $type === 'normal' ? $poItem->price : $poItem->final_price;
-                    }
-
-                    $remaining -= $deduct;
-                }
-
-                $product = Product::findOrFail($productId);
-                $totalPrice = $price * $quantityRequested;
-                $grandTotal += $totalPrice;
-
-                $transaction->items()->create([
-                    'product_id'      => $product->id,
-                    'product_code'    => $product->code,
-                    'product_name'    => $product->name . ($type === 'discount' ? ' (diskon)' : ''),
-                    'category_name'   => $product->category->parent->name ?? null,
-                    'subcategory_name'=> $product->category->name ?? null,
-                    'quantity'        => $quantityRequested,
-                    'price'           => $price,
-                    'total_price'     => $totalPrice,
-                    'note'            => $item['note'] ?? null,
-                ]);
-            }
-
-            $transaction->update(['grand_total' => $grandTotal]);
-            DB::commit();
-
-            return back()->with('success', 'Transaksi barang keluar berhasil dicatat');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withErrors(['items' => $e->getMessage()]);
-        }
-    }
 
     public function edit(Notice $notice)
     {
@@ -230,15 +102,43 @@ class NoticeWarehouseController extends Controller
             abort(403);
         }
 
-        $request->validate([
+        $rules = [
             'status' => 'required|string',
             'jasa_pengiriman' => 'nullable|string|max:100',
-        ]);
+            'resi_number'      => 'nullable|string|max:100',
+            'customer_name'    => 'nullable|string|max:255',
+            'customer_phone'   => 'nullable|string|max:20',
+            'customer_address' => 'nullable|string',
+            'image'            => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ];
+        $request->validate($rules);
+        // kalau ada file baru
+        $imagePath = $notice->image;
+        if ($request->hasFile('image')) {
+        // Hapus gambar lama kalau ada
+        if ($notice->image && file_exists(public_path($notice->image))) {
+            unlink(public_path($notice->image));
+        }
+
+        // Simpan file baru ke public/uploads/notices
+        $file = $request->file('image');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('uploads/notices'), $filename);
+
+        $imagePath = 'uploads/notices/' . $filename;
+        } else {
+            $imagePath = $notice->image;
+        }
 
         $notice->update([
-            'status' => $request->status,
-            'jasa_pengiriman' => $request->jasa_pengiriman,
-            'created_by' => $user->id,
+            'status'           => $request->status,
+            'jasa_pengiriman'  => $request->jasa_pengiriman,
+            'resi_number'      => $request->resi_number,
+            'customer_name'    => $request->customer_name,
+            'customer_phone'   => $request->customer_phone,
+            'customer_address' => $request->customer_address,
+            'image'            => $imagePath,
+            'created_by'       => $user->id,
         ]);
 
         return redirect()->route('warehouse.notice.index')->with('success', 'Notice berhasil diperbarui.');

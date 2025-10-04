@@ -10,6 +10,8 @@ use App\Models\CentralStock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Notifications\WarehouseNotification;
 
 class KirimBarangController extends Controller
 {
@@ -44,13 +46,23 @@ class KirimBarangController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'warehouse_id' => 'required|exists:warehouses,id',
-            'items' => 'required|array|min:1',
+            'warehouse_id'       => 'required|exists:warehouses,id',
+            'items'              => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
-            'items.*.qty' => 'required|integer|min:1',
+            'items.*.qty'        => 'required|integer|min:1',
+            'jasa_pengiriman'    => 'nullable|string',
+            'resi_number'        => 'nullable|string',
+            'image'              => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $warehouse = Warehouse::findOrFail($request->warehouse_id);
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/notice'), $filename); // simpan langsung di /public/uploads/notice
+            $imagePath = 'uploads/notice/' . $filename; // simpan path-nya
+        }
 
         // Buat header recap (langsung approved)
         $recap = PurchaseOrderRecap::create([
@@ -59,15 +71,21 @@ class KirimBarangController extends Controller
             'requested_by' => Auth::id(),
             'approved_by'  => Auth::id(),
             'status' => 'approved',
+            'jasa_pengiriman' => $request->jasa_pengiriman,
+            'resi_number' => $request->resi_number,
+            'image' => $imagePath,
         ]);
 
         // Buat header PO normal (mirror dari recap)
         $po = PurchaseOrder::create([
-            'po_code' => $recap->po_code, // samakan kode biar nyambung
+            'po_code' => $recap->po_code,
             'warehouse_id' => $warehouse->id,
             'requested_by' => Auth::id(),
             'approved_by'  => Auth::id(),
             'status' => 'approved',
+            'jasa_pengiriman' => $request->jasa_pengiriman,
+            'resi_number' => $request->resi_number,
+            'image' => $imagePath,
         ]);
 
         // Simpan item
@@ -127,6 +145,12 @@ class KirimBarangController extends Controller
                 $newQty = max(0, $centralStock->quantity - $item['qty']);
                 $centralStock->update(['quantity' => $newQty]);
             }
+        }
+            $userWarehouse = User::where('warehouse_id', $request->warehouse_id)->first();
+
+        if ($userWarehouse) {
+            $message = "Ada pengiriman baru dengan kode {$po->po_code}.";
+            $userWarehouse->notify(new WarehouseNotification($message));
         }
 
         return redirect()->route('admin.kirims.index')->with('success', 'Barang berhasil dikirim ke stokis');

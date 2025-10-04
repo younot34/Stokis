@@ -5,7 +5,7 @@
       x-init="init()">
 <head>
     <meta charset="UTF-8">
-    <title>Admin - @yield('title')</title>
+    <title>Pusat - @yield('title')</title>
     <script src="https://cdn.tailwindcss.com"></script>
         <script>
         tailwind.config = { darkMode: 'class', }
@@ -27,7 +27,7 @@
                     class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
-            <h1 class="text-lg font-bold">Admin Panel</h1>
+            <h1 class="text-lg font-bold">Pusat Panel</h1>
         </div>
 
         <div class="flex items-center space-x-4 ml-auto">
@@ -75,7 +75,7 @@
         transform md:translate-x-0 transition-all duration-300"
         :class="openSidebar ? 'translate-x-0' : '-translate-x-full'">
 
-            <h1 class="text-2xl font-bold mb-8 hidden md:block">Admin Panel</h1>
+            <h1 class="text-2xl font-bold mb-8 hidden md:block">Pusat Panel</h1>
             <nav>
                 <ul class="space-y-2">
                     <li>

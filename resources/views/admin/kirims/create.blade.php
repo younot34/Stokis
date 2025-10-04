@@ -8,7 +8,7 @@
     </div>
 
     <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6">
-        <form action="{{ route('admin.kirims.store') }}" method="POST" class="space-y-6">
+        <form action="{{ route('admin.kirims.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
 
             @csrf
 
@@ -27,6 +27,33 @@
                         @endforeach
                     </select>
                 </div>
+            </div>
+            <div class="grid grid-cols-2 gap-6 mb-4">
+                <div>
+                    <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-200">Jasa Pengiriman</label>
+                    <select name="jasa_pengiriman" class="border border-gray-400 dark:border-gray-600 p-2 rounded w-full bg-gray-100 dark:bg-gray-700 dark:text-gray-100">
+                        <option value="">-- Pilih Jasa Pengiriman --</option>
+                        <option value="Instan Gojek">Instan Gojek</option>
+                        <option value="Instan Grab">Instan Grab</option>
+                        <option value="Jnt">Jnt</option>
+                        <option value="Jne">Jne</option>
+                        <option value="Sicepat">Sicepat</option>
+                        <option value="Ninja Express">Ninja Express</option>
+                        <option value="Tiki">Tiki</option>
+                        <option value="Pos">Pos</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-200">Nomor Resi</label>
+                    <input type="text" name="resi_number"
+                        class="w-full border rounded p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-200">Upload Gambar</label>
+                <input type="file" name="image"
+                    class="w-full border rounded p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full border border-gray-400 dark:border-gray-600 rounded-lg" id="poTable">
