@@ -8,7 +8,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 text-gray-700 dark:text-gray-300">
         <p><span class="font-semibold dark:text-gray-200">Kode PO:</span> {{ $kirim->po_code }}</p>
-        <p><span class="font-semibold dark:text-gray-200">Stokis:</span> {{ $kirim->warehouse->name }}</p>
+        <p><span class="font-semibold dark:text-gray-200">Stockist:</span> {{ $kirim->warehouse->name }}</p>
         <p><span class="font-semibold dark:text-gray-200">Tanggal:</span> {{ $kirim->created_at->format('d-m-Y') }}</p>
         <p>
             <span class="font-semibold dark:text-gray-200">Status:</span>

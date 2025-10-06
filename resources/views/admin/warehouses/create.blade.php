@@ -3,12 +3,12 @@
 
 @section('content')
 <div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-xl p-8">
-    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">🏬 Tambah Stokis</h2>
+    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">🏬 Tambah Stockist</h2>
 
     <form action="{{ route('admin.warehouses.store') }}" method="POST" class="space-y-5">
         @csrf
         <div>
-            <label for="name" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Nama Stokis</label>
+            <label for="name" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Nama Stockist</label>
             <input type="text" name="name" id="name" required
                    class="w-full rounded-lg border border-gray-300 dark:border-gray-600
                           bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100

@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Notifications\WarehouseNotification;
+use App\Notifications\NoticeForStokis;
 
 class KirimBarangController extends Controller
 {
@@ -146,12 +146,26 @@ class KirimBarangController extends Controller
                 $centralStock->update(['quantity' => $newQty]);
             }
         }
-            $userWarehouse = User::where('warehouse_id', $request->warehouse_id)->first();
+        $warehouseId = $warehouse->id;
+            $stokis = User::where('warehouse_id', $warehouseId)
+                        ->where('role','stokis')
+                        ->get();
 
-        if ($userWarehouse) {
-            $message = "Ada pengiriman baru dengan kode {$po->po_code}.";
-            $userWarehouse->notify(new WarehouseNotification($message));
-        }
+            if ($stokis->count()) {
+                $title = 'Pengiriman baru';
+                $message = "Ada barang masuk baru dengan kode {$po->po_code}.";
+                \Notification::send(
+    $stokis,
+    new NoticeForStokis(
+                        $title,
+                        $message,
+                        Auth::id(),
+                        route('warehouse.notice.show', $po->id),
+                        $warehouse->id,
+                        'KIRIM'
+                    )
+                );
+            }
 
         return redirect()->route('admin.kirims.index')->with('success', 'Barang berhasil dikirim ke stokis');
     }

@@ -11,7 +11,7 @@
     </p>
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
         <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow hover:shadow-lg transition">
-            <h3 class="text-lg font-semibold">Total Stokis</h3>
+            <h3 class="text-lg font-semibold">Total Stockist</h3>
             <p class="text-4xl font-bold mt-2">{{ $totalWarehouses ?? 0 }}</p>
         </div>
         <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-xl shadow hover:shadow-lg transition">
@@ -74,7 +74,7 @@
                 <table class="min-w-full text-sm text-left border border-gray-200 dark:border-gray-700 rounded-lg">
                     <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
                         <tr>
-                             <th class="py-3 px-4">Stokis</th>
+                             <th class="py-3 px-4">Stockist</th>
                              <th class="py-3 px-4">Kota</th>
                             <th class="py-3 px-4 text-center">Jumlah Item</th>
                         </tr>
@@ -103,7 +103,7 @@
                 <table class="min-w-full text-sm text-left border border-gray-200 dark:border-gray-700 rounded-lg">
                     <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
                         <tr>
-                            <th class="py-3 px-4">Stokis</th>
+                            <th class="py-3 px-4">Stockist</th>
                             <th class="py-3 px-4">Kota</th>
                             <th class="py-3 px-4 text-right">Total</th>
                         </tr>

@@ -17,6 +17,7 @@ use App\Http\Controllers\Warehouse\TransactionController;
 use App\Http\Controllers\Warehouse\DashboardController as WarehouseDashboardController;
 use App\Http\Controllers\Warehouse\NoticeWarehouseController;
 use App\Http\Controllers\Warehouse\StockController;
+use Illuminate\Support\Facades\Broadcast;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,8 @@ use App\Http\Controllers\Warehouse\StockController;
 |
 */
 
+Broadcast::routes(['middleware' => ['auth']]);
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -38,7 +41,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
 
 Route::get('/redirect-after-login', function () {
     $user = auth()->user();
@@ -112,9 +114,10 @@ Route::middleware(['auth','role:stokis'])->prefix('warehouse')->name('warehouse.
 
     //notice
     Route::resource('notice', NoticeWarehouseController::class);
-    Route::get('notice/{notice}/edit', [NoticeWarehouseController::class, 'edit'])->name('notice.edit');
-    Route::put('notice/{notice}', [NoticeWarehouseController::class, 'update'])->name('notice.update');
 });
+Route::middleware('auth')->post('/notices/{id}/mark-read', [NoticeWarehouseController::class, 'markAsRead']);
+Route::middleware('auth')->get('/notifications/unread-count', [NoticeWarehouseController::class, 'unreadCount']);
+Route::middleware('auth')->post('/notices/mark-all', [NoticeWarehouseController::class, 'markAllAsRead']);
 
 
 require __DIR__.'/auth.php';

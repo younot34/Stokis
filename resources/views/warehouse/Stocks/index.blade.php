@@ -2,7 +2,7 @@
 @section('title','Stok stokis')
 
 @section('content')
-<h2 class="text-2xl font-bold mb-5 text-gray-900 dark:text-gray-100">Stok stokis</h2>
+<h2 class="text-2xl font-bold mb-5 text-gray-900 dark:text-gray-100">Stok Stockist</h2>
 {{-- Filter berdasarkan kode dan tipe produk --}}
 <div class="flex flex-col sm:flex-row justify-between items-center mb-4">
     <input type="text" id="filterInput"
@@ -69,7 +69,7 @@
             @empty
                 <tr>
                     <td colspan="7" class="text-center py-4 text-gray-500 dark:text-gray-400">
-                        Belum ada stok di stokis ini
+                        Belum ada stok di Stockist ini
                     </td>
                 </tr>
             @endforelse

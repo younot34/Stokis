@@ -7,7 +7,7 @@
     </h2>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-gray-700 dark:text-gray-300">
         <p><span class="font-semibold">Kode PO:</span> {{ $po->po_code }}</p>
-        <p><span class="font-semibold">Stokis:</span> {{ $po->warehouse->name }}</p>
+        <p><span class="font-semibold">Stockist:</span> {{ $po->warehouse->name }}</p>
         <p><span class="font-semibold">Tanggal:</span> {{ $po->created_at->format('d-m-Y') }}</p>
         <p>
             <span class="font-semibold">Status:</span>

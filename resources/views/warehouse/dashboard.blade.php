@@ -4,7 +4,7 @@
 @section('content')
 <div class="space-y-8">
     <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl p-6 shadow-xl">
-        <h2 class="text-2xl font-bold">Stokis Dashboard</h2>
+        <h2 class="text-2xl font-bold">Stockist Dashboard</h2>
         <p class="mt-2 text-gray-100 dark:text-gray-200">Selamat datang, <span class="font-semibold">{{ auth()->user()->name }}</span>!
         Berikut ringkasan <span class="font-semibold">{{ auth()->user()->warehouse->name ?? '-' }}</span>.</p>
     </div>

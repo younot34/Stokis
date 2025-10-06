@@ -32,18 +32,18 @@
                 <thead class="bg-gray-200 dark:bg-gray-700">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Kode Transaksi</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Gudang / Stokis</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Stockist</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Kode Barang</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Produk</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Kategori</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Subkategori</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Harga</th>
+                        {{-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Harga</th> --}}
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Jumlah</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Nama Customer</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Nomor Hp</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Jasa Kirim</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">No Resi</th>
+                        {{-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">No Resi</th> --}}
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Tanggal</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Aksi</th>
                     </tr>
@@ -69,9 +69,6 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-200">{{ $item->product_name ?? '-' }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-200">{{ $item->category_name ?? '-' }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-200">{{ $item->subcategory_name ?? '-' }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-gray-700 dark:text-gray-200">
-                                        {{ number_format($item->price,0,',','.') }}
-                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-gray-700 dark:text-gray-200">{{ $item->quantity }}</td>
                                     @if($key == 0)
                                         <td class="px-6 py-4 whitespace-nowrap align-top text-gray-700 dark:text-gray-200" rowspan="{{ $tx->items->count() }}">
@@ -95,9 +92,9 @@
                                         <td class="px-6 py-4 whitespace-nowrap align-top text-gray-700 dark:text-gray-200" rowspan="{{ $tx->items->count() }}">
                                             {{ $tx->jasa_pengiriman ?? '-' }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap align-top text-gray-700 dark:text-gray-200" rowspan="{{ $tx->items->count() }}">
+                                        {{-- <td class="px-6 py-4 whitespace-nowrap align-top text-gray-700 dark:text-gray-200" rowspan="{{ $tx->items->count() }}">
                                             {{ $tx->resi_number ?? '-' }}
-                                        </td>
+                                        </td> --}}
                                         <td class="px-6 py-4 whitespace-nowrap align-top text-gray-700 dark:text-gray-200" rowspan="{{ $tx->items->count() }}">
                                             {{ $tx->created_at->format('d M Y H:i') }}
                                         </td>

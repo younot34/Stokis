@@ -5,7 +5,8 @@
       x-init="init()">
 <head>
     <meta charset="UTF-8">
-    <title>Stokis - @yield('title')</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Stockist - @yield('title')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -28,7 +29,7 @@
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
             <a href="{{ route('warehouse.dashboard') }}" class="text-lg font-bold hover:underline cursor-pointer">
-                Stokis Panel
+                Stockist Panel
             </a>
         </div>
 
@@ -38,9 +39,35 @@
                 <i x-show="!darkMode" data-lucide="moon" class="w-5 h-5"></i>
                 <i x-show="darkMode" data-lucide="sun" class="w-5 h-5"></i>
             </button>
-            <button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                <i data-lucide="bell" class="w-5 h-5"></i>
-            </button>
+            <!-- 🔔 Notifikasi -->
+            <div class="relative" x-data="{ openNotif: false }">
+                <button @click="openNotif = !openNotif"
+                        class="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+
+                    <!-- 🔴 Badge jumlah notifikasi -->
+                    <span id="notifBellBadge"
+                        class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center hidden">
+                        0
+                    </span>
+                </button>
+
+                <!-- 🧾 Dropdown daftar notifikasi -->
+                <div x-show="openNotif" @click.away="openNotif = false"
+                    x-transition
+                    class="absolute right-0 mt-3 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl z-50 overflow-hidden border border-gray-200 dark:border-gray-700">
+
+                    <div class="px-4 py-2 border-b dark:border-gray-700 flex justify-between items-center">
+                        <span class="font-semibold text-sm">Notifikasi</span>
+                        <button id="clearNotif"
+                                class="text-xs text-blue-500 hover:underline">Tandai Dibaca</button>
+                    </div>
+
+                    <ul id="notifList" class="max-h-80 overflow-y-auto divide-y dark:divide-gray-700">
+                        <li class="text-center text-gray-400 text-sm py-3">Belum ada notifikasi</li>
+                    </ul>
+                </div>
+            </div>
             <div class="relative" x-data="{ openProfile: false }">
                 <button @click="openProfile = !openProfile" class="flex items-center space-x-2 focus:outline-none">
                     <img src="https://i.pravatar.cc/40" class="w-8 h-8 rounded-full" alt="profile">
@@ -75,7 +102,7 @@
 
             <a href="{{ route('warehouse.dashboard') }}">
                 <h1 class="text-2xl font-bold mb-8 hidden md:block hover:underline cursor-pointer">
-                    Stokis Panel
+                    Stockist Panel
                 </h1>
             </a>
             <nav>
@@ -110,12 +137,18 @@
                         </span>
                         </a>
                     </li>
-                    <li>
+                    <li class="relative">
                         <a href="{{ route('warehouse.purchase_orders.index') }}"
-                           class="flex items-center gap-3 p-2 rounded-lg transition
-                           {{ request()->routeIs('warehouse.purchase_orders.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
-                           <i data-lucide="file-text" class="w-5 h-5"></i>
-                           Permintaan Barang
+                        class="flex items-center gap-3 p-2 rounded-lg transition relative
+                        {{ request()->routeIs('warehouse.purchase_orders.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                        <span>Permintaan Barang</span>
+
+                        <!-- 🔴 Badge Angka Notifikasi -->
+                        <span id="permintaanBadge"
+                                class="absolute right-3 top-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">
+                                0
+                        </span>
                         </a>
                     </li>
                     <li>
@@ -157,87 +190,178 @@ lucide.createIcons();
 </script>
 
 <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
-<script src="{{ mix('js/app.js') }}"></script>
+@vite('resources/js/app.js')
 <script>
-    // Inisialisasi Pusher (harus cocok dengan .env kamu)
-    Pusher.logToConsole = false;
-
-    const pusher = new Pusher("{{ env('PUSHER_APP_KEY') }}", {
-        cluster: "{{ env('PUSHER_APP_CLUSTER') }}",
-        encrypted: true
-    });
-
-    // Channel sesuai warehouse_id user login
-    const warehouseId = "{{ auth()->user()->warehouse_id ?? '' }}";
-
-    if (warehouseId) {
-        // Ambil ID user login
-        const userId = "{{ auth()->id() }}";
-
-        if (userId) {
-            const channel = pusher.subscribe(`private-App.Models.User.${userId}`);
-
-            channel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function (data) {
-                // Ambil pesan dari notifikasi
-                const message = data.notification.message;
-
-                // 🔔 Mainkan suara notifikasi
-                const audio = new Audio('/sounds/notification.mp3');
-                audio.play();
-
-                // 🔔 Tampilkan alert
-                alert('📦 ' + message);
-
-                // 🔢 Tambah counter badge notifikasi
-                const badge = document.getElementById('noticeBadge');
-                let count = parseInt(localStorage.getItem('noticeCount') || '0') + 1;
-                badge.textContent = count;
-                badge.classList.remove('hidden');
-                localStorage.setItem('noticeCount', count);
-            });
-        }
-    }
+window.Laravel = {
+    userId: {{ auth()->id() ?? 'null' }},
+    csrfToken: '{{ csrf_token() }}'
+};
 </script>
+
 <script>
-    const badge = document.getElementById('noticeBadge');
-    let count = 0;
+const pusher = new Pusher("{{ env('PUSHER_APP_KEY') }}", {
+    cluster: "{{ env('PUSHER_APP_CLUSTER') }}",
+    encrypted: true
+});
 
-    if (warehouseId) {
-        const channel = pusher.subscribe(`warehouse.${warehouseId}`);
+const warehouseId = "{{ auth()->user()->warehouse_id ?? '' }}";
+const notifList = document.getElementById('notifList');
+const notifBadge = document.getElementById('notifBellBadge');
+const noticeBadge = document.getElementById('noticeBadge');
+const permintaanBadge = document.getElementById('permintaanBadge');
 
-        channel.bind('kirim-barang-event', function (data) {
-            // 🔔 Mainkan suara notifikasi
-            const audio = new Audio('/sounds/notification.mp3');
-            audio.play();
+// Ambil data dari localStorage
+let notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+let noticeCount = parseInt(localStorage.getItem('noticeCount') || '0');
+let permintaanCount = parseInt(localStorage.getItem('permintaanCount') || '0');
 
-            // 🔔 Tampilkan alert sederhana
-            alert('📦 Kiriman baru: ' + data.message);
+updateNotifUI();
+updateSidebarBadges();
 
-            // 🔢 Tambahkan counter notifikasi
-            count++;
-            badge.textContent = count;
-            badge.classList.remove('hidden');
+// === Fungsi Update Dropdown Bell ===
+function updateNotifUI() {
+    notifList.innerHTML = '';
+    if (notifications.length === 0) {
+        notifList.innerHTML = '<li class="text-center text-gray-400 text-sm py-3">Belum ada notifikasi</li>';
+        notifBadge.classList.add('hidden');
+        return;
+    }
 
-            // (Opsional) Simpan jumlah notifikasi di localStorage agar tetap ada setelah reload
-            localStorage.setItem('noticeCount', count);
+    notifBadge.textContent = notifications.length;
+    notifBadge.classList.remove('hidden');
+
+    notifications.slice().reverse().forEach(item => {
+        const li = document.createElement('li');
+        li.className = "px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer";
+        li.innerHTML = `
+            <div class="flex flex-col">
+                <span class="font-semibold text-sm">${item.title}</span>
+                <span class="text-xs text-gray-500 dark:text-gray-400">${item.message}</span>
+                <span class="text-[10px] text-gray-400 mt-1">${item.time}</span>
+            </div>
+        `;
+        notifList.appendChild(li);
+    });
+}
+
+// === Fungsi Update Badge Sidebar ===
+function updateSidebarBadges() {
+    if (noticeCount > 0) {
+        noticeBadge.textContent = noticeCount;
+        noticeBadge.classList.remove('hidden');
+    } else {
+        noticeBadge.classList.add('hidden');
+    }
+
+    if (permintaanCount > 0) {
+        permintaanBadge.textContent = permintaanCount;
+        permintaanBadge.classList.remove('hidden');
+    } else {
+        permintaanBadge.classList.add('hidden');
+    }
+}
+
+// === Tangani Event dari Pusher ===
+if (warehouseId) {
+    const channel = pusher.subscribe(`warehouse.${warehouseId}`);
+
+    channel.bind('notice.created', function(data) {
+        const message = data.message ?? '';
+        const title = data.title ?? 'Notice Baru';
+        const time = new Date().toLocaleTimeString();
+
+        // 🔔 Mainkan suara notifikasi
+        new Audio('/sounds/notification.mp3').play();
+
+        // 🔖 Tentukan kategori (Notice atau Permintaan)
+        let categoryRaw = (data.category || '').toUpperCase();
+        let category = (
+            categoryRaw.includes('KIRIM')
+                ? 'Permintaan Barang'
+                : 'Notice'
+        );
+
+        // Simpan notifikasi ke localStorage
+        notifications.push({
+            title: `[${category}] ${title}`,
+            message: message,
+            time: time
         });
-    }
+        localStorage.setItem('notifications', JSON.stringify(notifications));
 
-    // Saat halaman load, ambil jumlah notifikasi sebelumnya
-    document.addEventListener('DOMContentLoaded', () => {
-        const saved = localStorage.getItem('noticeCount');
-        if (saved && parseInt(saved) > 0) {
-            count = parseInt(saved);
-            badge.textContent = count;
-            badge.classList.remove('hidden');
+        // Tambah counter
+        if (category === 'Permintaan Barang') {
+            permintaanCount++;
+            localStorage.setItem('permintaanCount', permintaanCount);
+        } else {
+            noticeCount++;
+            localStorage.setItem('noticeCount', noticeCount);
         }
-    });
 
-    // Reset badge jika user membuka halaman notice
-    if (window.location.href.includes('/warehouse/notice')) {
+        // Perbarui UI
+        updateNotifUI();
+        updateSidebarBadges();
+    });
+}
+
+// === Fungsi untuk mark all as read (server optional) ===
+function markAllAsRead() {
+    fetch('/notices/mark-all', {
+        method: 'POST',
+        headers: { 'X-CSRF-TOKEN': window.Laravel.csrfToken }
+    }).then(() => console.log('✅ Semua notifikasi ditandai dibaca.'));
+}
+
+// === Tombol "Tandai Dibaca" di dropdown ===
+document.getElementById('clearNotif').addEventListener('click', () => {
+    notifications = [];
+    localStorage.removeItem('notifications');
+
+    // Reset badge semua
+    noticeCount = 0;
+    permintaanCount = 0;
+    localStorage.removeItem('noticeCount');
+    localStorage.removeItem('permintaanCount');
+
+    updateSidebarBadges();
+    updateNotifUI();
+    markAllAsRead();
+});
+
+// === Reset badge saat menu Notice atau Permintaan diklik ===
+document.querySelectorAll('a[href*="/warehouse/notice"]').forEach(link => {
+    link.addEventListener('click', () => {
+        noticeCount = 0;
         localStorage.removeItem('noticeCount');
-        if (badge) badge.classList.add('hidden');
+        updateSidebarBadges();
+        markAllAsRead();
+    });
+});
+
+document.querySelectorAll('a[href*="/warehouse/purchase-orders"]').forEach(link => {
+    link.addEventListener('click', () => {
+        permintaanCount = 0;
+        localStorage.removeItem('permintaanCount');
+        updateSidebarBadges();
+        markAllAsRead();
+    });
+});
+
+// === Reset badge jika halaman dibuka langsung ===
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.location.pathname.includes('/warehouse/notice')) {
+        noticeCount = 0;
+        localStorage.removeItem('noticeCount');
+        updateSidebarBadges();
     }
+
+    if (window.location.pathname.includes('/warehouse/purchase-orders')) {
+        permintaanCount = 0;
+        localStorage.removeItem('permintaanCount');
+        updateSidebarBadges();
+    }
+});
 </script>
+
 </body>
 </html>

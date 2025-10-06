@@ -144,4 +144,25 @@ class NoticeWarehouseController extends Controller
         return redirect()->route('warehouse.notice.index')->with('success', 'Notice berhasil diperbarui.');
     }
 
+    public function unreadCount()
+    {
+        return response()->json(['count' => auth()->user()->unreadNotifications()->count()]);
+    }
+
+    public function markAsRead($id)
+    {
+        $n = auth()->user()->notifications()->where('id', $id)->first();
+        if ($n) {
+            $n->markAsRead();
+            return response()->json(['status' => 'ok']);
+        }
+        return response()->json(['status' => 'not_found'], 404);
+    }
+
+    public function markAllAsRead()
+    {
+        auth()->user()->unreadNotifications()->update(['read_at' => now()]);
+        return back();
+    }
+
 }

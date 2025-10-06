@@ -64,7 +64,7 @@
                             <th class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Jumlah</th>
                             <th class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Harga</th>
                             <th id="thDiskon" class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Diskon</th>
-                            <th id="thHargaDiskon" class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Harga diskon</th>
+                            <th id="thHargaDiskon" class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Harga Diskon</th>
                             <th class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Subtotal</th>
                             <th class="border border-gray-400 dark:border-gray-600 p-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Aksi</th>
                         </tr>
@@ -143,16 +143,16 @@
                 <td><input type="number" name="items[${rowId}][qty]" value="1" min="1"
                         class="qty border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 w-full
                                bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100"></td>
-                <td><input type="number" name="items[${rowId}][harga]" readonly
+                <td><input type="text" name="items[${rowId}][harga]" readonly
                         class="harga border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 w-full
                                bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 bg-gray-100"></td>
                 <td><input type="number" name="items[${rowId}][diskon]" readonly
                         class="diskon border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 w-full
                                bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 bg-gray-100"></td>
-                <td><input type="number" name="items[${rowId}][harga_diskon]" readonly
+                <td><input type="text" name="items[${rowId}][harga_diskon]" readonly
                         class="harga-diskon border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 w-full
                                bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 bg-gray-100"></td>
-                <td><input type="number" class="subtotal border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 w-full
+                <td><input type="text" class="subtotal border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 w-full
                                bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 bg-gray-100" readonly></td>
                 <td class="text-center"><button type="button" class="remove text-red-500 font-bold">X</button></td>
             </tr>`;
@@ -160,29 +160,62 @@
         rowId++;
     }
 
-    // tombol tambah row
-    const addRowBtn = document.getElementById('addRow');
-    if(addRowBtn){
-        addRowBtn.addEventListener('click', addRow);
+    // tambah baris
+    document.getElementById('addRow').addEventListener('click', addRow);
+
+    // format angka ke ribuan tanpa desimal
+    function formatRupiah(angka) {
+        if (!angka) return '0';
+        angka = angka.toString().replace(/[^\d]/g, '');
+        return angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    // hapus format (jadi angka mentah)
+    function unformatRupiah(angka) {
+        if (!angka) return '0';
+        return angka.toString().replace(/\./g, '');
+    }
+
+    // update total
+    function updateTotals() {
+        let totalQty = 0;
+        let totalHarga = 0;
+
+        document.querySelectorAll('.row-item').forEach(row => {
+            let qty = parseInt(row.querySelector('.qty').value) || 0;
+            let hargaDiskon = parseInt(unformatRupiah(row.querySelector('.harga-diskon').value)) || 0;
+            let hargaNormal = parseInt(unformatRupiah(row.querySelector('.harga').value)) || 0;
+
+            let harga = hargaDiskon > 0 ? hargaDiskon : hargaNormal;
+            let subtotal = qty * harga;
+
+            row.querySelector('.subtotal').value = formatRupiah(subtotal);
+            totalQty += qty;
+            totalHarga += subtotal;
+        });
+
+        document.getElementById('totalQty').innerText = totalQty;
+        document.getElementById('totalHarga').innerText = 'Rp ' + formatRupiah(totalHarga);
     }
 
     // input listener
     document.addEventListener('input', e => {
-        if(e.target.classList.contains('code') || e.target.classList.contains('name')){
+        if (e.target.classList.contains('code') || e.target.classList.contains('name')) {
             let value = e.target.value;
             let product = products.find(p => p.code === value || p.name === value);
-            if(product){
+            if (product) {
                 let row = e.target.closest('tr');
                 row.querySelector('.name').value = product.name;
                 row.querySelector('.code').value = product.code;
-                row.querySelector('.harga').value = product.price;
+                row.querySelector('.harga').value = formatRupiah(parseInt(product.price));
                 row.querySelector('.product_id').value = product.id;
 
-                if(product.discount > 0){
+                if (product.discount > 0) {
                     row.querySelector('.diskon').value = product.discount;
-                    row.querySelector('.harga-diskon').value = product.discount_price
-                        ? product.discount_price
-                        : (product.price - (product.price * product.discount / 100));
+                    let hargaDiskon = product.discount_price
+                        ? parseInt(product.discount_price)
+                        : parseInt(product.price - (product.price * product.discount / 100));
+                    row.querySelector('.harga-diskon').value = formatRupiah(hargaDiskon);
                     row.querySelector('.use_discount').value = 1;
                 } else {
                     row.querySelector('.diskon').value = "";
@@ -192,57 +225,35 @@
                 updateTotals();
             }
         }
-        if(e.target.classList.contains('qty')){
+        if (e.target.classList.contains('qty')) updateTotals();
+    });
+
+    // hapus row
+    document.addEventListener('click', e => {
+        if (e.target.matches('.remove')) {
+            e.preventDefault();
+            e.target.closest('tr').remove();
             updateTotals();
         }
     });
 
-    // hitung total
-    function updateTotals() {
-        let totalQty = 0;
-        let totalHarga = 0;
-
-        document.querySelectorAll('.row-item').forEach(row => {
-            let qty = parseInt(row.querySelector('.qty').value) || 0;
-            let hargaDiskon = parseInt(row.querySelector('.harga-diskon').value) || 0;
-            let hargaNormal = parseInt(row.querySelector('.harga').value) || 0;
-
-            let harga = hargaDiskon > 0 ? hargaDiskon : hargaNormal;
-            let subtotal = qty * harga;
-            row.querySelector('.subtotal').value = subtotal;
-
-            totalQty += qty;
-            totalHarga += subtotal;
-        });
-
-        document.getElementById('totalQty').innerText = totalQty;
-        document.getElementById('totalHarga').innerText = 'Rp ' + totalHarga.toLocaleString();
-    }
-
-    // hapus row
-    document.addEventListener('click', function(e){
-        if(e.target.matches('.remove')){
-            e.preventDefault();
-            const tr = e.target.closest('tr');
-            if(tr){
-                tr.remove();
-                updateTotals();
-            }
-        }
-    });
-
+    // generate kode kirim otomatis
     document.getElementById('warehouse_id').addEventListener('change', function () {
         let warehouseId = this.value;
         if (warehouseId) {
             fetch(`/admin/generate-kirim-code/${warehouseId}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('po_code').value = data.code;
-                });
+                .then(res => res.json())
+                .then(data => document.getElementById('po_code').value = data.code);
         } else {
             document.getElementById('po_code').value = '';
         }
     });
-</script>
 
+    // sebelum submit → ubah semua angka jadi format mentah
+    document.querySelector('form').addEventListener('submit', function() {
+        document.querySelectorAll('.harga, .harga-diskon, .subtotal').forEach(el => {
+            el.value = unformatRupiah(el.value);
+        });
+    });
+</script>
 @endsection

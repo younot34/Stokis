@@ -3,13 +3,13 @@
 
 @section('content')
 <div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-xl p-8">
-    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">✏️ Edit Stokis</h2>
+    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">✏️ Edit Stockist</h2>
 
     <form action="{{ route('admin.warehouses.update', $warehouse->id) }}" method="POST" class="space-y-5">
         @csrf
         @method('PUT')
         <div>
-            <label for="name" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Nama Stokis</label>
+            <label for="name" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Nama Stockist</label>
             <input type="text" name="name" id="name"
                    value="{{ old('name', $warehouse->name) }}"
                    required

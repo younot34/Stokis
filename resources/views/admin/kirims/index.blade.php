@@ -4,7 +4,7 @@
 <div class="mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6">
 
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-4 sm:mb-0">Kirim Barang Ke Stokis</h2>
+        <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-4 sm:mb-0">Kirim Barang Ke Stockist</h2>
         <a href="{{ route('admin.kirims.create') }}"
            class="inline-block bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700
                   text-white px-5 py-2 rounded-lg shadow-md transition-all duration-200">

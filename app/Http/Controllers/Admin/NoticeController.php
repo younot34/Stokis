@@ -12,7 +12,7 @@ use App\Models\Warehouse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
-use App\Notifications\WarehouseNotification;
+use App\Notifications\NoticeForStokis;
 
 class NoticeController extends Controller
 {
@@ -250,11 +250,25 @@ class NoticeController extends Controller
 
             $transaction->update(['grand_total' => $grandTotal]);
             DB::commit();
-            $userWarehouse = User::where('warehouse_id', $request->warehouse_id)->first();
+            $warehouseId = $warehouse->id;
+            $stokis = User::where('warehouse_id', $warehouseId)
+                        ->where('role','stokis')
+                        ->get();
 
-            if ($userWarehouse) {
+            if ($stokis->count()) {
+                $title = 'Pengiriman baru';
                 $message = "Ada pengiriman baru dengan kode {$transaction->code}.";
-                $userWarehouse->notify(new WarehouseNotification($message));
+                \Notification::send(
+    $stokis,
+    new NoticeForStokis(
+                        $title,
+                        $message,
+                        Auth::id(),
+                        route('warehouse.notice.show', $transaction->id),
+                        $warehouse->id,
+                        'NOTICE'
+                    )
+                );
             }
 
             return back()->with('success', 'Transaksi barang keluar berhasil dicatat');

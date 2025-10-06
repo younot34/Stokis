@@ -161,76 +161,91 @@
 <script>
 let rowIndex = 1;
 
+// 🔹 Format angka ke ribuan (tanpa desimal)
+function formatRupiah(angka) {
+    if (!angka) return '0';
+    angka = angka.toString().replace(/[^\d]/g, '');
+    return angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+// 🔹 Hapus format ribuan (untuk hitung & kirim ke backend)
+function unformatRupiah(angka) {
+    if (!angka) return 0;
+    return parseFloat(angka.toString().replace(/\./g, '')) || 0;
+}
+
+// 🔹 Hitung total per baris
 function calculateRowTotal(row) {
     const qty = parseFloat(row.querySelector('.quantity').value) || 0;
-    const price = parseFloat(row.querySelector('.price').value) || 0;
+    const price = unformatRupiah(row.querySelector('.price').value);
     const total = qty * price;
-    row.querySelector('.total-price').value = total;
+    row.querySelector('.total-price').value = formatRupiah(total);
     return total;
 }
 
+// 🔹 Hitung total keseluruhan
 function calculateGrandTotal() {
     let sum = 0;
     document.querySelectorAll('.item-block').forEach(row => {
         sum += calculateRowTotal(row);
     });
-    document.getElementById('grandTotal').value = sum;
+    document.getElementById('grandTotal').value = formatRupiah(sum);
 }
 
+// 🔹 Jalankan saat qty berubah
 document.addEventListener('input', (e) => {
     if (e.target.classList.contains('quantity')) {
         calculateGrandTotal();
     }
 });
 
-// Panggil sekali waktu halaman load
-calculateGrandTotal();
-
+// 🔹 Fungsi update field produk
 function updateFields(row, data) {
+    row.querySelector('.product-id').value = data.id || '';
     row.querySelector('.product-code').value = data.code || '';
-    row.querySelector('.product-name').value = data.id || '';
+    row.querySelector('.product-name').value = data.name || '';
     row.querySelector('.category').value = data.category || '';
     row.querySelector('.subcategory').value = data.subcategory || '';
-    row.querySelector('.price').value = data.price || '';
-    row.querySelector('.quantity').value = 1; // default 1
+    row.querySelector('.price').value = formatRupiah(data.price || 0);
+    row.querySelector('.quantity').value = 1;
+    calculateGrandTotal();
 }
 
+// 🔹 Input listener — isi data otomatis
 document.addEventListener('input', (e) => {
+    const input = e.target;
+    const row = input.closest('.item-block');
+
     if (e.target.matches('.product-code')) {
-        const input = e.target;
-        const row   = input.closest('.item-block');
         const option = document.querySelector(`#productCodesAll option[value="${input.value}"]`);
         if (option) {
-            row.querySelector('.product-id').value = option.dataset.id || '';
-            row.querySelector('.product-name').value = option.dataset.name || '';
-            row.querySelector('.category').value = option.dataset.category || '';
-            row.querySelector('.subcategory').value = option.dataset.subcategory || '';
-            row.querySelector('.price').value = option.dataset.price || '';
-            row.querySelector('.item-type').value = option.dataset.type || 'normal';
-            row.querySelector('.quantity').value = 1;
-            calculateGrandTotal();
+            updateFields(row, {
+                id: option.dataset.id,
+                name: option.dataset.name,
+                category: option.dataset.category,
+                subcategory: option.dataset.subcategory,
+                price: parseInt(option.dataset.price),
+                code: option.value
+            });
         }
     }
 
     if (e.target.matches('.product-name')) {
-        const input = e.target;
-        const row   = input.closest('.item-block');
         const option = document.querySelector(`#productNamesAll option[value="${input.value}"]`);
         if (option) {
-            row.querySelector('.product-id').value = option.dataset.id || '';
-            row.querySelector('.product-code').value = option.dataset.code || '';
-            row.querySelector('.category').value = option.dataset.category || '';
-            row.querySelector('.subcategory').value = option.dataset.subcategory || '';
-            row.querySelector('.price').value = option.dataset.price || '';
-            row.querySelector('.item-type').value = option.dataset.type || 'normal';
-            row.querySelector('.quantity').value = 1;
-            calculateGrandTotal();
+            updateFields(row, {
+                id: option.dataset.id,
+                code: option.dataset.code,
+                category: option.dataset.category,
+                subcategory: option.dataset.subcategory,
+                price: parseInt(option.dataset.price),
+                name: option.value
+            });
         }
     }
 });
 
-
-// tombol tambah row
+// 🔹 Tombol tambah baris baru
 document.getElementById('addRow').addEventListener('click', () => {
     const wrapper = document.getElementById('items-wrapper');
     const newRow = document.createElement('div');
@@ -241,8 +256,7 @@ document.getElementById('addRow').addEventListener('click', () => {
                 <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Kode Barang</label>
                 <input type="text" name="items[${rowIndex}][product_code]"
                     class="product-code border border-gray-400 dark:border-gray-600 px-2 py-1 rounded w-full
-                            bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                    list="productCodesAll">
+                           bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" list="productCodesAll">
                 <input type="hidden" name="items[${rowIndex}][product_id]" class="product-id">
                 <input type="hidden" name="items[${rowIndex}][type]" class="item-type" value="normal">
             </div>
@@ -250,49 +264,48 @@ document.getElementById('addRow').addEventListener('click', () => {
                 <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Nama Barang</label>
                 <input type="text" name="items[${rowIndex}][product_name]"
                     class="product-name border border-gray-400 dark:border-gray-600 px-2 py-1 rounded w-full
-                            bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                    list="productNamesAll">
+                           bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" list="productNamesAll">
             </div>
             <div class="flex flex-col">
-                <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Kategori</label>
+                <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Kategori</label>
                 <input type="text" name="items[${rowIndex}][category]"
-                       class="category border border-gray-400 dark:border-gray-600 dark:bg-gray-800
-                              dark:text-gray-100 px-2 py-1 rounded" readonly>
+                    class="category border border-gray-400 dark:border-gray-600 px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" readonly>
             </div>
             <div class="flex flex-col">
-                <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Subkategori</label>
+                <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Subkategori</label>
                 <input type="text" name="items[${rowIndex}][subcategory]"
-                       class="subcategory border border-gray-400 dark:border-gray-600 dark:bg-gray-800
-                              dark:text-gray-100 px-2 py-1 rounded" readonly>
+                    class="subcategory border border-gray-400 dark:border-gray-600 px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" readonly>
             </div>
             <div class="flex flex-col">
-                <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Qty</label>
+                <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Qty</label>
                 <input type="number" name="items[${rowIndex}][quantity]" value="1"
-                       class="quantity border border-gray-400 dark:border-gray-600 dark:bg-gray-800
-                              dark:text-gray-100 px-2 py-1 w-20 text-center rounded">
+                    class="quantity border border-gray-400 dark:border-gray-600 px-2 py-1 w-20 text-center rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
             </div>
             <div class="flex flex-col">
-                <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Harga</label>
-                <input type="number" step="0.01" name="items[${rowIndex}][price]"
-                       class="price border border-gray-400 dark:border-gray-600 dark:bg-gray-800
-                              dark:text-gray-100 px-2 py-1 rounded text-right" readonly>
+                <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Harga</label>
+                <input type="text" name="items[${rowIndex}][price]"
+                    class="price border border-gray-400 dark:border-gray-600 px-2 py-1 text-right rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" readonly>
             </div>
             <div class="flex flex-col">
-                <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Total</label>
-                <input type="number" name="items[${rowIndex}][total_price]"
-                       class="total-price border border-gray-400 dark:border-gray-600 dark:bg-gray-800
-                              dark:text-gray-100 px-2 py-1 rounded text-right" readonly>
+                <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Total</label>
+                <input type="text" name="items[${rowIndex}][total_price]"
+                    class="total-price border border-gray-400 dark:border-gray-600 px-2 py-1 text-right rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" readonly>
             </div>
         </div>
         <div class="flex flex-col mt-2">
-            <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Keterangan</label>
+            <label class="text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Keterangan</label>
             <input type="text" name="items[${rowIndex}][note]" placeholder="Keterangan"
-                   class="note border border-gray-400 dark:border-gray-600 dark:bg-gray-800
-                          dark:text-gray-100 px-2 py-1 w-full rounded">
-        </div>
-    `;
+                class="note border border-gray-400 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 px-2 py-1 w-full rounded">
+        </div>`;
     wrapper.appendChild(newRow);
     rowIndex++;
+});
+
+// 🔹 Saat submit form → ubah format harga ke angka mentah
+document.querySelector('form').addEventListener('submit', function() {
+    document.querySelectorAll('.price, .total-price, #grandTotal').forEach(el => {
+        el.value = unformatRupiah(el.value);
+    });
 });
 </script>
 @endsection

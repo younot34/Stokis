@@ -3,10 +3,10 @@
 
 @section('content')
     <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">📦 Daftar Stokis</h2>
+        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">📦 Daftar Stockist</h2>
         <a href="{{ route('admin.warehouses.create') }}"
            class="inline-flex items-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow transition">
-            ➕ Tambah Stokis
+            ➕ Tambah Stockist
         </a>
     </div>
 
@@ -49,7 +49,7 @@
                 @empty
                     <tr>
                         <td colspan="4" class="px-6 py-6 text-center text-gray-500 dark:text-gray-400">
-                            Belum ada data stokis.
+                            Belum ada data Stockist.
                         </td>
                     </tr>
                 @endforelse

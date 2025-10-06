@@ -11,7 +11,7 @@
             <thead>
                 <tr class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-left">
                     <th class="px-4 py-3">Kode PO</th>
-                    <th class="px-4 py-3">Stokis</th>
+                    <th class="px-4 py-3">Stockist</th>
                     <th class="px-4 py-3">User By</th>
                     <th class="px-4 py-3">Tanggal</th>
                     <th class="px-4 py-3">Status</th>

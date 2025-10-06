@@ -91,7 +91,7 @@
                            class="flex items-center gap-3 p-2 rounded-lg transition
                            {{ request()->routeIs('admin.warehouses.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
                            <i data-lucide="building" class="w-5 h-5"></i>
-                           Stokis
+                           Stockist
                         </a>
                     </li>
                     <li>
@@ -115,7 +115,7 @@
                            class="flex items-center gap-3 p-2 rounded-lg transition
                            {{ request()->routeIs('admin.purchase_orders.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
                            <i data-lucide="file-text" class="w-5 h-5"></i>
-                           PO Stokis
+                           PO Stockist
                         </a>
                     </li>
                     <li>
@@ -123,7 +123,7 @@
                            class="flex items-center gap-3 p-2 rounded-lg transition
                            {{ request()->routeIs('admin.stocks.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
                            <i data-lucide="database" class="w-5 h-5"></i>
-                           Stok per Stokis
+                           Stok per Stockist
                         </a>
                     </li>
                     <li>
@@ -139,7 +139,7 @@
                            class="flex items-center gap-3 p-2 rounded-lg transition
                            {{ request()->routeIs('admin.reports.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
                            <i data-lucide="truck" class="w-5 h-5"></i>
-                           Barang Keluar Per Stokis
+                           Barang Keluar Per Stockist
                         </a>
                     </li>
                     <li>
@@ -147,7 +147,7 @@
                            class="flex items-center gap-3 p-2 rounded-lg transition
                            {{ request()->routeIs('admin.kirims.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
                            <i data-lucide="truck" class="w-5 h-5"></i>
-                           Kirim Barang Ke Stokis
+                           Kirim Barang Ke Stockist
                         </a>
                     </li>
                     <li>
@@ -155,7 +155,7 @@
                            class="flex items-center gap-3 p-2 rounded-lg transition
                            {{ request()->routeIs('admin.transactions.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
                            <i data-lucide="truck" class="w-5 h-5"></i>
-                           Notice Ke Stokis
+                           Notice Ke Stokcis
                         </a>
                     </li>
                     <li>

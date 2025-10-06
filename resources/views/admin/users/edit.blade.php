@@ -30,16 +30,16 @@
             <select name="role" required
                     class="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
                 <option value="admin" {{ $user->role=='admin'?'selected':'' }}>Admin</option>
-                <option value="stokis" {{ $user->role=='stokis'?'selected':'' }}>Stokis</option>
+                <option value="stokis" {{ $user->role=='stokis'?'selected':'' }}>Stockist</option>
             </select>
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                Stokis <span class="text-gray-400 dark:text-gray-500 text-xs">(jika role stokis)</span>
+                Stockist <span class="text-gray-400 dark:text-gray-500 text-xs">(jika role Stockist)</span>
             </label>
             <select name="warehouse_id"
                     class="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                <option value="">-- Pilih Stokis --</option>
+                <option value="">-- Pilih Stockist --</option>
                 @foreach($warehouses as $w)
                     <option value="{{ $w->id }}" {{ $user->warehouse_id==$w->id?'selected':'' }}>
                         {{ $w->name }}

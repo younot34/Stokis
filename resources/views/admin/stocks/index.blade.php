@@ -3,17 +3,17 @@
 @section('content')
 <div class="bg-white dark:bg-gray-900 shadow-md rounded-lg p-6">
     <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100 border-b pb-3 border-gray-300 dark:border-gray-700">
-        Stok Per Stokis
+        Stok Per Stockist
     </h2>
 
     <form method="GET" action="{{ route('admin.stocks.index') }}" class="mb-6 flex flex-wrap items-center gap-3">
         <div>
-            <label for="warehouse_id" class="text-gray-700 dark:text-gray-200 font-medium">Stokis:</label>
+            <label for="warehouse_id" class="text-gray-700 dark:text-gray-200 font-medium">Stockist:</label>
             <select name="warehouse_id" id="warehouse_id"
                 class="border border-gray-400 dark:border-gray-600 rounded-lg px-3 py-2
                     focus:ring focus:ring-blue-200 dark:focus:ring-blue-800
                     bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">
-                <option value="">-- Semua Stokis --</option>
+                <option value="">-- Semua Stockist --</option>
                 @foreach($allWarehouses as $wh)
                     <option value="{{ $wh->id }}" {{ request('warehouse_id') == $wh->id ? 'selected' : '' }}>
                         {{ $wh->name }}
@@ -102,7 +102,7 @@
                     @empty
                     <tr>
                         <td colspan="6" class="text-center py-4 text-gray-500 dark:text-gray-400">
-                            Belum ada stok di stokis ini
+                            Belum ada stok di Stockist ini
                         </td>
                     </tr>
                     @endforelse

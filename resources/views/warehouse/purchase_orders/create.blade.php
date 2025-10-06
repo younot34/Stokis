@@ -6,7 +6,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <h1 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-4 sm:mb-0">Buat Purchase Order</h1>
         <span class="text-gray-600 dark:text-gray-300">
-            Stokis: <strong>{{ $warehouse->name }}</strong>
+            Stockist: <strong>{{ $warehouse->name }}</strong>
         </span>
     </div>
 
@@ -22,7 +22,7 @@
                 </div>
 
                 <div>
-                    <label class="block font-semibold mb-1 text-gray-800 dark:text-gray-200">Stokis</label>
+                    <label class="block font-semibold mb-1 text-gray-800 dark:text-gray-200">Stockist</label>
                     <input type="text" value="{{ $warehouse->name }}" readonly
                            class="border border-gray-400 dark:border-gray-600 p-2 rounded w-full bg-gray-100 dark:bg-gray-700 dark:text-gray-100">
                     <input type="hidden" name="warehouse_id" value="{{ $warehouse->id }}">
