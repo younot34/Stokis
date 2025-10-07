@@ -26,7 +26,7 @@
             <p class="text-3xl font-bold mt-2">{{ $totalStock ?? 0 }}</p>
         </div>
         <div class="bg-gradient-to-r from-red-400 to-red-600 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300">
-            <h3 class="text-lg font-semibold">Total Aset</h3>
+            <h3 class="text-lg font-semibold">Total Aset Barang</h3>
             <p class="text-3xl font-bold mt-2">Rp {{ number_format($totalAsset ?? 0, 0, ',', '.') }}</p>
         </div>
     </div>

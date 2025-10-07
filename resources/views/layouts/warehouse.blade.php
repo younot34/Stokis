@@ -71,7 +71,11 @@
             <div class="relative" x-data="{ openProfile: false }">
                 <button @click="openProfile = !openProfile" class="flex items-center space-x-2 focus:outline-none">
                     <img src="https://i.pravatar.cc/40" class="w-8 h-8 rounded-full" alt="profile">
-                    <span class="hidden md:block font-medium">{{ auth()->user()->name }}</span>
+                    @if(auth()->check())
+                        <span class="hidden md:block font-medium">{{ auth()->user()->name }}</span>
+                    @else
+                        <span class="hidden md:block font-medium">Guest</span>
+                    @endif
                 </button>
                 <div x-show="openProfile" @click.away="openProfile = false"
                      x-transition
@@ -160,9 +164,9 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('tracking.index') }}"
+                        <a href="{{ route('warehouse.tracking.index') }}"
                         class="flex items-center gap-3 p-2 rounded-lg transition
-                        {{ request()->routeIs('tracking.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                        {{ request()->routeIs('warehouse.tracking.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
                         <i data-lucide="search" class="w-5 h-5"></i>
                         Track Resi
                         </a>

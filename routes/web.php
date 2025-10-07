@@ -31,35 +31,33 @@ use App\Http\Controllers\TrackingController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+    //notification
 Broadcast::routes(['middleware' => ['auth']]);
 
+    //central
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
+    //auth user
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::prefix('tracker')->group(function () {
-    Route::get('/', [TrackingController::class, 'index'])->name('tracker.index');
-    Route::post('/track', [TrackingController::class, 'track'])->name('tracker.track');
-});
-Route::prefix('tracking')->group(function () {
-    Route::get('/', [TrackingController::class, 'indexwarehouse'])->name('tracking.index');
-    Route::post('/tracking', [TrackingController::class, 'tracking'])->name('tracking.tracking');
-});
+    //login
 Route::get('/redirect-after-login', function () {
+    if (!auth()->check()) {
+        return redirect()->route('login');
+    }
     $user = auth()->user();
     if ($user->role == 'admin') {
         return redirect()->route('admin.dashboard');
     } elseif ($user->role == 'stokis') {
         return redirect()->route('warehouse.dashboard');
     } else {
-        abort(403);
+        abort(403, 'Peran pengguna tidak dikenali.');
     }
 })->middleware(['auth'])->name('redirect.after.login');
 
@@ -102,6 +100,8 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group
     // Barang Keluar / Transaksi
     Route::resource('transactions', NoticeController::class);
 
+    Route::get('/track', [TrackingController::class, 'index'])->name('tracker.index');
+    Route::post('/track', [TrackingController::class, 'track'])->name('tracker.result');
 });
 
 Route::middleware(['auth','role:stokis'])->prefix('warehouse')->name('warehouse.')->group(function(){
@@ -124,6 +124,9 @@ Route::middleware(['auth','role:stokis'])->prefix('warehouse')->name('warehouse.
 
     //notice
     Route::resource('notice', NoticeWarehouseController::class);
+
+    Route::get('/tracking', [TrackingController::class, 'indexwarehouse'])->name('tracking.index');
+    Route::post('/tracking', [TrackingController::class, 'tracking'])->name('tracking.result');
 });
 Route::middleware('auth')->post('/notices/{id}/mark-read', [NoticeWarehouseController::class, 'markAsRead']);
 Route::middleware('auth')->get('/notifications/unread-count', [NoticeWarehouseController::class, 'unreadCount']);

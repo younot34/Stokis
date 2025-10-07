@@ -5,7 +5,7 @@
 <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6">
     <h1 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100 border-b pb-3 border-gray-200 dark:border-gray-700">Track Resi</h1>
 
-    <form action="{{ route('tracking.tracking') }}" method="POST" class="space-y-4">
+    <form action="{{ route('warehouse.tracking.result') }}" method="POST" class="space-y-4">
         @csrf
 
         <div>

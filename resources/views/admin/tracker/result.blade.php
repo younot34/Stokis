@@ -27,7 +27,7 @@
         </ul>
     @endif
 
-    <a href="{{ route('tracker.index') }}"
+    <a href="{{ route('admin.tracker.index') }}"
        class="inline-block mt-4 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
         ← Kembali
     </a>

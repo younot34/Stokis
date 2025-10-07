@@ -19,7 +19,7 @@
                     <th class="px-6 py-3 text-left">Alamat</th>
                     <th class="px-6 py-3 text-left">Provinsi</th>
                     <th class="px-6 py-3 text-left">Kota / Kabupaten</th>
-                    <th class="px-6 py-3 text-left">Total Aset</th>
+                    <th class="px-6 py-3 text-left">Total Aset Barang</th>
                     <th class="px-6 py-3 text-center">Aksi</th>
                 </tr>
             </thead>
