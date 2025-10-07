@@ -159,6 +159,14 @@
                            Stok Barang
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('tracking.index') }}"
+                        class="flex items-center gap-3 p-2 rounded-lg transition
+                        {{ request()->routeIs('tracking.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                        <i data-lucide="search" class="w-5 h-5"></i>
+                        Track Resi
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </aside>

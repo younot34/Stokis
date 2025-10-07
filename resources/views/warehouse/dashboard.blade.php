@@ -18,7 +18,7 @@
             <p class="text-3xl font-bold mt-2">{{ $todayOutProducts->sum('quantity') ?? 0 }}</p>
         </div>
         <div class="bg-gradient-to-r from-purple-400 to-purple-600 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300">
-            <h3 class="text-lg font-semibold">Stok Kurang dari 10</h3>
+            <h3 class="text-lg font-semibold">Stok Limit</h3>
             <p class="text-3xl font-bold mt-2">{{ $totalLowStock ?? 0 }}</p>
         </div>
         <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300">
@@ -96,7 +96,7 @@
     </div>
 
     <div class="bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-6 hover:shadow-2xl transition-shadow duration-300">
-        <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">10 Barang dengan Stok Kurang dari 10</h3>
+        <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">Stok Limit</h3>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600 rounded-lg overflow-hidden shadow-sm">
                 <thead class="bg-gray-200 dark:bg-gray-700">

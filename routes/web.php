@@ -18,6 +18,8 @@ use App\Http\Controllers\Warehouse\DashboardController as WarehouseDashboardCont
 use App\Http\Controllers\Warehouse\NoticeWarehouseController;
 use App\Http\Controllers\Warehouse\StockController;
 use Illuminate\Support\Facades\Broadcast;
+use App\Http\Controllers\TrackingController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +44,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::prefix('tracker')->group(function () {
+    Route::get('/', [TrackingController::class, 'index'])->name('tracker.index');
+    Route::post('/track', [TrackingController::class, 'track'])->name('tracker.track');
+});
+Route::prefix('tracking')->group(function () {
+    Route::get('/', [TrackingController::class, 'indexwarehouse'])->name('tracking.index');
+    Route::post('/tracking', [TrackingController::class, 'tracking'])->name('tracking.tracking');
+});
 Route::get('/redirect-after-login', function () {
     $user = auth()->user();
     if ($user->role == 'admin') {

@@ -6,16 +6,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Pusat - @yield('title')</title>
+
+    <!-- ✅ Tambahkan jQuery sebelum Select2 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-        <script>
-        tailwind.config = { darkMode: 'class', }
+    <script>
+        tailwind.config = { darkMode: 'class' }
         if (localStorage.getItem('darkMode') === 'true' ||
             (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         }
     </script>
+
     <script src="https://unpkg.com/alpinejs" defer></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tambahkan stack agar @push('styles') bisa bekerja -->
+    @stack('styles')
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 font-sans text-gray-800 dark:text-gray-200">
 
@@ -159,6 +172,14 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('tracker.index') }}"
+                        class="flex items-center gap-3 p-2 rounded-lg transition
+                        {{ request()->routeIs('tracker.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                        <i data-lucide="search" class="w-5 h-5"></i>
+                        Track Resi
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('admin.users.index') }}"
                            class="flex items-center gap-3 p-2 rounded-lg transition
                            {{ request()->routeIs('admin.users.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
@@ -195,5 +216,6 @@ function darkModeHandler() {
 }
 lucide.createIcons();
 </script>
+@stack('scripts')
 </body>
 </html>
