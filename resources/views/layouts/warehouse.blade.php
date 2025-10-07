@@ -119,14 +119,14 @@
                            Dashboard
                         </a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a href="{{ route('warehouse.transactions.index') }}"
                            class="flex items-center gap-3 p-2 rounded-lg transition
                            {{ request()->routeIs('warehouse.transactions.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
                            <i data-lucide="truck" class="w-5 h-5"></i>
                            Barang Keluar User
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="relative">
                         <a href="{{ route('warehouse.notice.index') }}"
                         class="flex items-center gap-3 p-2 rounded-lg transition relative

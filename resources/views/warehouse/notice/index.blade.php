@@ -96,7 +96,7 @@
                                             {{ $tx->resi_number ?? '-' }}
                                         </td> --}}
                                         <td class="px-6 py-4 whitespace-nowrap align-top text-gray-700 dark:text-gray-200" rowspan="{{ $tx->items->count() }}">
-                                            {{ $tx->created_at->format('d M Y H:i') }}
+                                            {{ $tx->updated_at->format('d M Y H:i') }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap align-top text-gray-700 dark:text-gray-200" rowspan="{{ $tx->items->count() }}">
                                             <a href="{{ route('warehouse.notice.edit', $tx->id) }}" class="text-blue-600 hover:text-blue-800 font-semibold">Detail</a>

@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\KirimBarangController;
 use App\Http\Controllers\Admin\CentralStockController;
+use App\Http\Controllers\Admin\DepositController;
 use App\Http\Controllers\Warehouse\TransactionController;
 use App\Http\Controllers\Warehouse\DashboardController as WarehouseDashboardController;
 use App\Http\Controllers\Warehouse\NoticeWarehouseController;
@@ -102,6 +103,8 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group
 
     Route::get('/track', [TrackingController::class, 'index'])->name('tracker.index');
     Route::post('/track', [TrackingController::class, 'track'])->name('tracker.result');
+
+    Route::resource('deposits', DepositController::class);
 });
 
 Route::middleware(['auth','role:stokis'])->prefix('warehouse')->name('warehouse.')->group(function(){

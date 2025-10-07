@@ -167,14 +167,22 @@
                         <a href="{{ route('admin.transactions.index') }}"
                            class="flex items-center gap-3 p-2 rounded-lg transition
                            {{ request()->routeIs('admin.transactions.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
-                           <i data-lucide="truck" class="w-5 h-5"></i>
+                           <i data-lucide="bell" class="w-5 h-5"></i>
                            Notice Ke Stokcis
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('tracker.index') }}"
+                        <a href="{{ route('admin.deposits.index') }}"
                         class="flex items-center gap-3 p-2 rounded-lg transition
-                        {{ request()->routeIs('tracker.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                        {{ request()->routeIs('admin.deposits.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                        <i data-lucide="credit-card" class="w-5 h-5"></i>
+                        Deposit
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.tracker.index') }}"
+                        class="flex items-center gap-3 p-2 rounded-lg transition
+                        {{ request()->routeIs('admin.tracker.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
                         <i data-lucide="search" class="w-5 h-5"></i>
                         Track Resi
                         </a>

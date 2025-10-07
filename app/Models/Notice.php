@@ -12,7 +12,8 @@ class Notice extends Model
     protected $fillable = [
         'code','warehouse_id','type','note','grand_total','created_by',
         'status', 'jasa_pengiriman',
-        'resi_number','customer_name','customer_phone','customer_address','image'
+        'resi_number','customer_name','customer_phone','customer_address','image',
+        'shipping_cost'
     ];
 
     public function items() {

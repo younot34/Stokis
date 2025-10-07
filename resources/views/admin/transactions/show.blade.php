@@ -8,7 +8,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 text-gray-700 dark:text-gray-300">
         <p><span class="font-semibold dark:text-gray-200">Kode:</span> {{ $transaction->code }}</p>
         <p><span class="font-semibold dark:text-gray-200">Stockist:</span> {{ $transaction->warehouse->name }}</p>
-        <p><span class="font-semibold dark:text-gray-200">Tanggal:</span> {{ $transaction->created_at->format('d-m-Y') }}</p>
+        <p><span class="font-semibold dark:text-gray-200">Tanggal:</span> {{ $transaction->updated_at->format('d-m-Y') }}</p>
         <p>
             <span class="font-semibold dark:text-gray-200">Status:</span>
             <span class="px-3 py-1 rounded-full text-sm font-semibold
@@ -28,11 +28,17 @@
         @if($transaction->image)
             <img src="{{ asset($transaction->image) }}"
                 alt="Bukti Kirim"
-                class="mt-2 w-48 h-auto rounded shadow-md border">
+                class="w-16 h-16 object-cover rounded cursor-pointer"
+                onclick="openImageModal('{{ asset($transaction->image) }}')">
         @else
             <p class="text-gray-500 dark:text-gray-400 italic">Tidak ada bukti upload</p>
         @endif
+        <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+            <span class="absolute top-4 right-6 text-white text-3xl cursor-pointer" onclick="closeImageModal()">&times;</span>
+            <img id="modalImage" src="" class="max-h-full max-w-full rounded shadow-lg">
+        </div>
         </span></p>
+        <p><span class="font-semibold dark:text-gray-200">Biaya Pengiriman:</span> {{ number_format($transaction->shipping_cost, 0, ',', '.') }}</p>
     </div>
 
     {{-- Detail Items --}}
@@ -81,3 +87,16 @@
     </div>
 </div>
 @endsection
+<script>
+function openImageModal(src) {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    modalImg.src = src;
+    modal.classList.remove('hidden');
+}
+
+function closeImageModal() {
+    const modal = document.getElementById('imageModal');
+    modal.classList.add('hidden');
+}
+</script>

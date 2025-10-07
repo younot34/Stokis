@@ -56,7 +56,7 @@
                     rows="3" required>{{ old('customer_address', $notice->customer_address) }}</textarea>
         </div>
 
-        <div class="grid grid-cols-2 gap-6 mb-4">
+        <div class="grid grid-cols-3 gap-6 mb-4">
             <div>
                 <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-200">Nomor Resi</label>
                 <input type="text" name="resi_number"
@@ -69,9 +69,22 @@
                     class="w-full border rounded p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
                 @if($notice->image)
                     <div class="mt-2">
-                        <img src="{{ asset($notice->image) }}" alt="Foto" class="w-32 rounded shadow">
+                        <img src="{{ asset($notice->image) }}" alt="Foto" class="w-16 h-16 object-cover rounded cursor-pointer"
+                                    onclick="openImageModal('{{ asset($notice->image) }}')">
                     </div>
                 @endif
+                <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+                    <span class="absolute top-4 right-6 text-white text-3xl cursor-pointer" onclick="closeImageModal()">&times;</span>
+                    <img id="modalImage" src="" class="max-h-full max-w-full rounded shadow-lg">
+                </div>
+            </div>
+            <div>
+                <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-200">Biaya Pengiriman</label>
+                <input type="text" name="shipping_cost" id="shipping_cost" 
+                    value="{{ old('shipping_cost', number_format($notice->shipping_cost ?? 0, 0, ',', '.')) }}"
+                    class="w-full border rounded p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    placeholder="0">
+                @error('shipping_cost') <span class="text-red-500">{{ $message }}</span> @enderror
             </div>
         </div>
 
@@ -118,4 +131,25 @@
     </div>
     </form>
 </div>
+<script>
+const shippingInput = document.getElementById('shipping_cost');
+
+shippingInput.addEventListener('input', function(e){
+    let value = this.value.replace(/\D/g,''); // hapus semua selain angka
+    this.value = new Intl.NumberFormat('id-ID').format(value);
+});
+</script>
+<script>
+function openImageModal(src) {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    modalImg.src = src;
+    modal.classList.remove('hidden');
+}
+
+function closeImageModal() {
+    const modal = document.getElementById('imageModal');
+    modal.classList.add('hidden');
+}
+</script>
 @endsection

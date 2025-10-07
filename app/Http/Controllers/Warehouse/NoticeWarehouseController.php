@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Warehouse;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Deposit;
 use App\Models\Notice;
 use App\Models\PurchaseOrderDiscountItem;
 use App\Models\PurchaseOrderItem;
@@ -110,6 +111,7 @@ class NoticeWarehouseController extends Controller
             'customer_phone'   => 'nullable|string|max:20',
             'customer_address' => 'nullable|string',
             'image'            => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'shipping_cost'    => 'nullable|string',
         ];
         $request->validate($rules);
         // kalau ada file baru
@@ -124,11 +126,12 @@ class NoticeWarehouseController extends Controller
         $file = $request->file('image');
         $filename = time() . '_' . $file->getClientOriginalName();
         $file->move(public_path('uploads/notices'), $filename);
-
         $imagePath = 'uploads/notices/' . $filename;
         } else {
             $imagePath = $notice->image;
         }
+
+        $shippingCost = $request->shipping_cost ? (int) str_replace(['.', ','], '', $request->shipping_cost) : 0;
 
         $notice->update([
             'status'           => $request->status,
@@ -139,7 +142,23 @@ class NoticeWarehouseController extends Controller
             'customer_address' => $request->customer_address,
             'image'            => $imagePath,
             'created_by'       => $user->id,
+            'shipping_cost'    => $shippingCost,
         ]);
+
+        // kurangi deposit warehouse
+        if ($shippingCost > 0) {
+            $deposit = Deposit::firstOrCreate(
+                ['warehouse_id' => $notice->warehouse_id],
+                ['nominal' => 0]
+            );
+
+            $deposit->nominal -= $shippingCost;
+            if ($deposit->nominal < 0) {
+                $deposit->nominal = 0; // jangan sampai minus
+            }
+            $deposit->save();
+        }
+
 
         return redirect()->route('warehouse.notice.index')->with('success', 'Notice berhasil diperbarui.');
     }

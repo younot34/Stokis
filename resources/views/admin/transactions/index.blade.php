@@ -71,7 +71,7 @@
                                             {{ $tx->jasa_pengiriman ?? '-' }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap align-top text-gray-700 dark:text-gray-200" rowspan="{{ $tx->items->count() }}">
-                                            {{ $tx->created_at->format('d M Y H:i') }}
+                                            {{ $tx->updated_at->format('d M Y H:i') }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap align-top" rowspan="{{ $tx->items->count() }}">
                                             <a href="{{ route('admin.transactions.show', $tx->id) }}"

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Warehouse;
 
 use App\Http\Controllers\Controller;
+use App\Models\Deposit;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -19,6 +20,12 @@ public function index()
         $today = Carbon::today();
 
         $totalProducts = $warehouse->products->count();
+
+        // total deposit warehouse
+        $totalDeposit = 0;
+        if ($warehouse) {
+            $totalDeposit = Deposit::where('warehouse_id', $warehouse->id)->sum('nominal');
+        }
 
         // Hitung total stok dan total aset dari PO normal
         $normalItems = PurchaseOrderItem::whereHas('purchaseOrder', function($q) use ($warehouse) {
@@ -121,7 +128,8 @@ public function index()
             'totalProducts',
             'totalStock',
             'totalAsset',
-            'totalLowStock'
+            'totalLowStock',
+            'totalDeposit'
         ));
     }
 }

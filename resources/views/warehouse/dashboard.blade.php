@@ -8,7 +8,7 @@
         <p class="mt-2 text-gray-100 dark:text-gray-200">Selamat datang, <span class="font-semibold">{{ auth()->user()->name }}</span>!
         Berikut ringkasan <span class="font-semibold">{{ auth()->user()->warehouse->name ?? '-' }}</span>.</p>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-10">
+    <div class="grid grid-cols-1 md:grid-cols-6 gap-6 mb-10">
         <div class="bg-gradient-to-r from-blue-400 to-blue-600 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300">
             <h3 class="text-lg font-semibold">Total Barang</h3>
             <p class="text-3xl font-bold mt-2">{{ $totalProducts ?? 0 }}</p>
@@ -28,6 +28,10 @@
         <div class="bg-gradient-to-r from-red-400 to-red-600 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300">
             <h3 class="text-lg font-semibold">Total Aset Barang</h3>
             <p class="text-3xl font-bold mt-2">Rp {{ number_format($totalAsset ?? 0, 0, ',', '.') }}</p>
+        </div>
+        <div class="bg-gradient-to-r from-indigo-400 to-indigo-600 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300">
+            <h3 class="text-lg font-semibold">Total Deposit</h3>
+            <p class="text-3xl font-bold mt-2">Rp {{ number_format($totalDeposit ?? 0, 0, ',', '.') }}</p>
         </div>
     </div>
 
