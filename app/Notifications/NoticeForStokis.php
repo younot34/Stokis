@@ -32,7 +32,7 @@ class NoticeForStokis extends Notification implements ShouldBroadcast
 
     public function via($notifiable)
     {
-        return ['database', 'broadcast']; // simpan & kirim realtime
+        return ['database', 'broadcast'];
     }
 
     public function toArray($notifiable)

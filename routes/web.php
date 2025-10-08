@@ -73,7 +73,7 @@ Route::middleware(['auth', 'role:admin|adminsecond', 'auto.permission'])
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
     Route::resource('purchase_orders', PurchaseOrderController::class);
-    Route::resource('central_stocks', PurchaseOrderController::class);
+    Route::resource('central_stocks', CentralStockController::class);
     Route::resource('stocks', WarehouseProductController::class);
     Route::resource('reports', ReportController::class);
     Route::resource('deposits', DepositController::class);
