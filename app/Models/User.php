@@ -44,4 +44,9 @@ class User extends Authenticatable
     public function warehouse() {
         return $this->belongsTo(Warehouse::class, 'warehouse_id');
     }
+
+    public function permissions()
+    {
+        return $this->hasMany(\App\Models\Permission::class, 'user_id');
+    }
 }

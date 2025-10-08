@@ -42,7 +42,7 @@ class TrackingController extends Controller
         return view('warehouse.tracking.index', compact('courierList'));
     }
 
-    public function track(Request $request)
+    public function show(Request $request)
     {
         $request->validate([
             'courier' => 'required',
@@ -52,7 +52,7 @@ class TrackingController extends Controller
         $service = new BinderByteService();
         $data = $service->track($request->courier, $request->waybill);
 
-        return view('admin.tracker.result', compact('data'));
+        return view('admin.tracker.show', compact('data'));
     }
     public function tracking(Request $request)
     {

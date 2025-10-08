@@ -9,7 +9,7 @@ use Carbon\Carbon;
 
 class ReportController extends Controller
 {
-   public function outgoing(Request $request)
+   public function index(Request $request)
     {
         $warehouses = Warehouse::all();
 
@@ -39,7 +39,7 @@ class ReportController extends Controller
         // Load items dan product relation
         $transactions = $query->with('items.product','warehouse')->paginate(20);
 
-        return view('admin.reports.outgoing', compact(
+        return view('admin.reports.index', compact(
             'transactions','warehouses','warehouseId','date','month'
         ));
     }

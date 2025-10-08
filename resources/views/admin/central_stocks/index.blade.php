@@ -1,13 +1,15 @@
 @extends('layouts.admin')
 @section('title','Stok Pusat')
-
 @section('content')
+
     <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">📦 Stok Pusat</h2>
+        @canCreate('central_stocks')
         <a href="{{ route('admin.central_stocks.create') }}"
            class="inline-flex items-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow transition">
             ➕ Tambah Stok
         </a>
+        @endcanCreate
     </div>
     <div class="mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
         <form method="GET" action="{{ route('admin.central_stocks.index') }}" class="flex flex-wrap gap-4">
@@ -59,17 +61,21 @@
                         <td class="px-6 py-4 text-center">{{ $stock->quantity }}</td>
                         <td class="px-6 py-4 text-center">{{ $stock->created_at->format('d M Y') }}</td>
                         <td class="px-6 py-4 text-center space-x-2">
+                            @canEdit('central_stocks')
                             <a href="{{ route('admin.central_stocks.edit',$stock->id) }}"
                                class="inline-block bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg shadow transition">
                                 ✏️ Edit
                             </a>
+                            @endcanEdit
+                            @canDelete('central_stocks')
                             <form action="{{ route('admin.central_stocks.destroy',$stock->id) }}" method="POST" class="inline">
                                 @csrf @method('DELETE')
                                 <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg shadow transition"
                                         onclick="return confirm('Hapus data stok?')">
                                     🗑 Hapus
-                                </button>
+                              enbutton>
                             </form>
+                            @endcanDelete
                         </td>
                     </tr>
                 @empty

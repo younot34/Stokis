@@ -23,9 +23,9 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $notice->code }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($notice->image)
-                                <img 
-                                src="{{ asset($notice->image) }}" 
-                                    alt="image" 
+                                <img
+                                src="{{ asset($notice->image) }}"
+                                    alt="image"
                                     class="w-16 h-16 object-cover rounded cursor-pointer"
                                     onclick="openImageModal('{{ asset($notice->image) }}')">
                                     @else
@@ -49,7 +49,6 @@
         </div>
     </div>
 </div>
-@endsection
 <script>
 function openImageModal(src) {
     const modal = document.getElementById('imageModal');
@@ -63,3 +62,4 @@ function closeImageModal() {
     modal.classList.add('hidden');
 }
 </script>
+@endsection

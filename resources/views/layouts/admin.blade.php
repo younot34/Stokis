@@ -91,6 +91,7 @@
             <h1 class="text-2xl font-bold mb-8 hidden md:block">Pusat Panel</h1>
             <nav>
                 <ul class="space-y-2">
+                    @canView('dashboard')
                     <li>
                         <a href="{{ route('admin.dashboard') }}"
                            class="flex items-center gap-3 p-2 rounded-lg transition
@@ -99,6 +100,8 @@
                            Dashboard
                         </a>
                     </li>
+                    @endcanView
+                    @canView('warehouses')
                     <li>
                         <a href="{{ route('admin.warehouses.index') }}"
                            class="flex items-center gap-3 p-2 rounded-lg transition
@@ -107,6 +110,8 @@
                            Stockist
                         </a>
                     </li>
+                    @endcanView
+                    @canView('categories')
                     <li>
                         <a href="{{ route('admin.categories.index') }}"
                            class="flex items-center gap-3 p-2 rounded-lg transition
@@ -115,6 +120,8 @@
                            Kategori
                         </a>
                     </li>
+                    @endcanView
+                    @canView('products')
                     <li>
                         <a href="{{ route('admin.products.index') }}"
                            class="flex items-center gap-3 p-2 rounded-lg transition
@@ -123,6 +130,8 @@
                            Produk
                         </a>
                     </li>
+                    @endcanView
+                    @canView('purchase-orders')
                     <li>
                         <a href="{{ route('admin.purchase_orders.index') }}"
                            class="flex items-center gap-3 p-2 rounded-lg transition
@@ -131,6 +140,8 @@
                            PO Stockist
                         </a>
                     </li>
+                    @endcanView
+                    @canView('stocks')
                     <li>
                         <a href="{{ route('admin.stocks.index') }}"
                            class="flex items-center gap-3 p-2 rounded-lg transition
@@ -139,6 +150,8 @@
                            Stok per Stockist
                         </a>
                     </li>
+                    @endcanView
+                    @canView('central_stocks')
                     <li>
                         <a href="{{ route('admin.central_stocks.index') }}"
                             class="flex items-center gap-3 p-2 rounded-lg transition
@@ -147,14 +160,18 @@
                             Stok Pusat
                         </a>
                     </li>
+                    @endcanView
+                    @canView('reports')
                     <li>
-                        <a href="{{ route('admin.reports.outgoing') }}"
+                        <a href="{{ route('admin.reports.index') }}"
                            class="flex items-center gap-3 p-2 rounded-lg transition
                            {{ request()->routeIs('admin.reports.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
                            <i data-lucide="truck" class="w-5 h-5"></i>
                            Barang Keluar Per Stockist
                         </a>
                     </li>
+                    @endcanView
+                    @canView('kirims')
                     <li>
                         <a href="{{ route('admin.kirims.index') }}"
                            class="flex items-center gap-3 p-2 rounded-lg transition
@@ -163,6 +180,8 @@
                            Kirim Barang Ke Stockist
                         </a>
                     </li>
+                    @endcanView
+                    @canView('transactions')
                     <li>
                         <a href="{{ route('admin.transactions.index') }}"
                            class="flex items-center gap-3 p-2 rounded-lg transition
@@ -171,6 +190,8 @@
                            Notice Ke Stokcis
                         </a>
                     </li>
+                    @endcanView
+                    @canView('deposits')
                     <li>
                         <a href="{{ route('admin.deposits.index') }}"
                         class="flex items-center gap-3 p-2 rounded-lg transition
@@ -179,6 +200,8 @@
                         Deposit
                         </a>
                     </li>
+                    @endcanView
+                    @canView('tracker')
                     <li>
                         <a href="{{ route('admin.tracker.index') }}"
                         class="flex items-center gap-3 p-2 rounded-lg transition
@@ -187,6 +210,8 @@
                         Track Resi
                         </a>
                     </li>
+                    @endcanView
+                    @canView('user')
                     <li>
                         <a href="{{ route('admin.users.index') }}"
                            class="flex items-center gap-3 p-2 rounded-lg transition
@@ -195,6 +220,7 @@
                            User
                         </a>
                     </li>
+                    @endcanView
                 </ul>
             </nav>
         </aside>

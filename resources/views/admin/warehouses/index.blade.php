@@ -1,13 +1,14 @@
 @extends('layouts.admin')
 @section('title','Stokis')
-
 @section('content')
     <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">📦 Daftar Stockist</h2>
+        @canCreate('warehouses')
         <a href="{{ route('admin.warehouses.create') }}"
            class="inline-flex items-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow transition">
             ➕ Tambah Stockist
         </a>
+        @endcanCreate
     </div>
 
     <div class="overflow-x-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg">
@@ -33,10 +34,13 @@
                         <td class="px-6 py-4 text-gray-600 dark:text-gray-300">{{ $warehouse->city }}</td>
                         <td class="px-6 py-4 text-gray-600 dark:text-gray-300">Rp {{ number_format($warehouse->total_asset ?? 0, 0, ',', '.') }}</td>
                         <td class="px-6 py-4 text-center space-x-2">
+                            @canEdit('warehouses')
                             <a href="{{ route('admin.warehouses.edit',$warehouse->id) }}"
                                class="inline-block bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg shadow transition">
                                 ✏️ Edit
                             </a>
+                            @endcanEdit
+                            @canDelete('warehouses')
                             <form action="{{ route('admin.warehouses.destroy',$warehouse->id) }}" method="POST" class="inline">
                                 @csrf @method('DELETE')
                                 <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg shadow transition"
@@ -44,6 +48,7 @@
                                     🗑 Hapus
                                 </button>
                             </form>
+                            @endcanDelete
                         </td>
                     </tr>
                 @empty

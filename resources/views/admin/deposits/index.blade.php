@@ -6,10 +6,12 @@
     <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl p-6 shadow-lg">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between">
             <h2 class="text-2xl font-bold">💰 Deposit</h2>
+            @canCreate('deposits')
             <a href="{{ route('admin.deposits.create') }}"
                class="mt-3 md:mt-0 inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow transition">
                 ➕ Tambah Deposit
             </a>
+            @endcanCreate
         </div>
     </div>
 

@@ -1,15 +1,16 @@
 @extends('layouts.admin')
 @section('title','Produk')
 @section('content')
-
 <div class="space-y-8">
     <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl p-6 shadow-lg">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between">
             <h2 class="text-2xl font-bold">📦 List Produk</h2>
+            @canCreate('products')
             <a href="{{ route('admin.products.create') }}"
                class="mt-3 md:mt-0 inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow transition">
                 ➕ Tambah Produk
             </a>
+            @endcanCreate
         </div>
     </div>
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition">
@@ -46,10 +47,13 @@
                             Rp {{ number_format($product->discount_price,0,',','.') }}
                         </td>
                         <td class="px-4 py-2 text-center space-x-2">
+                            @canEdit('products')
                             <a href="{{ route('admin.products.edit',$product->id) }}"
                                class="inline-flex items-center px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow text-sm transition">
                                 ✏️ Edit
                             </a>
+                            @endcanEdit
+                            @canDelete('products')
                             <form action="{{ route('admin.products.destroy',$product->id) }}" method="POST" class="inline">
                                 @csrf @method('DELETE')
                                 <button type="submit"
@@ -58,6 +62,7 @@
                                     🗑️ Hapus
                                 </button>
                             </form>
+                            @endcanDelete
                         </td>
                     </tr>
                     @empty

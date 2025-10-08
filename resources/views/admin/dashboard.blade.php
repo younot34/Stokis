@@ -4,7 +4,7 @@
 
 @section('content')
     <h2 class="text-2xl md:text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">
-        Admin Dashboard
+        Dashboard
     </h2>
     <p class="text-gray-600 dark:text-gray-400 mb-8">
         Selamat datang, <span class="font-semibold">{{ auth()->user()->name }}</span> 👋

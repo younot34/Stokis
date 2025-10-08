@@ -1,14 +1,16 @@
 @extends('layouts.admin')
 @section('title','Kategori')
-
 @section('content')
+
 <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 space-y-3 sm:space-y-0">
         <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">📂 List Kategori</h2>
+        @canCreate('categories')
         <a href="{{ route('admin.categories.create') }}"
            class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow transition">
             ➕ Tambah Kategori
         </a>
+        @endcanCreate
     </div>
 
     <div class="overflow-x-auto">
@@ -33,10 +35,13 @@
                         @endif
                     </td>
                     <td class="px-4 py-3 text-center space-x-2">
+                        @canEdit('categories')
                         <a href="{{ route('admin.categories.edit',$category->id) }}"
                            class="inline-flex items-center px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm shadow transition">
                             ✏️ Edit
                         </a>
+                        @endcanEdit
+                        @canDelete('categories')
                         <form action="{{ route('admin.categories.destroy',$category->id) }}" method="POST" class="inline">
                             @csrf @method('DELETE')
                             <button type="submit" onclick="return confirm('Hapus kategori ini?')"
@@ -44,6 +49,7 @@
                                 🗑️ Hapus
                             </button>
                         </form>
+                        @endcanDelete
                     </td>
                 </tr>
                 @endforeach

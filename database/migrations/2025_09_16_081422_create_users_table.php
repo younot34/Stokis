@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum('role', ['admin', 'stokis'])->default('stokis');
+            $table->enum('role', ['admin', 'adminsecond', 'stokis'])->default('stokis');
             $table->foreignId('warehouse_id')->nullable()->constrained('warehouses')->onDelete('set null');
             $table->rememberToken();
             $table->timestamps();

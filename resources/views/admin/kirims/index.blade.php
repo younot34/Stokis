@@ -5,11 +5,13 @@
 
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-4 sm:mb-0">Kirim Barang Ke Stockist</h2>
+        @canCreate('kirims')
         <a href="{{ route('admin.kirims.create') }}"
            class="inline-block bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700
                   text-white px-5 py-2 rounded-lg shadow-md transition-all duration-200">
             + Kirim
         </a>
+        @endcanCreate
     </div>
     <div class="bg-white dark:bg-gray-900 shadow-lg rounded-xl overflow-hidden">
         <div class="overflow-x-auto">

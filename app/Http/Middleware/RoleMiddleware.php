@@ -16,24 +16,29 @@ class RoleMiddleware
     public function handle($request, Closure $next, ...$roles)
     {
         $user = auth()->user();
-
-        // Pastikan sudah login
         if (!$user) {
             abort(403, 'Anda belum login.');
         }
 
-        // Jika user tidak punya role sama sekali
+        if ($user->role === 'admin') {
+            return $next($request);
+        }
+
         if (is_null($user->role)) {
             abort(403, 'Akun Anda belum memiliki izin untuk mengakses sistem ini.');
         }
 
-        // Jika user role-nya stokis tapi belum punya warehouse
         if ($user->role === 'stokis' && is_null($user->warehouse_id)) {
             abort(403, 'Akun stokis Anda belum memiliki warehouse yang terdaftar.');
         }
 
-        // Jika role user tidak sesuai dengan parameter yang diterima
-        if (!in_array($user->role, $roles)) {
+        // Pecah role parameter menjadi array
+        $allowedRoles = [];
+        foreach ($roles as $role) {
+            $allowedRoles = array_merge($allowedRoles, explode('|', $role));
+        }
+
+        if (!in_array($user->role, $allowedRoles)) {
             abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 

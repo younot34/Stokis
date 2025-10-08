@@ -53,7 +53,7 @@ Route::get('/redirect-after-login', function () {
         return redirect()->route('login');
     }
     $user = auth()->user();
-    if ($user->role == 'admin') {
+    if (in_array($user->role, ['admin', 'adminsecond'])) {
         return redirect()->route('admin.dashboard');
     } elseif ($user->role == 'stokis') {
         return redirect()->route('warehouse.dashboard');
@@ -62,50 +62,27 @@ Route::get('/redirect-after-login', function () {
     }
 })->middleware(['auth'])->name('redirect.after.login');
 
-Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group(function(){
+Route::middleware(['auth', 'role:admin|adminsecond', 'auto.permission'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-    // Dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // stokis
     Route::resource('warehouses', WarehouseController::class);
-
-    // User
-    Route::resource('users', UserController::class);
-
-    // Kategori
     Route::resource('categories', CategoryController::class);
-
-    // Produk
     Route::resource('products', ProductController::class);
-
-    // Stok per stokis
-    Route::get('stocks', [WarehouseProductController::class,'index'])->name('stocks.index');
-    Route::post('stocks/{warehouse}/{product}', [WarehouseProductController::class,'updateStock'])->name('stocks.update');
-
-    // Purchase Orders
-    Route::get('/purchase-orders', [PurchaseOrderController::class, 'index'])->name('purchase_orders.index');
-    Route::get('/purchase-orders/{poRecap}', [PurchaseOrderController::class, 'show'])->name('purchase_orders.show');
-    Route::post('/purchase-orders/{purchaseOrder}/approve', [PurchaseOrderController::class, 'approve'])->name('purchase_orders.approve');
-
-    // Reports
-    Route::get('reports/outgoing', [ReportController::class, 'outgoing'])->name('reports.outgoing');
-
-    //stok pusat
-    Route::resource('central_stocks', CentralStockController::class);
-
-    //kirim barang ke stokis
-    Route::resource('kirims', KirimBarangController::class);
-    Route::get('/generate-kirim-code/{warehouse}', [KirimBarangController::class, 'generateCodeAjax'])->name('kirim.generate.code');
-
-    // Barang Keluar / Transaksi
-    Route::resource('transactions', NoticeController::class);
-
-    Route::get('/track', [TrackingController::class, 'index'])->name('tracker.index');
-    Route::post('/track', [TrackingController::class, 'track'])->name('tracker.result');
-
+    Route::resource('purchase_orders', PurchaseOrderController::class);
+    Route::resource('central_stocks', PurchaseOrderController::class);
+    Route::resource('stocks', WarehouseProductController::class);
+    Route::resource('reports', ReportController::class);
     Route::resource('deposits', DepositController::class);
+    Route::resource('users', UserController::class);
+    Route::resource('tracker', TrackingController::class);
+    Route::resource('kirims', KirimBarangController::class);
+    Route::resource('transactions', NoticeController::class);
 });
+
 
 Route::middleware(['auth','role:stokis'])->prefix('warehouse')->name('warehouse.')->group(function(){
 
@@ -131,6 +108,7 @@ Route::middleware(['auth','role:stokis'])->prefix('warehouse')->name('warehouse.
     Route::get('/tracking', [TrackingController::class, 'indexwarehouse'])->name('tracking.index');
     Route::post('/tracking', [TrackingController::class, 'tracking'])->name('tracking.result');
 });
+
 Route::middleware('auth')->post('/notices/{id}/mark-read', [NoticeWarehouseController::class, 'markAsRead']);
 Route::middleware('auth')->get('/notifications/unread-count', [NoticeWarehouseController::class, 'unreadCount']);
 Route::middleware('auth')->post('/notices/mark-all', [NoticeWarehouseController::class, 'markAllAsRead']);

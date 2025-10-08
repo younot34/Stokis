@@ -86,7 +86,6 @@
         </a>
     </div>
 </div>
-@endsection
 <script>
 function openImageModal(src) {
     const modal = document.getElementById('imageModal');
@@ -100,3 +99,4 @@ function closeImageModal() {
     modal.classList.add('hidden');
 }
 </script>
+@endsection
