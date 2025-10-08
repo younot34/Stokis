@@ -42,7 +42,7 @@ class TrackingController extends Controller
         return view('warehouse.tracking.index', compact('courierList'));
     }
 
-    public function show(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'courier' => 'required',
