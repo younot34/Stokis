@@ -240,6 +240,7 @@
                 @yield('content')
             </div>
         </main>
+        @yield('scripts')
     </div>
 <script>
 function darkModeHandler() {

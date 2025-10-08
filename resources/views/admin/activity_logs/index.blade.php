@@ -28,12 +28,12 @@
 
     <div class="flex flex-col">
         <label for="date_from" class="text-gray-700 dark:text-gray-300 mb-1 text-sm">Dari Tanggal</label>
-        <input type="date" name="date_from" id="date_from" value="{{ request('date_from') }}" class="border rounded p-2 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-200">
+        <input type="text" name="date_from" id="date_from" value="{{ request('date_from') }}" class="border rounded p-2 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-200" placeholder="dd-mm-yyyy">
     </div>
 
     <div class="flex flex-col">
         <label for="date_to" class="text-gray-700 dark:text-gray-300 mb-1 text-sm">Sampai Tanggal</label>
-        <input type="date" name="date_to" id="date_to" value="{{ request('date_to') }}" class="border rounded p-2 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-200">
+        <input type="text" name="date_to" id="date_to" value="{{ request('date_to') }}" class="border rounded p-2 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-200" placeholder="dd-mm-yyyy">
     </div>
 
     <div class="flex flex-col">
@@ -78,4 +78,27 @@
 <div class="mt-4">
     {{ $logs->links() }}
 </div>
+
+@endsection
+
+@section('scripts')
+<!-- Flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    flatpickr("#date_from", {
+        dateFormat: "d-m-Y",
+        defaultDate: "{{ request('date_from') }}",
+        allowInput: true, // tetap bisa ketik manual
+    });
+
+    flatpickr("#date_to", {
+        dateFormat: "d-m-Y",
+        defaultDate: "{{ request('date_to') }}",
+        allowInput: true,
+    });
+});
+</script>
 @endsection

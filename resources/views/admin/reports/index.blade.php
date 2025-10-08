@@ -20,7 +20,7 @@
         class="border border-gray-300 dark:border-gray-600 rounded p-2
                bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">
 
-    <input type="date" name="date" value="{{ $date ?? '' }}"
+    <input type="text" name="date" id="date" value="{{ $date ?? '' }}"
         class="border border-gray-300 dark:border-gray-600 rounded p-2
                bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200" placeholder="Per Hari">
 
@@ -110,4 +110,19 @@
         {{ $transactions->links() }}
     </div>
 </div>
+@endsection
+@section('scripts')
+<!-- Flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    flatpickr("#date", {
+        dateFormat: "d-m-Y",
+        defaultDate: "{{ request('date_from') }}",
+        allowInput: true, // tetap bisa ketik manual
+    });
+});
+</script>
 @endsection

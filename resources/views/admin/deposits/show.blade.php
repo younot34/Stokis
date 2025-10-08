@@ -4,7 +4,7 @@
 @section('content')
 <div class="mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6">
     <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6">
-        <h2 class="text-2xl font-bold mb-4">📄 Notices Warehouse {{ $warehouse->name }}</h2>
+        <h2 class="text-2xl font-bold mb-4">📄 Notices {{ $warehouse->name }}</h2>
         <a href="{{ route('admin.deposits.index') }}" class="text-sm text-gray-300 hover:underline mb-4 inline-block">← Kembali</a>
 
         <div class="overflow-x-auto">
