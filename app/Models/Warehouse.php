@@ -4,16 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * @mixin IdeHelperWarehouse
  */
 class Warehouse extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $fillable = ['name', 'address', 'province', 'city'];
-
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['name', 'address', 'province', 'city'])
+            ->useLogName('stockist')
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(fn(string $eventName) => "Stockist has been {$eventName}");
+    }
     public function users() {
         return $this->hasMany(User::class);
     }

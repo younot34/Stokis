@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -68,6 +69,7 @@ Route::middleware(['auth', 'role:admin|adminsecond', 'auto.permission'])
     ->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
 
     Route::resource('warehouses', WarehouseController::class);
     Route::resource('categories', CategoryController::class);

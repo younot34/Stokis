@@ -221,6 +221,16 @@
                         </a>
                     </li>
                     @endcanView
+                    @canView('activity-logs')
+                    <li>
+                        <a href="{{ route('admin.activity-logs.index') }}"
+                        class="flex items-center gap-3 p-2 rounded-lg transition
+                        {{ request()->routeIs('admin.activity-logs.*') ? 'bg-gray-700 border-l-4 border-blue-500' : 'hover:bg-gray-700' }}">
+                        <i data-lucide="clipboard" class="w-5 h-5"></i>
+                        Activity Log
+                        </a>
+                    </li>
+                    @endcanView
                 </ul>
             </nav>
         </aside>

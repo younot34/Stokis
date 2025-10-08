@@ -4,13 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * @mixin IdeHelperPurchaseOrder
  */
 class PurchaseOrder extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $fillable = [
         'po_code','warehouse_id','requested_by','approved_by','status',
@@ -18,6 +20,18 @@ class PurchaseOrder extends Model
         'resi_number',
         'image',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['po_code','warehouse_id','requested_by','approved_by','status',
+                'jasa_pengiriman',
+                'resi_number',
+                'image',])
+            ->useLogName('purchaseOrder')
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(fn(string $eventName) => "PO has been {$eventName}");
+    }
 
     public function warehouse() {
         return $this->belongsTo(Warehouse::class);

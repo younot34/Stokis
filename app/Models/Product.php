@@ -4,14 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * @mixin IdeHelperProduct
  */
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
     protected $fillable = ['code','name','parent_id','category_id','price','discount','discount_price'];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['code','name','category_id','price','discount','discount_price'])
+            ->useLogName('product')
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(fn(string $eventName) => "Product has been {$eventName}");
+    }
     public function category() {
         return $this->belongsTo(Category::class);
     }
